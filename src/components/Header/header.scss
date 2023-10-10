@@ -1,0 +1,36 @@
+.header {
+    &__container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, .125);
+    }
+
+    &__col {
+        margin: 1rem;
+    }
+
+    &__downdetector {
+        &-icon {
+            height: 2rem;
+            cursor: pointer;
+            transition: .3s;
+
+            &:hover {
+                opacity: .5;
+            }
+        }
+    }
+
+    &__login {
+        &-icon {
+            height: 2rem;
+            cursor: pointer;
+            transition: .3s;
+
+            &:hover {
+                opacity: .5;
+            }
+        }
+    }
+}

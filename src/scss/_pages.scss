@@ -1,0 +1,26 @@
+@import '../pages/Home/home.scss';
+@import '../pages/Login/login.scss';
+
+.page {
+    &__header {
+
+        &-title {
+        }
+
+        &-subtitle {
+        }
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .page {
+        &__header {
+
+            &-title {
+            }
+
+            &-subtitle {
+            }
+        }
+    }
+}
