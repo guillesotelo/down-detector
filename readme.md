@@ -1,6 +1,6 @@
 # Introduction
 
-In this server we setup all the backend logic including the DB management. To achieve this, we use Node and MongoDB.
+In this server we setup all the frontend logic. To achieve this, we use React served as a Node app connected to Apache.
 
 ## Prerequisites
 
@@ -15,6 +15,8 @@ node -v
 ```
 
 > Read more: [Node & Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
+
+If we are setting up the server on a Virtual Machine, follow the [Apache Connection](#Configure-Apache-for-Node) for further steps.
 
 ## Local Run
 
@@ -37,6 +39,106 @@ npm run dev
 ```
 
 This will run the server with Nodemon, which will be listening to changes as we update the code.
+
+## Configure Apache for Node
+
+First, make sure Apache is installed:
+
+```bash
+apache2 -v
+```
+
+If not, install it with:
+
+```bash
+sudo apt-get update
+sudo apt-get install apache2
+```
+
+Since Apache runs automatically after installatino, we can now check if has been installed correctly by going to http://127.0.0.1. From console: `xdg-open http://127.0.0.1`
+This should show us the Apache2 Ubuntu Default Page.
+
+After this, check the machine IP:
+
+```bash
+ifconfig
+```
+
+If you paste the IP in the browser, or open it with the previous command, you should see the same default page from Apache.
+We can confirm the status with:
+
+```bash
+sudo systemctl status apache2
+```
+
+### Connect the Node App with Apache
+
+After a successfully setup of Apache Server, we can connect our Node application.
+
+#### Creating the Apache configuration file
+
+First, we need to create the Apache configuration file. We do this with:
+
+```bash
+# go to the configs folder
+cd /etc/apache2/sites-available
+
+# create a default config file
+sudo nano 000-default.conf
+```
+
+The Apache VirtualHost is defined in the 000-default.conf file and is set up to listen for requests on port 80. 
+We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 3000 (or the one we previusly configured in our environment).
+
+We use ProxyPass to map the root URL at the specified address: http://localhost:3000.
+Copy the following line into the default.config file:
+
+```bash
+ProxyPass / http://localhost:3000/
+```
+
+Next, use the Control+X command to save and exit.
+
+#### Enabling the proxy and proxy_http modules
+
+Standing on the sites-available folder, run the following command to enable *proxy* and *proxy_http* modules:
+
+```bash
+sudo a2enmod
+```
+
+a2enmod is an acronym for “Apache2 enable module.” Running this command will list all modules that are available to be enabled. 
+Next, we are prompted to enter the name of a module that we’d like to enable.
+We enter proxy at the prompt to enable the proxy module:
+
+```bash
+# Which module(s) do you want to enable (wildcards ok)?
+proxy
+```
+
+Next, we enter proxy_http at the prompt to enable the proxy_http module:
+
+```bash
+# Which module(s) do you want to enable (wildcards ok)?
+proxy_http
+```
+
+#### Applying the configuration
+
+Because we changed the configuration file, we must reload the Apache server in order to apply the configuration. 
+In the sites-enabled directory, use the following command to reload the apache2 server, then stop and restart it:
+
+```bash
+sudo systemctl reload apache2
+sudo systemctl stop apache2
+sudo systemctl start apache2
+```
+
+####  Testing the configuration
+
+Finally, we can test everything's correct by going to http://localhost:80. We should see what we're serving in our Node app.
+
+> Source: [Apache & Node](https://blog.logrocket.com/configuring-apache-node-js/)
 
 ### MongoDB
 
