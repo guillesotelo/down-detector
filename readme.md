@@ -16,7 +16,7 @@ node -v
 
 > Read more: [Node & Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
 
-If we are setting up the server on a Virtual Machine, follow the [Apache Connection](#Configure-Apache-for-Node) for further steps.
+If we are setting up the server on a Virtual Machine, follow the [Apache Connection](#configure-apache-for-node) for further steps.
 
 ## Local Run
 
@@ -55,7 +55,7 @@ sudo apt-get update
 sudo apt-get install apache2
 ```
 
-Since Apache runs automatically after installatino, we can now check if has been installed correctly by going to http://127.0.0.1. From console: `xdg-open http://127.0.0.1`
+Since Apache runs automatically after installatino, we can now check if has been installed correctly by going to `http://127.0.0.1`. From console: `xdg-open http://127.0.0.1`
 This should show us the Apache2 Ubuntu Default Page.
 
 After this, check the machine IP:
@@ -87,10 +87,10 @@ cd /etc/apache2/sites-available
 sudo nano 000-default.conf
 ```
 
-The Apache VirtualHost is defined in the 000-default.conf file and is set up to listen for requests on port 80. 
+The Apache VirtualHost is defined in the 000-default.conf file and is set up to listen for requests on port 80.
 We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 3000 (or the one we previusly configured in our environment).
 
-We use ProxyPass to map the root URL at the specified address: http://localhost:3000.
+We use ProxyPass to map the root URL at the specified address: `http://localhost:3000`.
 Copy the following line into the default.config file:
 
 ```bash
@@ -107,7 +107,7 @@ Standing on the sites-available folder, run the following command to enable *pro
 sudo a2enmod
 ```
 
-a2enmod is an acronym for “Apache2 enable module.” Running this command will list all modules that are available to be enabled. 
+a2enmod is an acronym for “Apache2 enable module.” Running this command will list all modules that are available to be enabled.
 Next, we are prompted to enter the name of a module that we’d like to enable.
 We enter proxy at the prompt to enable the proxy module:
 
@@ -125,7 +125,7 @@ proxy_http
 
 #### Applying the configuration
 
-Because we changed the configuration file, we must reload the Apache server in order to apply the configuration. 
+Because we changed the configuration file, we must reload the Apache server in order to apply the configuration.
 In the sites-enabled directory, use the following command to reload the apache2 server, then stop and restart it:
 
 ```bash
@@ -134,9 +134,9 @@ sudo systemctl stop apache2
 sudo systemctl start apache2
 ```
 
-####  Testing the configuration
+#### Testing the configuration
 
-Finally, we can test everything's correct by going to http://localhost:80. We should see what we're serving in our Node app.
+Finally, we can test everything's correct by going to `http://localhost:80`. We should see what we're serving in our Node app.
 
 > Source: [Apache & Node](https://blog.logrocket.com/configuring-apache-node-js/)
 
