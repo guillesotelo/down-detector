@@ -61,7 +61,7 @@ This should show us the Apache2 Ubuntu Default Page.
 After this, check the machine IP:
 
 ```bash
-ifconfig
+ip a
 ```
 
 If you paste the IP in the browser, or open it with the previous command, you should see the same default page from Apache.
@@ -97,6 +97,16 @@ Copy the following line into the default.config file:
 ProxyPass / http://localhost:3000/
 ```
 
+So you would have something like this:
+
+```bash
+<VirtualHost *:80>
+        # ...other configs...
+
+        ProxyPass / http://localhost:3000/
+</VirtualHost>
+```
+
 Next, use the Control+X command to save and exit.
 
 #### Enabling the proxy and proxy_http modules
@@ -123,6 +133,17 @@ Next, we enter proxy_http at the prompt to enable the proxy_http module:
 proxy_http
 ```
 
+Now we do the same for module `proxy_http`:
+
+```bash
+sudo a2enmod
+```
+
+```bash
+# Which module(s) do you want to enable (wildcards ok)?
+proxy_http
+```
+
 #### Applying the configuration
 
 Because we changed the configuration file, we must reload the Apache server in order to apply the configuration.
@@ -142,6 +163,70 @@ Finally, we can test everything's correct by going to `http://localhost:80`. We 
 
 ### MongoDB
 
+#### Installation
+
+First install gnupg and curl if they are not already available:
+
+```bash
+sudo apt-get install gnupg curl
+```
+
+Import the Mongo public GPG key:
+
+```bash
+curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+   --dearmor
+```
+
+Create a list file for Mongo:
+
+- **Ubuntu 22.04**
+
+```bash
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+```
+
+- **Ubuntu 20.04**
+
+```bash
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+```
+
+Reload local package database:
+
+```bash
+sudo apt-get update
+```
+
+Install the MongoDB packages:
+
+```bash
+sudo apt-get install -y mongodb-org
+```
+
+#### Start MongoDB Instance
+
+Start MongoDB:
+
+```bash
+sudo systemctl start mongod
+```
+
+Check status:
+
+```bash
+sudo systemctl status mongod
+```
+
+Run app and check it connects to mongo instance:
+
+```bash
+npm run dev
+```
+
+#### MongoDB Compass
+
 To visualize the DB you can download MongoDB Compass. Download and install the version that suits your environment.
 If you are using Ubuntu >22.04, install and run with the following commands:
 
@@ -153,7 +238,7 @@ sudo dpkg -i mongodb-compass_1.39.3_amd64.deb
 mongodb-compass
 ```
 
-#### New Connection
+##### New Connection
 
 From the new window panel, start a new connection to MongoDB making sure the paramenters are correct. In this case we use the default PORT 27017.
 

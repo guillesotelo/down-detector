@@ -6,11 +6,19 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Header from './components/Header/Header';
 import './scss/app.scss'
+import { verifyToken } from './services';
+import Sidebar from './components/Sidebar/Sidebar';
+import History from './pages/History/History';
+import AppLogs from './pages/AppLogs/AppLogs';
+import Systems from './pages/Systems/Systems';
+import Users from './pages/Users/Users';
+import Help from './pages/Help/Help';
 
 function App() {
   const isMobile = window.screen.width <= 768
   const [search, setSearch] = useState<string[]>([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isSuper, setIsSuper] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
@@ -20,7 +28,17 @@ function App() {
       hitType: 'pageview',
       page: window.location.pathname
     })
+
+    verifyUser()
   }, [location, window.location.pathname])
+
+  const verifyUser = async () => {
+    const verified = await verifyToken()
+    if (verified) {
+      setIsLoggedIn(true)
+      setIsSuper(verified.isSuper)
+    }
+  }
 
   return (
     <AppProvider
@@ -29,18 +47,77 @@ function App() {
       isMobile={isMobile}
       isLoggedIn={isLoggedIn}
       setIsLoggedIn={setIsLoggedIn}
+      isSuper={isSuper}
+      setIsSuper={setIsSuper}
     >
       <Switch>
         <Route exact path="/">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <Home />
+            <div className="page__row">
+              <Sidebar />
+              <Home />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/history">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <History />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/applogs">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <AppLogs />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/systems">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <Systems />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/users">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <Users />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/help">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <Help />
+            </div>
           </div>
         </Route>
         <Route exact path="/login">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <Login />
+          </div>
+        </Route>
+        <Route>
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              <Sidebar />
+              <Home />
+            </div>
           </div>
         </Route>
       </Switch>

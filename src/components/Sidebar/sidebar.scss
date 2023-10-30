@@ -1,0 +1,56 @@
+.sidebar {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: .5rem;
+        border-right: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+        background-color: white;
+        width: 15vw;
+        height: calc(92vh - 1px);
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 10vw;
+        gap: 1rem;
+        cursor: pointer;
+        transition: .2s;
+        border-radius: 1rem;
+        padding: .4rem 1rem;
+        transition: .4s;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &:hover {
+            background-color: rgb(237, 237, 237);
+        }
+
+        &-svg {
+            height: 1.4rem;
+        }
+
+        &-label {
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin: 0;
+           
+        }
+    }
+
+    &__subitem {
+        margin: 0 0 1rem 2rem;
+    }
+
+    &__separator {
+        width: 15vw;
+        border-bottom: 1px solid lightgray;
+        margin: 1rem 0;
+    }
+}

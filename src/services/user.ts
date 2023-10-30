@@ -17,17 +17,21 @@ const loginUser = async (user: { [key: string | number]: any }) => {
         const finalUser = res.data
         localStorage.setItem('user', JSON.stringify({
             ...finalUser,
-            app: 'angelita',
+            app: 'downdetector',
             login: new Date()
         }))
         return finalUser
     } catch (error) { console.log(error) }
 }
 
-const verifyToken = async ()=> {
+const verifyToken = async () => {
     try {
-        const verify = await axios.post(`${API_URL}/api/user/verify`, {}, getConfig())
-        return verify.data
+        const user: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+        if (user) {
+            const verify = await axios.post(`${API_URL}/api/user/verify`, user, getConfig())
+            return verify.data
+        }
+        return null
     } catch (err) { }
 }
 

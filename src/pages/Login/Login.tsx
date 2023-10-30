@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import { loginUser } from '../../services'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
+import { AppContext } from '../../AppContext'
 
 type Props = {}
 
@@ -12,6 +13,7 @@ export default function Login({ }: Props) {
     const [loading, setLoading] = useState(false)
     const [dataOk, setDataOk] = useState(false)
     const history = useHistory()
+    const { setIsLoggedIn, setIsSuper } = useContext(AppContext)
 
     useEffect(() => {
         setDataOk(checkData())
@@ -25,7 +27,10 @@ export default function Login({ }: Props) {
     const login = async () => {
         try {
             const logged = await loginUser(data)
-            if (logged) toast.success(`Welcome back, ${logged.username ? logged.username.split(' ')[0] : 'admin'}`)
+            if (logged) {
+                toast.success(`Welcome back, ${logged.username ? logged.username.split(' ')[0] : 'admin'}`)
+                setTimeout(() => history.push('/'), 2000)
+            }
             else toast.error('An error occurred while logging in. Please try again.')
             setLoading(false)
         } catch (err) {

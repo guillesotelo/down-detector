@@ -1,14 +1,27 @@
 @import '../pages/Home/home.scss';
 @import '../pages/Login/login.scss';
+@import '../pages/History/history.scss';
+@import '../pages/AppLogs/applogs.scss';
+@import '../pages/Systems/systems.scss';
+@import '../pages/Users/users.scss';
+@import '../pages/Help/help.scss';
 
 .page {
     &__header {
 
-        &-title {
-        }
+        &-title {}
 
-        &-subtitle {
-        }
+        &-subtitle {}
+    }
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__row {
+        display: flex;
+        flex-direction: row;
     }
 }
 
@@ -16,11 +29,9 @@
     .page {
         &__header {
 
-            &-title {
-            }
+            &-title {}
 
-            &-subtitle {
-            }
+            &-subtitle {}
         }
     }
 }
