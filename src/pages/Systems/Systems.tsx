@@ -5,13 +5,23 @@ import { dataObj } from '../../types'
 import Modal from '../../components/Modal/Modal'
 import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
-import { downtimeHeaders, intervalDefaultOptions, systemHeaders, timeoutDefaultOptions } from '../../constants/tableHeaders'
-import { createSystem, getAllSystems, updateSystem } from '../../services'
+import {
+  downtimeHeaders,
+  intervalDefaultOptions,
+  systemHeaders,
+  timeoutDefaultOptions
+} from '../../constants/tableHeaders'
+import {
+  createSystem,
+  getAllSystems,
+  updateSystem,
+  deleteEvent,
+  getAllEvents
+} from '../../services'
 import { toast } from 'react-toastify'
 import Calendar from 'react-calendar'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { deleteEvent, getAllEvents } from '../../services/event'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -46,7 +56,7 @@ export default function Systems({ }: Props) {
       const select = tableData[selected]
       setData(select)
       getDowntimeData(select)
-      if (select.type) setSelectedType(data.type)
+      if (select.type) setSelectedType(select.type)
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))
       if (select.timeout) setSelectedTimeout(getTimeOption(timeoutDefaultOptions, select.timeout))
     }
@@ -91,12 +101,14 @@ export default function Systems({ }: Props) {
 
   const saveChanges = async () => {
     setLoading(true)
+    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     try {
       const systemData = {
         ...data,
         type: selectedType,
         interval: selectedInterval.value,
         timeout: selectedTimeout.value,
+        updatedBy: user.username || '',
         downtimeArray
       }
       if (newSystem) {

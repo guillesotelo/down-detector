@@ -21,6 +21,14 @@ import {
     deleteEvent,
 } from './event'
 
+import {
+    getAllHistory,
+    createHistory,
+    getHistoryById,
+    updateHistory,
+    deleteHistory,
+} from './history'
+
 export {
     loginUser,
     verifyToken,
@@ -31,4 +39,14 @@ export {
     createSystem,
     updateSystem,
     deleteSystem,
+    getAllEvents,
+    getEventById,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    getAllHistory,
+    createHistory,
+    getHistoryById,
+    updateHistory,
+    deleteHistory,
 }

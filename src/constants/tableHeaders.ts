@@ -33,7 +33,7 @@ export const systemHeaders = [
     // },
     {
         name: 'MODIFIED BY',
-        value: 'modifiedBy'
+        value: 'updatedBy'
     },
     {
         name: 'IS ACTIVE',

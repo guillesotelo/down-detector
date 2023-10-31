@@ -1,42 +1,38 @@
 import React from 'react'
 import Button from '../Button/Button'
+import { dataObj } from '../../types'
 
 type Props = {
-    _id?: string
-    name?: string
+    system?: any
     status?: boolean
-    url?: string
-    type?: string
-    description?: string
-    timeout?: number
-    interval?: number
-    createdBy?: string
-    modifiedBy?: string
     reportIssue: (value: string) => void
-    updatedAt?: Date
     downtime?: any
 }
 
 export default function SystemCard(props: Props) {
 
     const {
-        _id,
-        name,
+        system,
         status,
+        reportIssue,
+        downtime
+    } = props
+
+    const {
+        _id,
         url,
+        name,
         type,
         description,
         timeout,
         interval,
         createdBy,
-        modifiedBy,
-        reportIssue,
+        updatedBy,
         updatedAt,
-        downtime
-    } = props
+    } = system
 
     const getDate = (date: Date | undefined) => {
-        return date ? new Date(date).toLocaleDateString() : 'No data'
+        return date ? new Date(date).toLocaleString('es') : 'No data'
     }
 
     const getDowntime = (schedule: any) => {
@@ -58,10 +54,10 @@ export default function SystemCard(props: Props) {
                     </h2>
                 </div>
                 <div className="systemcard__graph">GRAPH</div>
+                <h4 className="systemcard__url">{url || 'https://apiexample.com/'}</h4>
                 <div className="systemcard__footer">
                     <div className="systemcard__details">
-                        <h4 className="systemcard__url">{url || 'https://apiexample.com/'}</h4>
-                        <h4 className="systemcard__updatedAt">Last updated: {getDate(updatedAt)}</h4>
+                        <h4 className="systemcard__updatedAt">Last updated: <br />{getDate(updatedAt)}</h4>
                     </div>
                     <Button
                         label='Report Issue'
