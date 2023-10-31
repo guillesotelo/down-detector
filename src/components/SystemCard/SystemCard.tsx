@@ -48,10 +48,14 @@ export default function SystemCard(props: Props) {
 
     return (
         <div className="systemcard__wrapper">
-            <div className="systemcard__container">
+            <div className="systemcard__container" style={{ borderColor: status ? 'green' : 'red' }}>
                 <div className="systemcard__header">
                     <h1 className="systemcard__name">{name || 'Api Name'}</h1>
-                    <h2 className="systemcard__status">{status || 'Loading'}</h2>
+                    <h2
+                        className="systemcard__status"
+                        style={{ color: status ? 'green' : 'red' }}>
+                        ● &nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
+                    </h2>
                 </div>
                 <div className="systemcard__graph">GRAPH</div>
                 <div className="systemcard__footer">
@@ -61,7 +65,7 @@ export default function SystemCard(props: Props) {
                     </div>
                     <Button
                         label='Report Issue'
-                        handleClick={() => reportIssue(_id || '')}
+                        handleClick={() => reportIssue(_id || '-')}
                         bgColor='#C45757'
                         textColor='white'
                     />

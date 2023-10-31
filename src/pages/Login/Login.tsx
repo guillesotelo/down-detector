@@ -69,12 +69,15 @@ export default function Login({ }: Props) {
                         label='Cancel'
                         handleClick={() => history.push('/')}
                         bgColor="lightgray"
+                        style={{ width: '45%' }}
                     />
                     <Button
                         label={loading ? 'Loggin in...' : 'Login'}
                         handleClick={login}
                         disabled={!dataOk}
-                        bgColor=""
+                        bgColor='#105ec6'
+                        textColor='white'
+                        style={{ width: '45%' }}
                     />
                 </div>
             </div>

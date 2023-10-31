@@ -8,6 +8,8 @@ type AppContextType = {
     isSuper: boolean
     setIsLoggedIn: (value: boolean) => void
     setIsSuper: (value: boolean) => void
+    item: string
+    setItem: (value: string) => void
     children: React.ReactNode
 }
 
@@ -21,6 +23,8 @@ export const AppProvider: React.FC<AppContextType> = ({
     setIsSuper,
     search,
     setSearch,
+    item,
+    setItem,
     children
 }) => (
     <AppContext.Provider value={{
@@ -31,6 +35,8 @@ export const AppProvider: React.FC<AppContextType> = ({
         isMobile,
         setIsLoggedIn,
         isLoggedIn,
+        item,
+        setItem,
         children
     }}>{children}</AppContext.Provider>
 );

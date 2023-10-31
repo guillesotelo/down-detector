@@ -16,8 +16,9 @@
     "axios": "^0.21.1",
     "export-to-csv": "^0.2.1",
     "react": "^18.2.0",
+    "react-calendar": "^4.6.1",
     "react-chartjs": "^1.2.0",
-    "react-datepicker": "^4.8.0",
+    "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-router-dom": "^5.3.1",
@@ -29,6 +30,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@types/react-datepicker": "^4.19.1",
     "@types/react-router-dom": "^5.3.3",
     "react-app-rewired": "^2.2.1"
   },

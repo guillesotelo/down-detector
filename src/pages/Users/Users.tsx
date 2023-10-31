@@ -4,6 +4,6 @@ type Props = {}
 
 export default function Users({}: Props) {
   return (
-    <div>Users</div>
+    <div className="users__container">USERS</div>
   )
 }

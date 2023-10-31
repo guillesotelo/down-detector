@@ -10,6 +10,11 @@
         background-color: white;
         width: 15vw;
         height: calc(92vh - 1px);
+        position: fixed;
+        left: 0;
+        top: 0;
+        margin-top: 8vh;
+        z-index: 1;
     }
 
     &__item {

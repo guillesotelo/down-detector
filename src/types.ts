@@ -1,0 +1,1 @@
+export type dataObj = { [key: string | number]: any }

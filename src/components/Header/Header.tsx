@@ -12,26 +12,26 @@ type Props = {
 }
 
 export default function Header({ search, setSearch, logo }: Props) {
-  const [showUSerOptions, setShowUserOptions] = useState(false)
-  const { isLoggedIn } = useContext(AppContext)
+  const { isLoggedIn, setItem } = useContext(AppContext)
   const history = useHistory()
 
   const userOptions = () => {
-    if (isLoggedIn) toggleUserOptions()
+    setItem('')
+    if (isLoggedIn) history.push('/account')
     else history.push('/login')
   }
 
-  const toggleUserOptions = () => {
-    setShowUserOptions(true)
+  const goHome = () => {
+    setItem('/')
+    history.push('/')
   }
 
   return (
     <div className="header__container">
       <div className="header__col">
-        <img src={DDLogo} onClick={() => history.push('/')} alt="DownDetector Logo" className="header__downdetector-icon" />
+        <img src={DDLogo} onClick={goHome} alt="DownDetector Logo" className="header__downdetector-icon" />
       </div>
       <div className="header__col">
-
       </div>
       <div className="header__col">
         <img src={isLoggedIn ? UserIcon : LoginIcon} alt="User Login" onClick={userOptions} className="header__login-icon" />

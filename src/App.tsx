@@ -13,12 +13,14 @@ import AppLogs from './pages/AppLogs/AppLogs';
 import Systems from './pages/Systems/Systems';
 import Users from './pages/Users/Users';
 import Help from './pages/Help/Help';
+import Account from './pages/Account/Account';
 
 function App() {
   const isMobile = window.screen.width <= 768
   const [search, setSearch] = useState<string[]>([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isSuper, setIsSuper] = useState(false)
+  const [item, setItem] = useState('/')
   const location = useLocation()
 
   useEffect(() => {
@@ -49,13 +51,15 @@ function App() {
       setIsLoggedIn={setIsLoggedIn}
       isSuper={isSuper}
       setIsSuper={setIsSuper}
+      item={item}
+      setItem={setItem}
     >
       <Switch>
         <Route exact path="/">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>
           </div>
@@ -64,7 +68,7 @@ function App() {
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <History />
             </div>
           </div>
@@ -73,7 +77,7 @@ function App() {
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <AppLogs />
             </div>
           </div>
@@ -82,7 +86,7 @@ function App() {
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <Systems />
             </div>
           </div>
@@ -91,7 +95,7 @@ function App() {
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <Users />
             </div>
           </div>
@@ -100,7 +104,7 @@ function App() {
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <Help />
             </div>
           </div>
@@ -111,11 +115,20 @@ function App() {
             <Login />
           </div>
         </Route>
+        <Route exact path="/account">
+          <div className='page__wrapper'>
+            <Header search={search} setSearch={setSearch} />
+            <div className="page__row">
+              {isLoggedIn ? <Sidebar /> : ''}
+              <Account />
+            </div>
+          </div>
+        </Route>
         <Route>
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
             <div className="page__row">
-              <Sidebar />
+              {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>
           </div>

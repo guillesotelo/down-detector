@@ -1,8 +1,8 @@
 .systemcard {
     &__container {
-        width: 18vw;
-        box-shadow: .5rem .5rem 2rem lightgray;
-        border: 1px solid rgba(0, 0, 0, 0.074);
+        width: 16vw;
+        box-shadow: .2rem .3rem 1rem lightgray;
+        border: 2px solid rgba(0, 0, 0, 0.074);
         border-radius: 1rem;
         padding: 1.5rem;
         display: flex;
@@ -14,6 +14,12 @@
         z-index: 0;
         position: relative;
         background-color: white;
+        transition: .3s;
+
+        &:hover {
+            box-shadow: .5rem 1rem 2rem lightgray;
+
+        }
     }
 
     &__header {
@@ -21,6 +27,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        // cursor: pointer;
     }
 
     &__name {
@@ -41,15 +48,16 @@
         align-items: center;
         justify-content: center;
         height: 10vw;
-        width: 18vw;
+        width: 16vw;
         border: 1px solid gray;
         border-radius: .5rem;
+        cursor: pointer;
     }
 
     &__footer {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-between;
     }
 
@@ -58,11 +66,21 @@
         flex-direction: column;
         gap: .5rem;
         margin-right: 1rem;
+        cursor: pointer;
+        overflow: hidden;
     }
 
     &__url {
         margin: 0;
         font-weight: normal;
+        // font-size: .9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover {
+            overflow: visible;
+        }
     }
 
     &__updatedAt {

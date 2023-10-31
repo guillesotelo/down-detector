@@ -9,11 +9,12 @@
 
     &__box {
         box-shadow: 0 1rem 2rem rgba(0, 0, 0, .125);
+        border: 1px solid rgba(128, 128, 128, 0.223);
         padding: 2rem;
         border-radius: 1rem;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
         width: 16vw;
     }
 
@@ -22,6 +23,7 @@
         flex-direction: row;
         justify-content: space-between;
         gap: 2rem;
+        margin-top: .5rem;
     }
 
 }

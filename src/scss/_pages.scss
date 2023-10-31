@@ -5,6 +5,7 @@
 @import '../pages/Systems/systems.scss';
 @import '../pages/Users/users.scss';
 @import '../pages/Help/help.scss';
+@import '../pages/Account/account.scss';
 
 .page {
     &__header {
@@ -17,11 +18,17 @@
     &__wrapper {
         display: flex;
         flex-direction: column;
+        overflow: auto;
     }
 
     &__row {
         display: flex;
         flex-direction: row;
+        justify-content: center;
+        padding: 8vh 0;
+        margin-left: 15vw;
+        min-height: 85vh;
+        position: relative;
     }
 }
 

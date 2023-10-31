@@ -12,10 +12,8 @@ import { useHistory } from 'react-router-dom'
 type Props = {}
 
 export default function Sidebar({ }: Props) {
-    const [openSettings, setOpenSettings] = useState(false)
-    const [item, setItem] = useState('/')
     const history = useHistory()
-    const { isSuper } = useContext(AppContext)
+    const { isSuper, item, setItem } = useContext(AppContext)
 
     return (
         <div className="sidebar__container">

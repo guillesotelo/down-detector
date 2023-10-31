@@ -4,6 +4,6 @@ type Props = {}
 
 export default function Help({}: Props) {
   return (
-    <div>Help</div>
+    <div className="help__container">HELP</div>
   )
 }

@@ -3,7 +3,7 @@
         font-size: .9rem;
         background-color: #D3AFAF;
         // width: 100%;
-        padding: .5rem .6rem;
+        padding: .4rem .5rem;
         border-radius: .5vw;
         cursor: pointer;
         font-weight: normal;
@@ -13,10 +13,16 @@
         min-height: 1.3rem;
         overflow: hidden;
         min-width: fit-content;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover {
-            filter: brightness(110%);
-            transition: .4s;
+            filter: brightness(120%);
+            transition: .3s;
+            // background-color: transparent !important;
+            // border-color: black;
+            // color: black !important;
         }
 
     }
