@@ -122,7 +122,7 @@ export default function Systems({ }: Props) {
       } else {
         const updated = await updateSystem(systemData)
         if (updated && updated._id) {
-          toast.success('System created successfully')
+          toast.success('System updated successfully')
           discardChanges()
           getSystems()
         }
@@ -144,14 +144,16 @@ export default function Systems({ }: Props) {
         start,
         end,
         updatedBy: user.username || '',
-        note: data.downtimeNote
+        note: data.downtimeNote,
+        url: data.url || ''
       }
       setDowntimeArray(newArr)
     } else setDowntimeArray(downtimeArray.concat({
       start,
       end,
       updatedBy: user.username || '',
-      note: data.downtimeNote
+      note: data.downtimeNote,
+      url: data.url || ''
     }))
     setAddDowntime(false)
     setStart(null)

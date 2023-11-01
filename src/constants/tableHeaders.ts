@@ -60,6 +60,26 @@ export const downtimeHeaders = [
     },
 ]
 
+export const hisrotyHeaders = [
+    {
+        name: 'UPDATED',
+        value: 'updatedAt'
+    },
+    {
+        name: 'URL',
+        value: 'url'
+    },
+    {
+        name: 'STATUS',
+        value: 'status'
+    },
+    {
+        name: 'DETAILS',
+        value: 'description'
+    },
+]
+
+
 export const timeoutDefaultOptions = [
     {
         name: '10 seconds',

@@ -91,10 +91,14 @@ export default function DataTable({ tableData, setTableData, tableHeaders, title
                         <h4
                             key={j}
                             className={`datatable__row-item datatable__row-${header.value}`}
-                            style={{ width: `${100 / tableHeaders.length}%` }}
+                            style={{ 
+                                width: `${100 / tableHeaders.length}%`,
+                                color: typeof row[header.value] === 'boolean' ? row[header.value] ? 'green' : 'red' : ''
+                            }}
                         >
-                            {header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end' ? `${new Date(row[header.value]).toLocaleDateString('es-ES')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` :
-                                header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
+                            {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end') && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('es-ES')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` :
+                                 header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
+                                 header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
                                     row && row[header.value] ? String(row[header.value])
                                         : '--'}
                         </h4>
