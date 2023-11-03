@@ -9,7 +9,7 @@ type Props = {}
 
 export default function Home({ }: Props) {
   const [report, setReport] = useState('')
-  const [allSystems, setAllSystems] = useState([])
+  const [allSystems, setAllSystems] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
   const { isLoggedIn, isSuper } = useContext(AppContext)
 
@@ -21,7 +21,7 @@ export default function Home({ }: Props) {
   const getSystems = async () => {
     try {
       const systems = await getAllSystems()
-      if (systems && systems.length) {
+      if (systems && Array.isArray(systems)) {
         setAllSystems(systems)
       }
     } catch (error) {

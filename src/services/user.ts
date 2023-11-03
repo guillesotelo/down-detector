@@ -42,18 +42,11 @@ const registerUser = async (data: { [key: string | number]: any }) => {
     } catch (err) { console.error(err) }
 }
 
-const subscribe = async (data: { [key: string | number]: any }) => {
+const getAllUsers = async () => {
     try {
-        const newEmail = await axios.post(`${API_URL}/api/app/subscribe`, data)
-        return newEmail.data
-    } catch (err) { console.error(err) }
-}
-
-const cancelSubscription = async (data: { [key: string | number]: any }) => {
-    try {
-        const canceled = await axios.post(`${API_URL}/api/app/cancelSubscription`, data)
-        return canceled.data
-    } catch (err) { console.error(err) }
+        const users = await axios.get(`${API_URL}/api/user/getAll`, { headers: getHeaders() })
+        return users.data
+    } catch (err) { console.log(err) }
 }
 
 const updateUser = async (data: { [key: string | number]: any }) => {
@@ -73,6 +66,5 @@ export {
     verifyToken,
     registerUser,
     updateUser,
-    subscribe,
-    cancelSubscription
+    getAllUsers,
 }

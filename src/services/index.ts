@@ -3,6 +3,7 @@ import {
     verifyToken,
     registerUser,
     updateUser,
+    getAllUsers
 } from './user'
 
 import {
@@ -29,11 +30,20 @@ import {
     deleteHistory,
 } from './history'
 
+import {
+    getAllLogs,
+    createLog,
+    getLogById,
+    updateLog,
+    deleteLog,
+} from './appLog'
+
 export {
     loginUser,
     verifyToken,
     registerUser,
     updateUser,
+    getAllUsers,
     getAllSystems,
     getSystemById,
     createSystem,
@@ -49,4 +59,9 @@ export {
     getHistoryById,
     updateHistory,
     deleteHistory,
+    getAllLogs,
+    createLog,
+    getLogById,
+    updateLog,
+    deleteLog,
 }

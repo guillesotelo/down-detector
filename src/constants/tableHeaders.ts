@@ -79,6 +79,48 @@ export const hisrotyHeaders = [
     },
 ]
 
+export const userHeaders = [
+    {
+        name: 'UPDATED',
+        value: 'updatedAt'
+    },
+    {
+        name: 'USERNAME',
+        value: 'username'
+    },
+    {
+        name: 'EMAIL',
+        value: 'email'
+    },
+    {
+        name: 'IS SUPER',
+        value: 'isSuper'
+    },
+]
+
+export const logHeaders = [
+    {
+        name: 'DATE',
+        value: 'updatedAt'
+    },
+    {
+        name: 'USERNAME',
+        value: 'username'
+    },
+    {
+        name: 'EMAIL',
+        value: 'email'
+    },
+    {
+        name: 'DETAILS',
+        value: 'details'
+    },
+    {
+        name: 'MODULE',
+        value: 'module'
+    },
+]
+
 
 export const timeoutDefaultOptions = [
     {

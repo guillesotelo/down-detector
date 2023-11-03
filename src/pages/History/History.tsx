@@ -28,7 +28,7 @@ export default function History({ }: Props) {
 
     return (
         <div className="history__container">
-            <div className="systems__col">
+            <div className="history__col">
                 <DataTable
                     title='History'
                     tableData={tableData}
