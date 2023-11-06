@@ -49,9 +49,10 @@
         justify-content: center;
         height: 10vw;
         width: 16vw;
-        border: 1px solid gray;
+        // border: 1px solid rgb(0, 0, 0);
         border-radius: .5rem;
         cursor: pointer;
+        margin: 1rem 0;
     }
 
     &__footer {

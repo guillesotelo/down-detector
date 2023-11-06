@@ -18,6 +18,13 @@ const getAllHistory = async () => {
     } catch (err) { console.log(err) }
 }
 
+const getHistoryBySystemId = async (_id: string) => {
+    try {
+        const history = await axios.get(`${API_URL}/api/history/getBySystemId`, { params: { _id }, headers: getHeaders() })
+        return history.data
+    } catch (err) { console.log(err) }
+}
+
 const getHistoryById = async (_id: string) => {
     try {
         const history = await axios.get(`${API_URL}/api/history/getById`, { params: { _id }, headers: getHeaders() })
@@ -49,6 +56,7 @@ const deleteHistory = async (data: { [key: string | number]: any }) => {
 export {
     getAllHistory,
     createHistory,
+    getHistoryBySystemId,
     getHistoryById,
     updateHistory,
     deleteHistory,

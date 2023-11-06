@@ -25,6 +25,7 @@ import {
 import {
     getAllHistory,
     createHistory,
+    getHistoryBySystemId,
     getHistoryById,
     updateHistory,
     deleteHistory,
@@ -56,6 +57,7 @@ export {
     deleteEvent,
     getAllHistory,
     createHistory,
+    getHistoryBySystemId,
     getHistoryById,
     updateHistory,
     deleteHistory,

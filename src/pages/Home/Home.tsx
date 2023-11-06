@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory } from '../../services'
+import { getAllSystems, getAllHistory, getHistoryBySystemId } from '../../services'
 import { dataObj } from '../../types'
 
 type Props = {}
@@ -11,7 +11,10 @@ export default function Home({ }: Props) {
   const [report, setReport] = useState('')
   const [allSystems, setAllSystems] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
+  const [historyByIds, setHistoryByIds] = useState<dataObj>({})
   const { isLoggedIn, isSuper } = useContext(AppContext)
+
+  console.log('historyByIds', historyByIds)
 
   useEffect(() => {
     getSystems()
@@ -22,6 +25,7 @@ export default function Home({ }: Props) {
     try {
       const systems = await getAllSystems()
       if (systems && Array.isArray(systems)) {
+        setHistoryByIds(await getSystemsHistory(systems))
         setAllSystems(systems)
       }
     } catch (error) {
@@ -31,13 +35,21 @@ export default function Home({ }: Props) {
 
   const getAllStatus = async () => {
     try {
-      const status = await getAllHistory()
-      if (status && status.length) {
-        setAllStatus(status)
+      const history = await getAllHistory()
+      if (history && history.length) {
+        setAllStatus(history)
       }
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const getSystemsHistory = async (systems: dataObj) => {
+    const promises = systems.map(async (system: dataObj) => {
+      return await getHistoryBySystemId(system._id)
+    })
+
+    return await Promise.all(promises)
   }
 
   const getSystemStatus = (system: dataObj) => {
@@ -63,6 +75,7 @@ export default function Home({ }: Props) {
             status={getSystemStatus(system)}
             system={system}
             reportIssue={setReport}
+            history={historyByIds[i]}
           />)}
       </div>
     </div>
