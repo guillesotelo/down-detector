@@ -8,10 +8,7 @@ type Props = {}
 
 export default function History({ }: Props) {
     const [loading, setLoading] = useState(false)
-    const [selected, setSelected] = useState(-1)
     const [tableData, setTableData] = useState<dataObj[]>([])
-
-    console.log(tableData)
 
     useEffect(() => {
         getHistory()
@@ -32,11 +29,8 @@ export default function History({ }: Props) {
                 <DataTable
                     title='History'
                     tableData={tableData}
-                    setTableData={setTableData}
                     tableHeaders={hisrotyHeaders}
-                    name='systems'
-                    selected={selected}
-                    setSelected={setSelected}
+                    name='history'
                     loading={loading}
                 />
             </div>

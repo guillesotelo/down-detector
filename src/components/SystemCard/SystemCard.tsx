@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
 import { dataObj } from '../../types'
@@ -12,20 +12,25 @@ type Props = {
     reportIssue: (value: string) => void
     downtime?: any
     history?: any
+    setSelected: (value: string) => void
+    setSelectedData: (value: dataObj) => void
 }
 
 export default function SystemCard(props: Props) {
-    const { isLoggedIn, isSuper, isMobile } = useContext(AppContext)
+    const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
+    const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
 
-    const chartHeight = isMobile ? 350 : '30vw'
-    const chartWidth = isMobile ? window.outerWidth * 0.9 : '40vw'
+    const chartHeight = '30vw'
+    const chartWidth = '40vw'
 
     const {
         system,
         status,
         reportIssue,
         downtime,
-        history
+        history,
+        setSelected,
+        setSelectedData
     } = props
 
     const {
@@ -39,38 +44,170 @@ export default function SystemCard(props: Props) {
         createdBy,
         updatedBy,
         updatedAt,
+        lastCheck,
+        lastCheckStatus
     } = system
 
     const timeOptions: any = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
+        // minute: '2-digit',
+        // hour12: false
     }
 
+    useEffect(() => {
+        setLastDayChartData({
+            labels: Array.isArray(history) ? getLastDayData(history, 'labels') : [],
+            datasets: [{
+                data: Array.isArray(history) ? getLastDayData(history, 'data') : [],
+                backgroundColor: 'transparent',
+                borderColor: status ? 'green' : 'red',
+                tension: .4,
+                pointBorderWidth: 0,
+                label: 'Status',
+                tooltips: {
+                    callbacks: {
+                        label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
+                    }
+                },
+            }]
+        })
+
+        setCompleteChartData({
+            labels: Array.isArray(history) ? getCompleteData(history, 'labels') : [],
+            datasets: [{
+                data: Array.isArray(history) ? getCompleteData(history, 'data') : [],
+                backgroundColor: 'transparent',
+                borderColor: status ? 'green' : 'red',
+                tension: .4,
+                pointBorderWidth: 0,
+                label: 'Status',
+                tooltips: {
+                    callbacks: {
+                        label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
+                    }
+                },
+            }]
+        })
+
+    }, [history, system])
+
     const getLastDayData = (history: dataObj[], type: string) => {
-        const hours = history.map(el => new Date(el.createdAt).getHours())
-        const time: any = {}
+        const downHours: string[] = []
+        const upHours: string[] = []
+        const allHours: dataObj[] = []
 
         history.forEach(el => {
             const date = new Date(el.createdAt)
-            time[date.getHours()] = date.toLocaleTimeString([], timeOptions)
+            date.setMinutes(0)
+            date.setSeconds(0)
+
+            if (!el.status) downHours.push(date.toLocaleString())
+            else upHours.push(date.toLocaleString())
+            allHours.push({ time: date, status: el.status ? 1 : 0 })
         })
 
-        const status = Array.from({ length: 23 }).map((_, i) => {
-            if (hours.includes(i)) return { status: 0, time: time[i] }
-            return { status: 1, time: time[i] }
-        })
+        const getDateWithGivenHour = (hour: number) => {
+            const today = new Date()
+            today.setMinutes(0)
+            today.setSeconds(0)
+            today.setHours(today.getHours() - hour)
+            return today
+        }
 
-        return type === 'data' ? status.map(el => el.status) : status.map(el => el.time)
+        let status: dataObj[] = Array.from({ length: 23 }).map((_, i) => {
+            return {
+                status: 0,
+                time: getDateWithGivenHour(i),
+                index: i
+            }
+        }).reverse()
+
+        const copyLastStatus = (status: dataObj[], last: dataObj) => {
+            return status.map(item => {
+                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
+                    item.status = last.status
+                } else if (upHours.includes(item.time.toLocaleString())) item.status = 1
+                return item
+            })
+        }
+
+        status = copyLastStatus(status, allHours[0])
+
+        return type === 'data' ? status.map(el => el.status) : status.map(el => el.time.toLocaleString())
     }
 
-    const chartData = {
-        labels: Array.isArray(history) ? getLastDayData(history, 'labels') : [],
-        datasets: [{
-            data: Array.isArray(history) ? getLastDayData(history, 'data') : [],
-            backgroundColor: status ? 'green' : 'red',
-            borderColor: status ? 'green' : 'red'
-        }]
+    const getCompleteData = (history: dataObj[], type: string) => {
+        const downHours: string[] = []
+        const upHours: string[] = []
+        const allHours: dataObj[] = []
+        const firstCheck = history.length ? history[history.length - 1].createdAt : null
+        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000)
+
+        history.forEach(el => {
+            const date = new Date(el.createdAt)
+            date.setMinutes(0)
+            date.setSeconds(0)
+
+            if (!el.status) downHours.push(date.toLocaleString())
+            else upHours.push(date.toLocaleString())
+            allHours.push({ time: date, status: el.status ? 1 : 0 })
+        })
+
+        const getDateWithGivenHour = (hour: number) => {
+            const today = new Date()
+            today.setMinutes(0)
+            today.setSeconds(0)
+            today.setHours(today.getHours() - hour)
+            return today
+        }
+
+        let status: dataObj[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
+            return {
+                status: 0,
+                time: getDateWithGivenHour(i),
+                index: i
+            }
+        }).reverse()
+
+        const copyLastStatus = (status: dataObj[], last: dataObj) => {
+            return status.map(item => {
+                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
+                    item.status = last.status
+                } else if (upHours.includes(item.time.toLocaleString())) item.status = 1
+                return item
+            })
+        }
+
+        status = copyLastStatus(status, allHours[0])
+
+        // console.log('timeSinceFirstCheck', timeSinceFirstCheck)
+        // console.log('SYSTEM', name)
+        // console.log('history', history)
+        // console.log('status', status)
+        // console.log('allHours', allHours)
+        // console.log('upHours', upHours)
+        // console.log('downHours', downHours)
+        // console.log('\n\n')
+        return type === 'data' ? status.map(el => el.status) : status.map(el => el.time.toLocaleString())
+    }
+
+    const getDate = (date: Date | undefined) => {
+        return date ? new Date(date).toLocaleString([], timeOptions) : 'No data'
+    }
+
+    const getDowntime = (schedule: any) => {
+        if (schedule && schedule.start && schedule.end) {
+            return `${getDate(schedule.start)} to ${getDate(schedule.end)}`
+        }
+        else return 'No data'
+    }
+
+    const selectSystem = () => {
+        setSelected(system._id)
+        setSelectedData(completeChartData)
     }
 
     const chartOptions: any = {
@@ -79,6 +216,15 @@ export default function SystemCard(props: Props) {
         plugins: {
             legend: {
                 display: false
+            },
+             title: {
+                display: true,
+                text: 'Last 24 hours',
+                align: 'start',
+                fullSize: false,
+                font: {
+                    weight: 'normal'
+                }
             }
         },
         scales: {
@@ -89,7 +235,7 @@ export default function SystemCard(props: Props) {
                 },
                 ticks: {
                     autoSkip: false,
-                    // display: false
+                    display: false,
                     color: 'gray'
                 },
                 grid: {
@@ -115,17 +261,6 @@ export default function SystemCard(props: Props) {
         }
     }
 
-    const getDate = (date: Date | undefined) => {
-        return date ? new Date(date).toLocaleString('es') : 'No data'
-    }
-
-    const getDowntime = (schedule: any) => {
-        if (schedule && schedule.start && schedule.end) {
-            return `${getDate(schedule.start)} to ${getDate(schedule.end)}`
-        }
-        else return 'No data'
-    }
-
     return (
         <div className="systemcard__wrapper">
             <div className="systemcard__container" style={{ borderColor: status ? 'green' : 'red' }}>
@@ -137,13 +272,13 @@ export default function SystemCard(props: Props) {
                         ● &nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
                     </h2>
                 </div>
-                <div className="systemcard__graph">
-                    <Line data={chartData} height={chartHeight} width={chartWidth} options={chartOptions} />
+                <div className="systemcard__graph" onClick={selectSystem}>
+                    <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
                 </div>
                 <h4 className="systemcard__url">{url || 'https://apiexample.com/'}</h4>
                 <div className="systemcard__footer">
                     <div className="systemcard__details">
-                        <h4 className="systemcard__updatedAt">Last updated: <br />{getDate(updatedAt)}</h4>
+                        <h4 className="systemcard__updatedAt">Updated: <br />{getDate(lastCheck)}</h4>
                     </div>
                     <Button
                         label='Report Issue'

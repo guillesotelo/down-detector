@@ -4,17 +4,32 @@ import { dataObj } from '../../types'
 
 type Props = {
     tableData: dataObj[]
-    setTableData: (value: dataObj[]) => void
+    setTableData?: (value: dataObj[]) => void
     tableHeaders: dataObj
     title?: string
     name?: string
     loading?: boolean
-    selected: number
-    setSelected: (value: number) => void
+    selected?: number
+    setSelected?: (value: number) => void
+    max?: number
+    style?: dataObj
 }
 
-export default function DataTable({ tableData, setTableData, tableHeaders, title, name, loading, selected, setSelected }: Props) {
-    const [maxItems, setMaxItems] = useState(10)
+export default function DataTable(props: Props) {
+    const {
+        tableData,
+        setTableData,
+        tableHeaders,
+        title,
+        name,
+        loading,
+        selected,
+        setSelected,
+        max,
+        style
+    } = props
+
+    const [maxItems, setMaxItems] = useState(max || 10)
     const [ordered, setOrdered] = useState({ ...tableHeaders.forEach((h: dataObj) => { return { [h.name]: false } }) })
     const [startTime, setStartTime] = useState(new Date())
     const [loadingTime, setLoadingTime] = useState(0)
@@ -55,9 +70,9 @@ export default function DataTable({ tableData, setTableData, tableHeaders, title
             }
             return 0
         })
-        setTableData(orderedData)
+        if (setTableData) setTableData(orderedData)
         setOrdered({ [header.name]: !ordered[header.name] })
-        setSelected(-1)
+        if (setSelected) setSelected(-1)
     }
 
     const loadingText = () => {
@@ -84,31 +99,31 @@ export default function DataTable({ tableData, setTableData, tableHeaders, title
                 <div
                     key={i}
                     className={selected === i ? 'datatable__row-selected' : 'datatable__row'}
-                    onClick={() => i === selected ? setSelected(-1) : setSelected(i)}
+                    onClick={() => setSelected ? i === selected ? setSelected(-1) : setSelected(i) : {}}
                     style={{ backgroundColor: selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5' }}
                 >
                     {tableHeaders.map((header: dataObj, j: number) =>
                         <h4
                             key={j}
                             className={`datatable__row-item datatable__row-${header.value}`}
-                            style={{ 
+                            style={{
                                 width: `${100 / tableHeaders.length}%`,
                                 color: typeof row[header.value] === 'boolean' ? row[header.value] ? 'green' : 'red' : ''
                             }}
                         >
                             {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end') && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('es-ES')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` :
-                                 header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
-                                 header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
-                                    row && row[header.value] ? String(row[header.value])
-                                        : '--'}
+                                header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
+                                    header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
+                                        row && row[header.value] ? String(row[header.value])
+                                            : '--'}
                         </h4>
                     )}
                 </div>
             )}
             {maxItems < tableData.length ?
                 <button className='datatable__lazy-btn' onClick={() => setMaxItems(maxItems + 10)}>{`Show more ${name ? name : ''} ▼`}</button>
-                : tableData.length && tableData.length > 10 && maxItems >= tableData.length && tableData.length ?
-                    <button className='datatable__lazy-btn' onClick={() => setMaxItems(maxItems - 10)}>{`Show less ▲`}</button>
+                : tableData.length && maxItems >= tableData.length && tableData.length >= (max || 10) ?
+                    <button className='datatable__lazy-btn' onClick={() => setMaxItems(max || 10)}>Show less ▲</button>
                     : ''
             }
         </div>
@@ -129,7 +144,7 @@ export default function DataTable({ tableData, setTableData, tableHeaders, title
     }
 
     return (
-        <div className='datatable__container'>
+        <div className='datatable__container' style={style}>
             <div className='datatable__titles'>
                 <h4 className='datatable__title'>{title || ''}</h4>
             </div>
