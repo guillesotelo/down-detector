@@ -62,8 +62,8 @@ export const downtimeHeaders = [
 
 export const hisrotyHeaders = [
     {
-        name: 'UPDATED',
-        value: 'updatedAt'
+        name: 'CREATED',
+        value: 'createdAt'
     },
     {
         name: 'URL',

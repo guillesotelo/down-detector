@@ -39,6 +39,15 @@ import {
     deleteLog,
 } from './appLog'
 
+import {
+    getAllAlerts,
+    createUserAlert,
+    getUserAlertBySystemId,
+    getUserAlertById,
+    updateUserAlert,
+    deleteUserAlert,
+} from './userAlert'
+
 export {
     loginUser,
     verifyToken,
@@ -66,4 +75,10 @@ export {
     getLogById,
     updateLog,
     deleteLog,
+    getAllAlerts,
+    createUserAlert,
+    getUserAlertBySystemId,
+    getUserAlertById,
+    updateUserAlert,
+    deleteUserAlert,
 }

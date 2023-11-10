@@ -53,8 +53,8 @@ export default function SystemCard(props: Props) {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        // minute: '2-digit',
-        // hour12: false
+        minute: '2-digit',
+        hour12: false
     }
 
     useEffect(() => {
@@ -126,25 +126,40 @@ export default function SystemCard(props: Props) {
         }).reverse()
 
         const copyLastStatus = (status: dataObj[], last: dataObj) => {
-            return status.map(item => {
+            let previousStatus: number = 0
+            return status.map((item, i) => {
+                // Replicate last saved register to the rest of status until now
                 if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
                     item.status = last.status
-                } else if (upHours.includes(item.time.toLocaleString())) item.status = 1
+                }
+                else if (upHours.includes(item.time.toLocaleString())) {
+                    item.status = 1
+                    previousStatus = 1
+                }
+                else if (downHours.includes(item.time.toLocaleString())) {
+                    item.status = 0
+                    previousStatus = 0
+                }
+                // Replicate status between two registered status
+                else item.status = previousStatus
+
                 return item
             })
         }
 
         status = copyLastStatus(status, allHours[0])
 
-        return type === 'data' ? status.map(el => el.status) : status.map(el => el.time.toLocaleString())
+        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time))
     }
 
     const getCompleteData = (history: dataObj[], type: string) => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: dataObj[] = []
-        const firstCheck = history.length ? history[history.length - 1].createdAt : null
-        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000)
+        const systemStatus = history.filter(status => status.systemId === _id)
+        const firstStatus = systemStatus.length ? systemStatus[systemStatus.length - 1] : null
+        const firstCheck = firstStatus ? firstStatus.createdAt : null
+        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000) + 2
 
         history.forEach(el => {
             const date = new Date(el.createdAt)
@@ -173,14 +188,26 @@ export default function SystemCard(props: Props) {
         }).reverse()
 
         const copyLastStatus = (status: dataObj[], last: dataObj) => {
-            return status.map(item => {
+            let previousStatus: number = 0
+            return status.map((item, i) => {
+                // Replicate last saved register to the rest of status until now
                 if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
                     item.status = last.status
-                } else if (upHours.includes(item.time.toLocaleString())) item.status = 1
+                }
+                else if (upHours.includes(item.time.toLocaleString())) {
+                    item.status = 1
+                    previousStatus = 1
+                }
+                else if (downHours.includes(item.time.toLocaleString())) {
+                    item.status = 0
+                    previousStatus = 0
+                }
+                // Replicate status between two registered status
+                else item.status = previousStatus
+
                 return item
             })
         }
-
         status = copyLastStatus(status, allHours[0])
 
         // console.log('timeSinceFirstCheck', timeSinceFirstCheck)
@@ -191,7 +218,7 @@ export default function SystemCard(props: Props) {
         // console.log('upHours', upHours)
         // console.log('downHours', downHours)
         // console.log('\n\n')
-        return type === 'data' ? status.map(el => el.status) : status.map(el => el.time.toLocaleString())
+        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time).replace(',', ' -'))
     }
 
     const getDate = (date: Date | undefined) => {
@@ -217,7 +244,7 @@ export default function SystemCard(props: Props) {
             legend: {
                 display: false
             },
-             title: {
+            title: {
                 display: true,
                 text: 'Last 24 hours',
                 align: 'start',
@@ -282,7 +309,7 @@ export default function SystemCard(props: Props) {
                     </div>
                     <Button
                         label='Report Issue'
-                        handleClick={() => reportIssue(_id || '-')}
+                        handleClick={() => reportIssue(_id)}
                         bgColor='#C45757'
                         textColor='white'
                     />

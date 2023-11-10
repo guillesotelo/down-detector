@@ -71,5 +71,15 @@
             font-size: .9rem;
             color: gray;
         }
+        &-issue {
+            &-name {
+                font-weight: normal;
+            }
+            &-col {
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+            }
+        }
     }
 }

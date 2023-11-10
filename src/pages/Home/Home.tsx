@@ -2,12 +2,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, getHistoryBySystemId } from '../../services'
+import { getAllSystems, getAllHistory, getHistoryBySystemId, createUserAlert } from '../../services'
 import { dataObj } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
+import InputField from '../../components/InputField/InputField'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import Button from '../../components/Button/Button'
+import { toast } from 'react-toastify'
 Chart.register(...registerables);
 
 type Props = {}
@@ -19,8 +23,10 @@ export default function Home({ }: Props) {
   const [allSystems, setAllSystems] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
   const [historyByIds, setHistoryByIds] = useState<dataObj>({})
+  const [data, setData] = useState<dataObj>({})
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
+  const [reportedStatus, setReportedStatus] = useState<dataObj>({ name: 'Unable to access' })
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -32,6 +38,12 @@ export default function Home({ }: Props) {
     minute: '2-digit',
     hour12: false
   }
+  const issueOptions = [
+    { name: 'Unable to access' },
+    { name: `Can access but doesn't work` },
+    { name: 'Low response time' },
+    { name: 'Other (describe)' },
+  ]
 
   useEffect(() => {
     getSystems()
@@ -43,8 +55,9 @@ export default function Home({ }: Props) {
   }, [allStatus, selected])
 
   const getTotalRegisteredHours = () => {
-    const history: dataObj = allStatus.filter((status: dataObj) => status.systemId === selected)
-    const firstCheck = history.length ? history[history.length - 1].createdAt : null
+    const systemStatus = allStatus.filter((status: dataObj) => status.systemId === selected)
+    const firstStatus: dataObj = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
+    const firstCheck = firstStatus ? firstStatus.createdAt : null
     const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000)
     setTotalHours(timeSinceFirstCheck)
   }
@@ -105,6 +118,26 @@ export default function Home({ }: Props) {
     return date ? new Date(date).toLocaleString([], timeOptions) : 'No data'
   }
 
+  const sendReport = async () => {
+    try {
+      const sent = await createUserAlert(data)
+      if (sent && sent._id) {
+        setSelected('')
+        setReport('')
+        setData({})
+        toast.success('Report sent successfully')
+      }
+    } catch (error) {
+      toast.success('Error sending report. Try again.')
+    }
+  }
+
+
+  const updateData = (key: string, e: { [key: string | number]: any }) => {
+    const value = e.target.value
+    setData({ ...data, [key]: value })
+  }
+
   const chartOptions: any = {
     maintainAspectRatio: false,
     indexAxis: 'x',
@@ -151,7 +184,63 @@ export default function Home({ }: Props) {
   return (
     <div className="home__container">
       {report ?
-        <Modal onClose={() => setReport('')}>
+        <Modal
+          title='Report Issue'
+          onClose={() => setReport('')}>
+          <div className="home__modal-issue-col">
+            <InputField
+              label='Name'
+              name='name'
+              value={getSystemData(report, 'name')}
+              disabled={true}
+            />
+            <InputField
+              label='URL'
+              name='url'
+              value={getSystemData(report, 'url')}
+              disabled={true}
+            />
+            <InputField
+              label='Name'
+              name='name'
+              value={getSystemData(report, 'name')}
+              disabled={true}
+            />
+            <InputField
+              label='Status'
+              name='status'
+              value='DOWN'
+              disabled={true}
+            />
+            <Dropdown
+              label='Issue type'
+              options={issueOptions}
+              value={reportedStatus.name}
+              selected={reportedStatus}
+              setSelected={setReportedStatus}
+              maxHeight='20vh'
+              objKey='name'
+            />
+            <InputField
+              label='Details'
+              name='description'
+              value={data.description}
+              updateData={updateData}
+            />
+          </div>
+          <div className="home__modal-issue-btns">
+            <Button
+              label='Cancel'
+              handleClick={() => setReport('')}
+              bgColor='lightgray'
+            />
+            <Button
+              label='Send Report'
+              handleClick={sendReport}
+              bgColor='#C45757'
+              textColor='white'
+            />
+          </div>
         </Modal>
         : ''}
       {!report && selected ?
@@ -173,7 +262,7 @@ export default function Home({ }: Props) {
           <div className="home__modal-table">
             <DataTable
               title='Latest system logs'
-              tableData={allStatus}
+              tableData={allStatus.filter((status: dataObj) => status.systemId === selected)}
               tableHeaders={hisrotyHeaders}
               name='history'
               loading={loading}

@@ -2,7 +2,7 @@ import React, { SyntheticEvent } from 'react'
 
 type Props = {
     name: string
-    updateData: (name: string, e: SyntheticEvent) => void
+    updateData?: (name: string, e: SyntheticEvent) => void
     className?: string
     type?: string
     label?: string
@@ -11,16 +11,31 @@ type Props = {
     cols?: number
     rows?: number
     style?: { [key: string | number]: any }
+    disabled?: boolean
 }
 
-export default function InputField({ value, name, label, updateData, className, type, placeholder, cols, rows, style }: Props) {
+export default function InputField(props: Props) {
+    const {
+        value,
+        name,
+        label,
+        updateData,
+        className,
+        type,
+        placeholder,
+        cols,
+        rows,
+        style,
+        disabled
+    } = props
+
     return type === 'textarea' ?
         <div className="inputfield__container" style={style}>
             {label ? <h2 className="inputfield__label">{label}</h2> : ''}
             <textarea
                 className={className || 'textarea__default'}
                 placeholder={placeholder || ''}
-                onChange={e => updateData(name, e)}
+                onChange={e => updateData ? updateData(name, e) : null}
                 value={value}
                 cols={cols}
                 rows={rows}
@@ -33,8 +48,9 @@ export default function InputField({ value, name, label, updateData, className, 
                 type={type || 'text'}
                 className={className || 'inputfield__default'}
                 placeholder={placeholder || ''}
-                onChange={e => updateData(name, e)}
+                onChange={e => updateData ? updateData(name, e) : null}
                 value={value}
+                disabled={disabled}
             />
         </div>
 }
