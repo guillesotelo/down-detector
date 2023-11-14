@@ -74,6 +74,10 @@ export const hisrotyHeaders = [
         value: 'status'
     },
     {
+        name: 'REPORTED BY',
+        value: 'userAlert'
+    },
+    {
         name: 'DETAILS',
         value: 'description'
     },

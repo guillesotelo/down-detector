@@ -59,26 +59,41 @@ export default function SystemCard(props: Props) {
 
     useEffect(() => {
         setLastDayChartData({
-            labels: Array.isArray(history) ? getLastDayData(history, 'labels') : [],
-            datasets: [{
-                data: Array.isArray(history) ? getLastDayData(history, 'data') : [],
-                backgroundColor: 'transparent',
-                borderColor: status ? 'green' : 'red',
-                tension: .4,
-                pointBorderWidth: 0,
-                label: 'Status',
-                tooltips: {
-                    callbacks: {
-                        label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
-                    }
+            labels: Array.isArray(history) ? getLastDayHistory(history, 'labels') : [],
+            datasets: [
+                {
+                    data: Array.isArray(history) ? getLastDayHistory(history, 'data') : [],
+                    backgroundColor: 'transparent',
+                    borderColor: status ? 'green' : 'red',
+                    tension: .4,
+                    pointBorderWidth: 0,
+                    label: 'Status',
+                    tooltips: {
+                        callbacks: {
+                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
+                        }
+                    },
                 },
-            }]
+                {
+                    data: Array.isArray(history) ? getLastDayReports(history, 'data') : [],
+                    backgroundColor: 'transparent',
+                    borderColor: status ? 'green' : 'red',
+                    tension: .4,
+                    pointBorderWidth: 0,
+                    label: 'Status',
+                    tooltips: {
+                        callbacks: {
+                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
+                        }
+                    },
+                }
+            ]
         })
 
         setCompleteChartData({
-            labels: Array.isArray(history) ? getCompleteData(history, 'labels') : [],
+            labels: Array.isArray(history) ? getCompleteHistory(history, 'labels') : [],
             datasets: [{
-                data: Array.isArray(history) ? getCompleteData(history, 'data') : [],
+                data: Array.isArray(history) ? getCompleteHistory(history, 'data') : [],
                 backgroundColor: 'transparent',
                 borderColor: status ? 'green' : 'red',
                 tension: .4,
@@ -94,7 +109,7 @@ export default function SystemCard(props: Props) {
 
     }, [history, system])
 
-    const getLastDayData = (history: dataObj[], type: string) => {
+    const getLastDayReports = (history: dataObj[], type: string) => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: dataObj[] = []
@@ -152,7 +167,65 @@ export default function SystemCard(props: Props) {
         return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time))
     }
 
-    const getCompleteData = (history: dataObj[], type: string) => {
+    const getLastDayHistory = (history: dataObj[], type: string) => {
+        const downHours: string[] = []
+        const upHours: string[] = []
+        const allHours: dataObj[] = []
+
+        history.forEach(el => {
+            const date = new Date(el.createdAt)
+            date.setMinutes(0)
+            date.setSeconds(0)
+
+            if (!el.status) downHours.push(date.toLocaleString())
+            else upHours.push(date.toLocaleString())
+            allHours.push({ time: date, status: el.status ? 1 : 0 })
+        })
+
+        const getDateWithGivenHour = (hour: number) => {
+            const today = new Date()
+            today.setMinutes(0)
+            today.setSeconds(0)
+            today.setHours(today.getHours() - hour)
+            return today
+        }
+
+        let status: dataObj[] = Array.from({ length: 23 }).map((_, i) => {
+            return {
+                status: 0,
+                time: getDateWithGivenHour(i),
+                index: i
+            }
+        }).reverse()
+
+        const copyLastStatus = (status: dataObj[], last: dataObj) => {
+            let previousStatus: number = 0
+            return status.map((item, i) => {
+                // Replicate last saved register to the rest of status until now
+                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
+                    item.status = last.status
+                }
+                else if (upHours.includes(item.time.toLocaleString())) {
+                    item.status = 1
+                    previousStatus = 1
+                }
+                else if (downHours.includes(item.time.toLocaleString())) {
+                    item.status = 0
+                    previousStatus = 0
+                }
+                // Replicate status between two registered status
+                else item.status = previousStatus
+
+                return item
+            })
+        }
+
+        status = copyLastStatus(status, allHours[0])
+
+        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time))
+    }
+
+    const getCompleteHistory = (history: dataObj[], type: string) => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: dataObj[] = []
@@ -290,13 +363,19 @@ export default function SystemCard(props: Props) {
 
     return (
         <div className="systemcard__wrapper">
-            <div className="systemcard__container" style={{ borderColor: status ? 'green' : 'red' }}>
+            <div
+                className="systemcard__container"
+                style={{
+                    borderColor: status ? 'green' : 'red',
+                    backgroundImage: `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                }}
+            >
                 <div className="systemcard__header">
                     <h1 className="systemcard__name">{name || 'Api Name'}</h1>
                     <h2
                         className="systemcard__status"
                         style={{ color: status ? 'green' : 'red' }}>
-                        ● &nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
+                        <span className='systemcard__status-dot'>●</span> &nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
                     </h2>
                 </div>
                 <div className="systemcard__graph" onClick={selectSystem}>

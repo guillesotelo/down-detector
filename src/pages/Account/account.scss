@@ -3,7 +3,30 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        // justify-content: center;
         width: 85vw;
     }
+
+    &__details {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // align-items: center;
+        gap: 1rem;
+        width: 20vw;
+
+        &-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        &-icon {
+            height: 10vw;
+            opacity: .5;
+        }
+    }
+
 }

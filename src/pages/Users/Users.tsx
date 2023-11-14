@@ -54,7 +54,17 @@ export default function Users({ }: Props) {
     setSelected(-1)
   }
 
+  const dataOk = () => {
+    return data.email.includes('@') &&
+      data.email.includes('.') &&
+      data.email.length > 5 &&
+      data.password && data.password2 &&
+      data.password.length > 5 &&
+      data.password === data.password2
+  }
+
   const saveChanges = async () => {
+    if (!dataOk()) return toast.error('Check the fields')
     setLoading(true)
     try {
       const userData = {
@@ -106,6 +116,14 @@ export default function Users({ }: Props) {
               name='password'
               updateData={updateData}
               value={data.password}
+              type='password'
+            />
+            <InputField
+              label='Repeat passowrd'
+              name='password2'
+              updateData={updateData}
+              value={data.password2}
+              type='password'
             />
             <div className="systems__new-row">
               <Button

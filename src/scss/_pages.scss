@@ -10,7 +10,10 @@
 .page {
     &__header {
 
-        &-title {}
+        &-title {
+            font-weight: normal;
+            width: 82vw;
+        }
 
         &-subtitle {}
     }

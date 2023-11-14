@@ -58,7 +58,7 @@ function App() {
         <Route exact path="/">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>
@@ -67,7 +67,7 @@ function App() {
         <Route exact path="/history">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <History />
             </div>
@@ -76,7 +76,7 @@ function App() {
         <Route exact path="/applogs">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <AppLogs />
             </div>
@@ -85,7 +85,7 @@ function App() {
         <Route exact path="/systems">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Systems />
             </div>
@@ -94,7 +94,7 @@ function App() {
         <Route exact path="/users">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Users />
             </div>
@@ -103,7 +103,7 @@ function App() {
         <Route exact path="/help">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Help />
             </div>
@@ -118,7 +118,7 @@ function App() {
         <Route exact path="/account">
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Account />
             </div>
@@ -127,7 +127,7 @@ function App() {
         <Route>
           <div className='page__wrapper'>
             <Header search={search} setSearch={setSearch} />
-            <div className="page__row">
+            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>

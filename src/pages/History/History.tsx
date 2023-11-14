@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { dataObj } from '../../types'
-import { getAllHistory } from '../../services'
+import { getAllAlerts, getAllHistory } from '../../services'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
+import { getHistoryAndAlerts, sortArray } from '../../helpers'
 
 type Props = {}
 
@@ -16,9 +17,11 @@ export default function History({ }: Props) {
 
     const getHistory = async () => {
         try {
-            const systems = await getAllHistory()
-            if (systems && systems.length) setTableData(systems)
+            setLoading(true)
+            setTableData(await getHistoryAndAlerts())
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.error(error)
         }
     }

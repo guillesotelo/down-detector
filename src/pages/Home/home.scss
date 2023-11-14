@@ -19,9 +19,8 @@
         }
 
         &-void {
-            position: absolute;
-            top: 50%;
-            right: 55%
+            width: 100%;
+            text-align: center;
         }
     }
 
@@ -45,6 +44,7 @@
                 -webkit-overflow-scrolling: touch;
                 overscroll-behavior-y: none;
                 -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
                 ::-webkit-scrollbar {
                     background: #150c01;
                     width: 1vw;
@@ -61,6 +61,13 @@
             margin: 1.5rem 0;
         }
 
+        &-footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
         &-updated {
             font-size: .9rem;
             margin: 0;
@@ -71,14 +78,24 @@
             font-size: .9rem;
             color: gray;
         }
+
         &-issue {
             &-name {
                 font-weight: normal;
             }
+
             &-col {
                 display: flex;
                 flex-direction: column;
-                gap: .5rem;
+                gap: 1rem;
+            }
+
+            &-btns {
+                margin-top: 1rem;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
             }
         }
     }

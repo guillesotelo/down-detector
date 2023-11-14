@@ -11,9 +11,9 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${token}` } }
 }
 
-const getAllHistory = async () => {
+const getAllHistory = async (id?: string) => {
     try {
-        const history = await axios.get(`${API_URL}/api/history/getAll`, { headers: getHeaders() })
+        const history = await axios.get(`${API_URL}/api/history/getAll?id=${id}`, { headers: getHeaders() })
         return history.data
     } catch (err) { console.log(err) }
 }
