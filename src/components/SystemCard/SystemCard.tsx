@@ -12,11 +12,15 @@ type Props = {
     reportIssue: (value: string) => void
     downtime?: any
     history?: any
+    alerts?: any
     setSelected: (value: string) => void
     setSelectedData: (value: dataObj) => void
 }
 
 export default function SystemCard(props: Props) {
+    const [lastDayData, setLastDayData] = useState<any[]>([])
+    const [completeData, setCompleteData] = useState<any[]>([])
+    const [userAlerts, setUserAlerts] = useState<any[]>([])
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
 
@@ -30,7 +34,8 @@ export default function SystemCard(props: Props) {
         downtime,
         history,
         setSelected,
-        setSelectedData
+        setSelectedData,
+        alerts
     } = props
 
     const {
@@ -58,11 +63,15 @@ export default function SystemCard(props: Props) {
     }
 
     useEffect(() => {
+        processChartData()
+    }, [history, system, alerts])
+
+    useEffect(() => {
         setLastDayChartData({
-            labels: Array.isArray(history) ? getLastDayHistory(history, 'labels') : [],
+            labels: lastDayData.map((el: dataObj) => getDate(el.time)),
             datasets: [
                 {
-                    data: Array.isArray(history) ? getLastDayHistory(history, 'data') : [],
+                    data: lastDayData.map((el: dataObj) => el.status),
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -75,46 +84,75 @@ export default function SystemCard(props: Props) {
                     },
                 },
                 {
-                    data: Array.isArray(history) ? getLastDayReports(history, 'data') : [],
-                    backgroundColor: 'transparent',
-                    borderColor: status ? 'green' : 'red',
-                    tension: .4,
-                    pointBorderWidth: 0,
-                    label: 'Status',
-                    tooltips: {
-                        callbacks: {
-                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
-                        }
-                    },
+                    data: lastDayData.map((el: dataObj) => el.status),
+                    backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? 'black' : 'transparent',
+                    borderColor: 'transparent',
+                    label: 'Reported DOWN by user'
                 }
             ]
         })
 
         setCompleteChartData({
-            labels: Array.isArray(history) ? getCompleteHistory(history, 'labels') : [],
-            datasets: [{
-                data: Array.isArray(history) ? getCompleteHistory(history, 'data') : [],
-                backgroundColor: 'transparent',
-                borderColor: status ? 'green' : 'red',
-                tension: .4,
-                pointBorderWidth: 0,
-                label: 'Status',
-                tooltips: {
-                    callbacks: {
-                        label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
-                    }
+            labels: completeData.map(el => getDate(el.time).replace(',', ' -')),
+            datasets: [
+                {
+                    data: completeData.map((el: dataObj) => el.status),
+                    backgroundColor: 'transparent',
+                    borderColor: status ? 'green' : 'red',
+                    tension: .4,
+                    pointBorderWidth: 0,
+                    label: 'Status',
+                    tooltips: {
+                        callbacks: {
+                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
+                        }
+                    },
                 },
-            }]
+                {
+                    data: completeData.map((el: dataObj) => el.status),
+                    backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? 'black' : 'transparent',
+                    borderColor: 'transparent',
+                    label: 'Reported DOWN by user'
+                }
+            ]
         })
 
-    }, [history, system])
+    }, [lastDayData, completeData])
 
-    const getLastDayReports = (history: dataObj[], type: string) => {
+    const processChartData = () => {
+        const reportedHours: string[] = []
+
+        alerts.forEach((el: dataObj) => {
+            const date = new Date(el.createdAt)
+            date.setMinutes(0)
+            date.setSeconds(0)
+            reportedHours.push(date.toLocaleString())
+        })
+
+        const lastDay = processLastDayHistory()
+        const complete = processCompleteHistory()
+
+        setLastDayData(lastDay.map(item => {
+            if (reportedHours.includes(item.time.toLocaleString())) {
+                return { ...item, reported: true }
+            }
+            return item
+        }))
+
+        setCompleteData(complete.map(item => {
+            if (reportedHours.includes(item.time.toLocaleString())) {
+                return { ...item, reported: true }
+            }
+            return item
+        }))
+    }
+
+    const processLastDayHistory = () => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: dataObj[] = []
 
-        history.forEach(el => {
+        history.forEach((el: dataObj) => {
             const date = new Date(el.createdAt)
             date.setMinutes(0)
             date.setSeconds(0)
@@ -135,8 +173,7 @@ export default function SystemCard(props: Props) {
         let status: dataObj[] = Array.from({ length: 23 }).map((_, i) => {
             return {
                 status: 0,
-                time: getDateWithGivenHour(i),
-                index: i
+                time: getDateWithGivenHour(i)
             }
         }).reverse()
 
@@ -162,79 +199,19 @@ export default function SystemCard(props: Props) {
             })
         }
 
-        status = copyLastStatus(status, allHours[0])
-
-        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time))
+        return copyLastStatus(status, allHours[0])
     }
 
-    const getLastDayHistory = (history: dataObj[], type: string) => {
+    const processCompleteHistory = () => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: dataObj[] = []
-
-        history.forEach(el => {
-            const date = new Date(el.createdAt)
-            date.setMinutes(0)
-            date.setSeconds(0)
-
-            if (!el.status) downHours.push(date.toLocaleString())
-            else upHours.push(date.toLocaleString())
-            allHours.push({ time: date, status: el.status ? 1 : 0 })
-        })
-
-        const getDateWithGivenHour = (hour: number) => {
-            const today = new Date()
-            today.setMinutes(0)
-            today.setSeconds(0)
-            today.setHours(today.getHours() - hour)
-            return today
-        }
-
-        let status: dataObj[] = Array.from({ length: 23 }).map((_, i) => {
-            return {
-                status: 0,
-                time: getDateWithGivenHour(i),
-                index: i
-            }
-        }).reverse()
-
-        const copyLastStatus = (status: dataObj[], last: dataObj) => {
-            let previousStatus: number = 0
-            return status.map((item, i) => {
-                // Replicate last saved register to the rest of status until now
-                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
-                    item.status = last.status
-                }
-                else if (upHours.includes(item.time.toLocaleString())) {
-                    item.status = 1
-                    previousStatus = 1
-                }
-                else if (downHours.includes(item.time.toLocaleString())) {
-                    item.status = 0
-                    previousStatus = 0
-                }
-                // Replicate status between two registered status
-                else item.status = previousStatus
-
-                return item
-            })
-        }
-
-        status = copyLastStatus(status, allHours[0])
-
-        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time))
-    }
-
-    const getCompleteHistory = (history: dataObj[], type: string) => {
-        const downHours: string[] = []
-        const upHours: string[] = []
-        const allHours: dataObj[] = []
-        const systemStatus = history.filter(status => status.systemId === _id)
+        const systemStatus = history.filter((status: dataObj) => status.systemId === _id)
         const firstStatus = systemStatus.length ? systemStatus[systemStatus.length - 1] : null
         const firstCheck = firstStatus ? firstStatus.createdAt : null
         const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000) + 2
 
-        history.forEach(el => {
+        history.forEach((el: dataObj) => {
             const date = new Date(el.createdAt)
             date.setMinutes(0)
             date.setSeconds(0)
@@ -255,8 +232,7 @@ export default function SystemCard(props: Props) {
         let status: dataObj[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
             return {
                 status: 0,
-                time: getDateWithGivenHour(i),
-                index: i
+                time: getDateWithGivenHour(i)
             }
         }).reverse()
 
@@ -281,17 +257,7 @@ export default function SystemCard(props: Props) {
                 return item
             })
         }
-        status = copyLastStatus(status, allHours[0])
-
-        // console.log('timeSinceFirstCheck', timeSinceFirstCheck)
-        // console.log('SYSTEM', name)
-        // console.log('history', history)
-        // console.log('status', status)
-        // console.log('allHours', allHours)
-        // console.log('upHours', upHours)
-        // console.log('downHours', downHours)
-        // console.log('\n\n')
-        return type === 'data' ? status.map(el => el.status) : status.map(el => getDate(el.time).replace(',', ' -'))
+        return status = copyLastStatus(status, allHours[0])
     }
 
     const getDate = (date: Date | undefined) => {
@@ -324,6 +290,16 @@ export default function SystemCard(props: Props) {
                 fullSize: false,
                 font: {
                     weight: 'normal'
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: (ctx: any) => {
+                        const label = ctx.dataset.label || ''
+                        if (lastDayData[ctx.dataIndex] && lastDayData[ctx.dataIndex].reported) return label
+                        else if (label.includes('user')) return ''
+                        return label
+                    }
                 }
             }
         },

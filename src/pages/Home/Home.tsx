@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, getHistoryBySystemId, createUserAlert } from '../../services'
+import { getAllSystems, getAllHistory, getHistoryBySystemId, createUserAlert, getAllAlerts } from '../../services'
 import { dataObj } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -22,7 +22,7 @@ export default function Home({ }: Props) {
   const [selected, setSelected] = useState('')
   const [allSystems, setAllSystems] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
-  const [historyByIds, setHistoryByIds] = useState<dataObj>({})
+  const [allAlerts, setAllAlerts] = useState([])
   const [data, setData] = useState<dataObj>({})
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
@@ -48,6 +48,7 @@ export default function Home({ }: Props) {
   useEffect(() => {
     getSystems()
     getAllStatus()
+    getAllUserAlerts()
   }, [])
 
   useEffect(() => {
@@ -72,7 +73,6 @@ export default function Home({ }: Props) {
       setLoading(true)
       const systems = await getAllSystems()
       if (systems && Array.isArray(systems)) {
-        setHistoryByIds(await getSystemsHistory(systems))
         setAllSystems(systems)
       }
       setLoading(false)
@@ -93,12 +93,15 @@ export default function Home({ }: Props) {
     }
   }
 
-  const getSystemsHistory = async (systems: dataObj) => {
-    const promises = systems.map(async (system: dataObj) => {
-      return await getHistoryBySystemId(system._id)
-    })
-
-    return await Promise.all(promises)
+  const getAllUserAlerts = async () => {
+    try {
+      const alerts = await getAllAlerts()
+      if (alerts && alerts.length) {
+        setAllAlerts(alerts)
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const getCurrentStatus = (system: dataObj) => {
@@ -141,6 +144,13 @@ export default function Home({ }: Props) {
     }
   }
 
+  const getAlertsBySystem = (system: dataObj) => {
+    return allAlerts.filter((alert: dataObj) => alert.systemId === system._id)
+  }
+
+  const getHistoryBySystem = (system: dataObj) => {
+    return allStatus.filter((alert: dataObj) => alert.systemId === system._id)
+  }
 
   const updateData = (key: string, e: { [key: string | number]: any }) => {
     const value = e.target.value
@@ -310,7 +320,8 @@ export default function Home({ }: Props) {
               status={getCurrentStatus(system)}
               system={system}
               reportIssue={setReport}
-              history={historyByIds[i]}
+              history={getHistoryBySystem(system)}
+              alerts={getAlertsBySystem(system)}
               setSelected={setSelected}
               setSelectedData={setChartData}
             />)
