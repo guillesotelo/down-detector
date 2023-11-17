@@ -27,6 +27,7 @@ export default function Home({ }: Props) {
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState<dataObj>({ name: 'Unable to access' })
+  const [modalChartOptions, setModalChartOptions] = useState<dataObj>({})
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -157,48 +158,6 @@ export default function Home({ }: Props) {
     setData({ ...data, [key]: value })
   }
 
-  const chartOptions: any = {
-    maintainAspectRatio: false,
-    indexAxis: 'x',
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        border: {
-          display: false
-        },
-        ticks: {
-          autoSkip: false,
-          display: false,
-          // color: 'gray'
-        },
-        grid: {
-          // display: false,
-          // drawBorder: false,
-          // drawChartArea: false
-        }
-      },
-      y: {
-        // beginAtZero: true,
-        border: {
-          // display: false
-        },
-        ticks: {
-          display: false
-        },
-        grid: {
-          // display: false,
-          // drawBorder: false,
-          // drawChartArea: false
-        }
-      }
-    }
-  }
-
   const renderReportModal = () => {
     return (
       <Modal
@@ -277,7 +236,7 @@ export default function Home({ }: Props) {
         <p className="home__modal-hours">Total registered: {totalHours} hours</p>
         <div className="home__modal-graph-wrapper">
           <div className='home__modal-graph'>
-            <Line data={chartData} height={chartHeight} width={chartWidth} options={chartOptions} />
+            <Line data={chartData} height={chartHeight} width={chartWidth} options={modalChartOptions} />
           </div>
         </div>
         <div className="home__modal-table">
@@ -324,6 +283,7 @@ export default function Home({ }: Props) {
               alerts={getAlertsBySystem(system)}
               setSelected={setSelected}
               setSelectedData={setChartData}
+              setModalChartOptions={setModalChartOptions}
             />)
           :
           <p className="home__system-void">No systems found</p>

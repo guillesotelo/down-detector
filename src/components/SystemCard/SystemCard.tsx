@@ -15,12 +15,12 @@ type Props = {
     alerts?: any
     setSelected: (value: string) => void
     setSelectedData: (value: dataObj) => void
+    setModalChartOptions: (value: dataObj[]) => void
 }
 
 export default function SystemCard(props: Props) {
     const [lastDayData, setLastDayData] = useState<any[]>([])
     const [completeData, setCompleteData] = useState<any[]>([])
-    const [userAlerts, setUserAlerts] = useState<any[]>([])
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
 
@@ -35,7 +35,8 @@ export default function SystemCard(props: Props) {
         history,
         setSelected,
         setSelectedData,
-        alerts
+        alerts,
+        setModalChartOptions
     } = props
 
     const {
@@ -68,10 +69,10 @@ export default function SystemCard(props: Props) {
 
     useEffect(() => {
         setLastDayChartData({
-            labels: lastDayData.map((el: dataObj) => getDate(el.time)),
+            labels: lastDayData.length ? lastDayData.map((el: dataObj) => getDate(el.time)) : [],
             datasets: [
                 {
-                    data: lastDayData.map((el: dataObj) => el.status),
+                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -84,7 +85,7 @@ export default function SystemCard(props: Props) {
                     },
                 },
                 {
-                    data: lastDayData.map((el: dataObj) => el.status),
+                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
                     backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? 'black' : 'transparent',
                     borderColor: 'transparent',
                     label: 'Reported DOWN by user'
@@ -93,10 +94,10 @@ export default function SystemCard(props: Props) {
         })
 
         setCompleteChartData({
-            labels: completeData.map(el => getDate(el.time).replace(',', ' -')),
+            labels: completeData.length ? completeData.map(el => getDate(el.time).replace(',', ' -')) : [],
             datasets: [
                 {
-                    data: completeData.map((el: dataObj) => el.status),
+                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -109,7 +110,7 @@ export default function SystemCard(props: Props) {
                     },
                 },
                 {
-                    data: completeData.map((el: dataObj) => el.status),
+                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
                     backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? 'black' : 'transparent',
                     borderColor: 'transparent',
                     label: 'Reported DOWN by user'
@@ -130,7 +131,7 @@ export default function SystemCard(props: Props) {
         })
 
         const lastDay = processLastDayHistory()
-        const complete = processCompleteHistory()
+        let complete = processCompleteHistory()
 
         setLastDayData(lastDay.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
@@ -139,12 +140,14 @@ export default function SystemCard(props: Props) {
             return item
         }))
 
-        setCompleteData(complete.map(item => {
+        complete = complete.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
                 return { ...item, reported: true }
             }
             return item
-        }))
+        })
+
+        setCompleteData(complete)
     }
 
     const processLastDayHistory = () => {
@@ -199,7 +202,7 @@ export default function SystemCard(props: Props) {
             })
         }
 
-        return copyLastStatus(status, allHours[0])
+        return allHours.length ? copyLastStatus(status, allHours[0]) : []
     }
 
     const processCompleteHistory = () => {
@@ -257,7 +260,7 @@ export default function SystemCard(props: Props) {
                 return item
             })
         }
-        return status = copyLastStatus(status, allHours[0])
+        return allHours.length ? copyLastStatus(status, allHours[0]) : []
     }
 
     const getDate = (date: Date | undefined) => {
@@ -274,6 +277,7 @@ export default function SystemCard(props: Props) {
     const selectSystem = () => {
         setSelected(system._id)
         setSelectedData(completeChartData)
+        setModalChartOptions(completeChartOptions)
     }
 
     const chartOptions: any = {
@@ -336,6 +340,58 @@ export default function SystemCard(props: Props) {
             }
         }
     }
+
+    const completeChartOptions: any = {
+        maintainAspectRatio: false,
+        indexAxis: 'x',
+        plugins: {
+          legend: {
+            display: false
+          },
+            tooltip: {
+                    callbacks: {
+                        label: (ctx: any) => {
+                            const label = ctx.dataset.label || ''
+                            if (completeData[ctx.dataIndex] && completeData[ctx.dataIndex].reported) return label
+                            else if (label.includes('user')) return ''
+                            return label
+                        }
+                    }
+                }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            border: {
+              display: false
+            },
+            ticks: {
+              autoSkip: false,
+              display: false,
+              // color: 'gray'
+            },
+            grid: {
+              // display: false,
+              // drawBorder: false,
+              // drawChartArea: false
+            }
+          },
+          y: {
+            // beginAtZero: true,
+            border: {
+              // display: false
+            },
+            ticks: {
+              display: false
+            },
+            grid: {
+              // display: false,
+              // drawBorder: false,
+              // drawChartArea: false
+            }
+          }
+        }
+      }
 
     return (
         <div className="systemcard__wrapper">
