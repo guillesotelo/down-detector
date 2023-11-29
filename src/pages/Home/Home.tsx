@@ -12,6 +12,8 @@ import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
+import { MoonLoader } from 'react-spinners'
+import { getHistoryAndAlerts } from '../../helpers'
 Chart.register(...registerables);
 
 type Props = {}
@@ -21,6 +23,7 @@ export default function Home({ }: Props) {
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
   const [allSystems, setAllSystems] = useState<any[]>([])
+  const [statusAndAlerts, setStatusAndAlerts] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
   const [allAlerts, setAllAlerts] = useState([])
   const [data, setData] = useState<dataObj>({})
@@ -47,19 +50,42 @@ export default function Home({ }: Props) {
   ]
 
   useEffect(() => {
-    getSystems()
-    getAllStatus()
-    getAllUserAlerts()
+    loadData()
   }, [])
 
   useEffect(() => {
     getTotalRegisteredHours()
   }, [allStatus, selected])
 
+
+  useEffect(() => {
+    if (selected) getStatusAndAlerts()
+  }, [selected])
+
   useEffect(() => {
     if (report) document.body.style.overflow = 'hidden'
     else document.body.style.overflow = 'auto'
   }, [report])
+
+  const getStatusAndAlerts = async () => {
+    try {
+      setLoading(true)
+      setStatusAndAlerts(await getHistoryAndAlerts(selected))
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.error(error)
+    }
+  }
+
+  const loadData = () => {
+    setData({})
+    setSelected('')
+    setReport('')
+    getSystems()
+    getAllStatus()
+    getAllUserAlerts()
+  }
 
   const getTotalRegisteredHours = () => {
     const systemStatus = allStatus.filter((status: dataObj) => status.systemId === selected)
@@ -125,17 +151,18 @@ export default function Home({ }: Props) {
   const sendReport = async () => {
     try {
       setLoading(true)
+      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
       const reportData = {
         ...data,
         type: reportedStatus.name,
         systemId: report,
-        url: getSystemData(report, 'url')
+        url: getSystemData(report, 'url'),
+        description: getSystemData(report, 'description'),
+        createdBy: user.username || ''
       }
       const sent = await createUserAlert(reportData)
       if (sent && sent._id) {
-        setSelected('')
-        setReport('')
-        setData({})
+        loadData()
         toast.success('Report sent successfully')
       }
       setLoading(false)
@@ -242,7 +269,7 @@ export default function Home({ }: Props) {
         <div className="home__modal-table">
           <DataTable
             title='Latest system logs'
-            tableData={allStatus.filter((status: dataObj) => status.systemId === selected)}
+            tableData={statusAndAlerts}
             tableHeaders={hisrotyHeaders}
             name='history'
             loading={loading}
@@ -285,8 +312,8 @@ export default function Home({ }: Props) {
               setSelectedData={setChartData}
               setModalChartOptions={setModalChartOptions}
             />)
-          :
-          <p className="home__system-void">No systems found</p>
+          : loading ? <MoonLoader color='#0057ad' size={50} /> :
+            <p className="home__system-void">No systems found</p>
         }
       </div>
     </div>

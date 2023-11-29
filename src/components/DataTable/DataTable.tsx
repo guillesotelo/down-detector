@@ -123,7 +123,7 @@ export default function DataTable(props: Props) {
             )}
             {maxItems < tableData.length ?
                 <button className='datatable__lazy-btn' onClick={() => setMaxItems(maxItems + 10)}>{`Show more ${name ? name : ''} ▼`}</button>
-                : tableData.length && maxItems >= tableData.length && tableData.length >= (max || 10) ?
+                : tableData.length && maxItems >= tableData.length && tableData.length > (max || 10) ?
                     <button className='datatable__lazy-btn' onClick={() => setMaxItems(max || 10)}>Show less ▲</button>
                     : ''
             }

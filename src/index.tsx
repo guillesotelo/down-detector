@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactGA from 'react-ga4';
 import './index.css';
+import { AppProvider } from './AppContext';
 const TRACKING_ID = "G-";
 ReactGA.initialize(TRACKING_ID);
 
@@ -14,6 +15,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <ToastContainer autoClose={2000} />
-    <App />
+    <AppProvider>
+      <App />
+    </AppProvider>
   </BrowserRouter>,
 );

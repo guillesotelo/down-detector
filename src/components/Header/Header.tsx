@@ -5,13 +5,7 @@ import DDLogo from '../../assets/logos/dd_logo.png'
 import { AppContext, AppProvider } from '../../AppContext'
 import { useHistory } from 'react-router-dom'
 
-type Props = {
-  search: string[]
-  setSearch: (value: string[]) => void
-  logo?: string
-}
-
-export default function Header({ search, setSearch, logo }: Props) {
+export default function Header() {
   const { isLoggedIn, setItem } = useContext(AppContext)
   const history = useHistory()
 

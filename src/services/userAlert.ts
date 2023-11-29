@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL
-
+const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 const getHeaders = () => {
     const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     return { authorization: `Bearer ${token}` }
@@ -13,7 +12,7 @@ const getConfig = () => {
 
 const getAllAlerts = async (systemId?: string) => {
     try {
-        const userAlert = await axios.get(`${API_URL}/api/userAlert/getAll?systemId=${systemId}`, { headers: getHeaders() })
+        const userAlert = await axios.get(`${API_URL}/api/userAlert/getAll`, { params: { systemId }, headers: getHeaders() })
         return userAlert.data
     } catch (err) { console.log(err) }
 }

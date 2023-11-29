@@ -15,6 +15,7 @@
         position: relative;
         background-color: white;
         transition: .3s;
+        overflow: hidden;
         
         &:hover {
             box-shadow: .5rem 1rem 2rem lightgray;
@@ -41,6 +42,7 @@
     &__status {
         font-size: 1rem;
         font-weight: normal;
+        white-space: nowrap;
         margin: 0;
 
         &-dot {
@@ -58,7 +60,7 @@
         // border: 1px solid rgba(0, 0, 0, 0.093);
         border-radius: .2rem;
         cursor: pointer;
-        margin: 1rem 0;
+        margin: .5rem 0;
     }
 
     &__footer {

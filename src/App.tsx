@@ -1,12 +1,11 @@
-import { AppProvider } from './AppContext';
+import { AppContext, AppProvider } from './AppContext';
 import ReactGA from 'react-ga4';
-import { Switch, Route, useLocation, useHistory } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { Switch, Route, useLocation } from "react-router-dom";
+import { useContext, useEffect } from 'react';
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Header from './components/Header/Header';
 import './scss/app.scss'
-import { verifyToken } from './services';
 import Sidebar from './components/Sidebar/Sidebar';
 import History from './pages/History/History';
 import AppLogs from './pages/AppLogs/AppLogs';
@@ -16,13 +15,8 @@ import Help from './pages/Help/Help';
 import Account from './pages/Account/Account';
 
 function App() {
-  const isMobile = window.screen.width <= 768
-  const [search, setSearch] = useState<string[]>([])
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isSuper, setIsSuper] = useState(false)
-  const [item, setItem] = useState('/')
   const location = useLocation()
-
+  const { isLoggedIn } = useContext(AppContext)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -30,34 +24,13 @@ function App() {
       hitType: 'pageview',
       page: window.location.pathname
     })
-
-    verifyUser()
   }, [location, window.location.pathname])
 
-  const verifyUser = async () => {
-    const verified = await verifyToken()
-    if (verified) {
-      setIsLoggedIn(true)
-      setIsSuper(verified.isSuper)
-    }
-  }
-
   return (
-    <AppProvider
-      search={search}
-      setSearch={setSearch}
-      isMobile={isMobile}
-      isLoggedIn={isLoggedIn}
-      setIsLoggedIn={setIsLoggedIn}
-      isSuper={isSuper}
-      setIsSuper={setIsSuper}
-      item={item}
-      setItem={setItem}
-    >
       <Switch>
         <Route exact path="/">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
@@ -66,7 +39,7 @@ function App() {
         </Route>
         <Route exact path="/history">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <History />
@@ -75,7 +48,7 @@ function App() {
         </Route>
         <Route exact path="/applogs">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <AppLogs />
@@ -84,7 +57,7 @@ function App() {
         </Route>
         <Route exact path="/systems">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Systems />
@@ -93,7 +66,7 @@ function App() {
         </Route>
         <Route exact path="/users">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Users />
@@ -102,7 +75,7 @@ function App() {
         </Route>
         <Route exact path="/help">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Help />
@@ -111,13 +84,13 @@ function App() {
         </Route>
         <Route exact path="/login">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <Login />
           </div>
         </Route>
         <Route exact path="/account">
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Account />
@@ -126,7 +99,7 @@ function App() {
         </Route>
         <Route>
           <div className='page__wrapper'>
-            <Header search={search} setSearch={setSearch} />
+            <Header />
             <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
@@ -134,7 +107,6 @@ function App() {
           </div>
         </Route>
       </Switch>
-    </AppProvider>
   )
 }
 

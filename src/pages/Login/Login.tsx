@@ -29,7 +29,11 @@ export default function Login({ }: Props) {
             const logged = await loginUser(data)
             if (logged) {
                 toast.success(`Welcome back, ${logged.username ? logged.username.split(' ')[0] : 'admin'}`)
-                setTimeout(() => history.push('/'), 2000)
+                setTimeout(() => {
+                    setIsLoggedIn(true)
+                    setIsSuper(logged.isSuper)
+                    history.push('/')
+                }, 2000)
             }
             else toast.error('An error occurred while logging in. Please try again.')
             setLoading(false)
@@ -51,6 +55,7 @@ export default function Login({ }: Props) {
     return (
         <div className="login__container">
             <div className="login__box">
+                <h2 className='account__details-title'>Sign In</h2>
                 <InputField
                     label="Email"
                     name='email'

@@ -146,7 +146,7 @@ proxy_http
 
 #### Applying the configuration
 
-Because we changed the configuration file, we must reload the Apache server in order to apply the configuration.
+Because we changed the configuration file, we must reload the Apache server to apply the configuration.
 In the sites-enabled directory, use the following command to reload the apache2 server, then stop and restart it:
 
 ```bash
@@ -155,9 +155,41 @@ sudo systemctl stop apache2
 sudo systemctl start apache2
 ```
 
+#### Run Server & Client
+
+If everything went well, we can start both the backend and client servers using the command `nohup` for persistence.
+
+Note that the backend server is using `pm2` as process administrator, so you would need to install pm2 in order to use it:
+
+```bash
+npm i pm2 -g
+```
+
+Standing the respective folder, run the command for each server:
+
+```bash
+nohup npm start &
+```
+
+If we want to close the connection, standing on the respective folder, we use:
+
+```bash
+disown
+```
+
+When a new SSH connection to the server is made, we might need to kill the process when we want to close any connection. We can do it with:
+
+```bash
+# Check connections in port 3000 (like for the client server)
+lsof -i tcp:3000
+
+# Then we kill the process using the respective PID
+kill -9 PID
+```
+
 #### Testing the configuration
 
-Finally, we can test everything's correct by going to `http://localhost:80`. We should see what we're serving in our Node app.
+Finally, we can test everything's correct by going to `http://localhost`. We should see what we're serving in our Node app and the corresponding API request to the backend should be working.
 
 > Source: [Apache & Node](https://blog.logrocket.com/configuring-apache-node-js/)
 
@@ -165,7 +197,7 @@ Finally, we can test everything's correct by going to `http://localhost:80`. We 
 
 #### Installation
 
-First install gnupg and curl if they are not already available:
+First, install `gnupg` and `curl` if they are not already available:
 
 ```bash
 sudo apt-get install gnupg curl

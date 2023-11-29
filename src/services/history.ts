@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL
-
+const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 const getHeaders = () => {
     const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     return { authorization: `Bearer ${token}` }
@@ -11,9 +10,9 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${token}` } }
 }
 
-const getAllHistory = async (id?: string) => {
+const getAllHistory = async (systemId?: string) => {
     try {
-        const history = await axios.get(`${API_URL}/api/history/getAll?id=${id}`, { headers: getHeaders() })
+        const history = await axios.get(`${API_URL}/api/history/getAll`, { params: { systemId }, headers: getHeaders() })
         return history.data
     } catch (err) { console.log(err) }
 }

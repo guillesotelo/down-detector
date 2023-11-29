@@ -6,7 +6,7 @@
         // justify-content: center;
         width: 85vw;
     }
-
+    
     &__details {
         display: flex;
         flex-direction: column;
@@ -14,6 +14,13 @@
         // align-items: center;
         gap: 1rem;
         width: 20vw;
+        box-shadow: .5rem 1rem 3rem rgba(0, 0, 0, 0.272);
+        padding: 2rem;
+        border-radius: 1rem;
+
+        &-title {
+            margin: 0;
+        }
 
         &-row {
             display: flex;

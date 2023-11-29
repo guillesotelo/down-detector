@@ -1,42 +1,55 @@
-import React, { createContext } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
+import { verifyToken } from './services'
+import { AppContextType } from './types'
 
-type AppContextType = {
-    isMobile: boolean
-    search: string[]
-    setSearch: (search: string[]) => void
-    isLoggedIn: boolean
-    isSuper: boolean
-    setIsLoggedIn: (value: boolean) => void
-    setIsSuper: (value: boolean) => void
-    item: string
-    setItem: (value: string) => void
-    children: React.ReactNode
+export const AppContext = createContext<AppContextType>({
+    isMobile: false,
+    search: [],
+    setSearch: () => { },
+    isLoggedIn: false,
+    isSuper: false,
+    setIsLoggedIn: () => { },
+    setIsSuper: () => { },
+    item: '',
+    setItem: () => { }
+})
+
+type Props = {
+    children?: React.ReactNode
 }
 
-export const AppContext = createContext<AppContextType>({} as AppContextType);
+export const AppProvider = ({ children }: Props) => {
+    const isMobile = window.screen.width <= 768
+    const [search, setSearch] = useState<string[]>([])
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isSuper, setIsSuper] = useState(false)
+    const [item, setItem] = useState('/')
 
-export const AppProvider: React.FC<AppContextType> = ({
-    isMobile,
-    setIsLoggedIn,
-    isLoggedIn,
-    isSuper,
-    setIsSuper,
-    search,
-    setSearch,
-    item,
-    setItem,
-    children
-}) => (
-    <AppContext.Provider value={{
-        search,
-        setSearch,
-        isSuper,
-        setIsSuper,
-        isMobile,
-        setIsLoggedIn,
-        isLoggedIn,
-        item,
-        setItem,
-        children
-    }}>{children}</AppContext.Provider>
-);
+
+    useEffect(() => {
+        verifyUser()
+    }, [])
+
+    const verifyUser = async () => {
+        const verified = await verifyToken()
+        if (verified) {
+            setIsLoggedIn(true)
+            setIsSuper(verified.isSuper)
+        }
+    }
+
+    return <AppContext.Provider
+        value={{
+            search,
+            setSearch,
+            isSuper,
+            setIsSuper,
+            isMobile,
+            setIsLoggedIn,
+            isLoggedIn,
+            item,
+            setItem
+        }}>
+        {children}
+    </AppContext.Provider>
+}

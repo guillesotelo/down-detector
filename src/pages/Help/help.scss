@@ -24,8 +24,9 @@
             flex-direction: row;
             height: 50vh;
             width: 50vw;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
+            margin-top: 8rem;
         }
 
         &-title {
