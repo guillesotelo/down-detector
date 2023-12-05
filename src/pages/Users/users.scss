@@ -16,4 +16,14 @@
         align-items: flex-start;
     }
 
+    &__delete {
+        &-modal {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 7vw;
+            text-align: center;
+        }
+    }
+
 }

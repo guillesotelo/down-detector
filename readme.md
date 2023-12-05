@@ -126,13 +126,6 @@ We enter proxy at the prompt to enable the proxy module:
 proxy
 ```
 
-Next, we enter proxy_http at the prompt to enable the proxy_http module:
-
-```bash
-# Which module(s) do you want to enable (wildcards ok)?
-proxy_http
-```
-
 Now we do the same for module `proxy_http`:
 
 ```bash

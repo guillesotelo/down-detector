@@ -3,7 +3,8 @@ import {
     verifyToken,
     registerUser,
     updateUser,
-    getAllUsers
+    getAllUsers,
+    deleteUser
 } from './user'
 
 import {
@@ -53,6 +54,7 @@ export {
     verifyToken,
     registerUser,
     updateUser,
+    deleteUser,
     getAllUsers,
     getAllSystems,
     getSystemById,

@@ -16,12 +16,14 @@ import {
   getAllSystems,
   updateSystem,
   deleteEvent,
-  getAllEvents
+  getAllEvents,
+  deleteSystem
 } from '../../services'
 import { toast } from 'react-toastify'
 import Calendar from 'react-calendar'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Separator from '../../components/Separator/Separator'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -43,6 +45,7 @@ export default function Systems({ }: Props) {
   const [openStartCalendar, setOpenStartCalendar] = useState(false)
   const [openEndCalendar, setOpenEndCalendar] = useState(false)
   const [downtimeArray, setDowntimeArray] = useState<any[]>([])
+  const [onDeleteSystem, setOnDeleteSystem] = useState(false)
 
   useEffect(() => {
     getSystems()
@@ -187,9 +190,50 @@ export default function Systems({ }: Props) {
     setAddDowntime(true)
   }
 
+  const removeSystem = async () => {
+    setLoading(true)
+    try {
+      const deleted = await deleteSystem(tableData[selected])
+      if (deleted) {
+        toast.success('System deleted successfully')
+        discardChanges()
+        getSystems()
+      }
+      else toast.error('Error deleting system. Try again later')
+      setLoading(false)
+    } catch (err) {
+      console.error(err)
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="systems__container">
-      {newSystem || selected !== -1 ?
+      {newSystem || selected !== -1 ? onDeleteSystem ?
+        <Modal onClose={discardChanges} title='Delete System'>
+          <div className='users__delete-modal'>
+            <p>Are you sure you want to delete system <strong>{tableData[selected].name}</strong>?</p>
+            <div className="systems__new-row">
+              <Button
+                label='Cancel'
+                handleClick={discardChanges}
+                bgColor='gray'
+                textColor='white'
+                style={{ width: '45%' }}
+                disabled={loading}
+              />
+              <Button
+                label='Confirm'
+                handleClick={removeSystem}
+                bgColor='#C45757'
+                textColor='white'
+                style={{ width: '45%' }}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </Modal>
+        :
         <Modal onClose={discardChanges} title={newSystem ? 'New System' : 'System Details'}>
           <div className="systems__new">
             <InputField
@@ -353,6 +397,14 @@ export default function Systems({ }: Props) {
                 style={{ width: '45%' }}
               />
             </div>
+            <Separator />
+            <Button
+              label='Delete System'
+              handleClick={() => setOnDeleteSystem(true)}
+              bgColor='#C45757'
+              textColor='white'
+              disabled={loading}
+            />
           </div>
         </Modal>
         : ''}

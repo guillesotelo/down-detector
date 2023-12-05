@@ -157,9 +157,12 @@ export default function Home({ }: Props) {
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
-        description: getSystemData(report, 'description'),
+        description: getSystemData(report, 'description') || '',
         createdBy: user.username || ''
       }
+
+      console.log(reportData)
+
       const sent = await createUserAlert(reportData)
       if (sent && sent._id) {
         loadData()
@@ -237,10 +240,12 @@ export default function Home({ }: Props) {
             label='Cancel'
             handleClick={() => setReport('')}
             bgColor='lightgray'
+            disabled={loading}
           />
           <Button
             label='Send Report'
             handleClick={sendReport}
+            disabled={loading}
             bgColor='#105ec6'
             textColor='white'
           />

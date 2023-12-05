@@ -15,6 +15,7 @@ type Props = {}
 export default function Account({ }: Props) {
   const [data, setData] = useState<dataObj>({})
   const [loading, setLoading] = useState(false)
+  const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
   const { setIsLoggedIn } = useContext(AppContext) as AppContextType
@@ -65,6 +66,7 @@ export default function Account({ }: Props) {
   }
 
   const logout = () => {
+    setLoggedOut(true)
     toast.info('See you later!')
     setTimeout(() => {
       setIsLoggedIn(false)
@@ -135,10 +137,12 @@ export default function Account({ }: Props) {
                 bgColor='#105ec6'
                 textColor='white'
                 style={{ width: '45%' }}
+                disabled={loggedOut}
               />}
             <Button
               label='Logout'
               handleClick={logout}
+              disabled={loggedOut}
               bgColor='#105ec6'
               textColor='white'
               style={{ width: edit ? '100%' : '45%' }}

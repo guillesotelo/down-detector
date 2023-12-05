@@ -12,6 +12,7 @@ export default function Login({ }: Props) {
     const [data, setData] = useState({ email: '', password: '' })
     const [loading, setLoading] = useState(false)
     const [dataOk, setDataOk] = useState(false)
+    const [logged, setLogged] = useState(false)
     const history = useHistory()
     const { setIsLoggedIn, setIsSuper } = useContext(AppContext)
 
@@ -28,6 +29,7 @@ export default function Login({ }: Props) {
         try {
             const logged = await loginUser(data)
             if (logged) {
+                setLogged(true)
                 toast.success(`Welcome back, ${logged.username ? logged.username.split(' ')[0] : 'admin'}`)
                 setTimeout(() => {
                     setIsLoggedIn(true)
@@ -75,11 +77,12 @@ export default function Login({ }: Props) {
                         handleClick={() => history.push('/')}
                         bgColor="lightgray"
                         style={{ width: '45%' }}
+                        disabled={logged}
                     />
                     <Button
                         label={loading ? 'Loggin in...' : 'Login'}
                         handleClick={login}
-                        disabled={!dataOk}
+                        disabled={!dataOk || logged}
                         bgColor='#105ec6'
                         textColor='white'
                         style={{ width: '45%' }}

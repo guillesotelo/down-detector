@@ -36,7 +36,7 @@ const verifyToken = async () => {
 
 const registerUser = async (data: { [key: string | number]: any }) => {
     try {
-        const newUser = await axios.post(`${API_URL}/api/user/create`, data)
+        const newUser = await axios.post(`${API_URL}/api/user/create`, data, getConfig())
         return newUser.data
     } catch (err) { console.error(err) }
 }
@@ -60,10 +60,18 @@ const updateUser = async (data: { [key: string | number]: any }) => {
     } catch (err) { console.error(err) }
 }
 
+const deleteUser = async (data: { [key: string | number]: any }) => {
+    try {
+        const deleted = await axios.post(`${API_URL}/api/user/remove`, data, getConfig())
+        return deleted.data
+    } catch (err) { console.log(err) }
+}
+
 export {
     loginUser,
     verifyToken,
     registerUser,
     updateUser,
     getAllUsers,
+    deleteUser
 }
