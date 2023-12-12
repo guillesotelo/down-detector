@@ -100,6 +100,7 @@ export default function Systems({ }: Props) {
     setSelectedTimeout({ name: '', value: null })
     setDowntimeArray([])
     setSelectedDowntime(-1)
+    setOnDeleteSystem(false)
   }
 
   const saveChanges = async () => {
@@ -397,14 +398,18 @@ export default function Systems({ }: Props) {
                 style={{ width: '45%' }}
               />
             </div>
-            <Separator />
-            <Button
-              label='Delete System'
-              handleClick={() => setOnDeleteSystem(true)}
-              bgColor='#C45757'
-              textColor='white'
-              disabled={loading}
-            />
+            {!newSystem ?
+              <>
+                <Separator />
+                <Button
+                  label='Delete System'
+                  handleClick={() => setOnDeleteSystem(true)}
+                  bgColor='#C45757'
+                  textColor='white'
+                  disabled={loading}
+                />
+              </>
+              : ''}
           </div>
         </Modal>
         : ''}

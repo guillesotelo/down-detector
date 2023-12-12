@@ -1,4 +1,5 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useContext } from 'react'
+import { AppContext } from '../../AppContext'
 
 type Props = {
     name: string
@@ -15,6 +16,7 @@ type Props = {
 }
 
 export default function InputField(props: Props) {
+    const { darkMode } = useContext(AppContext)
     const {
         value,
         name,
@@ -30,10 +32,10 @@ export default function InputField(props: Props) {
     } = props
 
     return type === 'textarea' ?
-        <div className="inputfield__container" style={style}>
-            {label ? <h2 className="inputfield__label">{label}</h2> : ''}
+        <div className='inputfield__container' style={style}>
+            {label ? <h2 className={`inputfield__label${darkMode ? '--dark' : ''}`}>{label}</h2> : ''}
             <textarea
-                className={className || 'textarea__default'}
+                className={className || `textarea__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
                 value={value}
@@ -42,11 +44,11 @@ export default function InputField(props: Props) {
             />
         </div>
         :
-        <div className="inputfield__container" style={style}>
-            {label ? <h2 className="inputfield__label">{label}</h2> : ''}
+        <div className='inputfield__container' style={style}>
+            {label ? <h2 className={`inputfield__label${darkMode ? '--dark' : ''}`}>{label}</h2> : ''}
             <input
                 type={type || 'text'}
-                className={className || 'inputfield__default'}
+                className={className || `inputfield__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
                 value={value}

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, getHistoryBySystemId, createUserAlert, getAllAlerts } from '../../services'
+import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts } from '../../services'
 import { dataObj } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -13,7 +13,6 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
-import { getHistoryAndAlerts } from '../../helpers'
 Chart.register(...registerables);
 
 type Props = {}
@@ -31,6 +30,7 @@ export default function Home({ }: Props) {
   const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState<dataObj>({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState<dataObj>({})
+  const { darkMode } = useContext(AppContext)
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -67,15 +67,10 @@ export default function Home({ }: Props) {
     else document.body.style.overflow = 'auto'
   }, [report])
 
-  const getStatusAndAlerts = async () => {
-    try {
-      setLoading(true)
-      setStatusAndAlerts(await getHistoryAndAlerts(selected))
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      console.error(error)
-    }
+  const getStatusAndAlerts = () => {
+    const statusAndAlertsByID = allStatus.filter((status: dataObj) => status.systemId === selected)
+      .concat(allAlerts.filter((alert: dataObj) => alert.systemId === selected))
+    setStatusAndAlerts(statusAndAlertsByID)
   }
 
   const loadData = () => {
@@ -98,7 +93,15 @@ export default function Home({ }: Props) {
   const getSystems = async () => {
     try {
       setLoading(true)
-      const systems = await getAllSystems()
+      let systems = []
+      const { saved, data } = JSON.parse(localStorage.getItem('localSystems') || '{}') || {}
+      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+        systems = data
+      }
+      else {
+        systems = await getAllSystems()
+        localStorage.setItem('localSystems', JSON.stringify({ data: systems, saved: new Date() }))
+      }
       if (systems && Array.isArray(systems)) {
         setAllSystems(systems)
       }
@@ -111,22 +114,44 @@ export default function Home({ }: Props) {
 
   const getAllStatus = async () => {
     try {
-      const history = await getAllHistory()
+      setLoading(true)
+      let history = []
+      const { saved, data } = JSON.parse(localStorage.getItem('localHistory') || '{}') || {}
+      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+        history = data
+      }
+      else {
+        history = await getAllHistory()
+        localStorage.setItem('localHistory', JSON.stringify({ data: history, saved: new Date() }))
+      }
       if (history && history.length) {
         setAllStatus(history)
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error(error)
     }
   }
 
   const getAllUserAlerts = async () => {
     try {
-      const alerts = await getAllAlerts()
+      setLoading(true)
+      let alerts = []
+      const { saved, data } = JSON.parse(localStorage.getItem('localAlerts') || '{}') || {}
+      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+        alerts = data
+      }
+      else {
+        alerts = await getAllAlerts()
+        localStorage.setItem('localAlerts', JSON.stringify({ data: alerts, saved: new Date() }))
+      }
       if (alerts && alerts.length) {
         setAllAlerts(alerts)
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error(error)
     }
   }
@@ -158,15 +183,16 @@ export default function Home({ }: Props) {
         systemId: report,
         url: getSystemData(report, 'url'),
         description: getSystemData(report, 'description') || '',
-        createdBy: user.username || ''
+        createdBy: user.username || 'anonymous'
       }
-
-      console.log(reportData)
 
       const sent = await createUserAlert(reportData)
       if (sent && sent._id) {
         loadData()
         toast.success('Report sent successfully')
+        localStorage.removeItem('localSystems')
+        localStorage.removeItem('localHistory')
+        localStorage.removeItem('localAlerts')
       }
       setLoading(false)
     } catch (error) {
@@ -186,6 +212,10 @@ export default function Home({ }: Props) {
   const updateData = (key: string, e: { [key: string | number]: any }) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
+  }
+
+  const parseUrl = (url: string) => {
+    return url.replace(/^((?:[^\/]*\/){3}).*$/, '$1')
   }
 
   const renderReportModal = () => {
@@ -239,7 +269,7 @@ export default function Home({ }: Props) {
           <Button
             label='Cancel'
             handleClick={() => setReport('')}
-            bgColor='lightgray'
+            bgColor='gray'
             disabled={loading}
           />
           <Button
@@ -258,7 +288,7 @@ export default function Home({ }: Props) {
     return (
       <Modal
         title={getSystemData(selected, 'name')}
-        subtitle={getSystemData(selected, 'url')}
+        subtitle={parseUrl(getSystemData(selected, 'url'))}
         onClose={() => setSelected('')}>
         <h2
           className="systemcard__status"
@@ -297,7 +327,7 @@ export default function Home({ }: Props) {
 
 
   return (
-    <div className="home__container">
+    <div className={`home__container${darkMode ? '--dark' : ''}`}>
       {report ? renderReportModal() : ''}
       {!report && selected ? renderSystemDetailsModal() : ''}
       <div

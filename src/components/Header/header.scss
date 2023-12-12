@@ -3,27 +3,57 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
         height: 8vh;
         border-bottom: 1px solid lightgray;
         background-color: white;
         position: fixed;
         width: 100vw;
         z-index: 1;
+
+        &--dark {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
+            height: 8vh;
+            border-bottom: 1px solid  rgb(84, 84, 84);
+            position: fixed;
+            width: 100vw;
+            z-index: 1;
+            background-color: #000000;
+        }
     }
 
     &__col {
         margin: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     &__downdetector {
         &-icon {
-            height: 2rem;
+            height: 2.5rem;
             cursor: pointer;
             transition: .3s;
+            padding-left: 10px;
 
             &:hover {
                 opacity: .5;
+            }
+
+            &--dark {
+                height: 2.5rem;
+                cursor: pointer;
+                transition: .3s;
+                padding-left: 10px;
+                filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(85%) contrast(108%);
+
+                &:hover {
+                    opacity: .5;
+                }
+
             }
         }
     }
@@ -37,6 +67,46 @@
 
             &:hover {
                 opacity: .5;
+            }
+
+            &--dark {
+                filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(85%) contrast(108%);
+                height: 2rem;
+                cursor: pointer;
+                transition: .3s;
+                padding-right: 10px;
+
+                &:hover {
+                    opacity: .5;
+                }
+            }
+        }
+    }
+
+    &__user-group {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    &__darkmode {
+        height: 1.5rem;
+        cursor: pointer;
+        transition: .3s;
+
+        &:hover {
+            opacity: .6;
+        }
+
+        &--dark {
+            height: 1.5rem;
+            cursor: pointer;
+            transition: .3s;
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(85%) contrast(108%);
+
+            &:hover {
+                opacity: .6;
             }
         }
     }

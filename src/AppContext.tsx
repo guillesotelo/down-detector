@@ -11,7 +11,9 @@ export const AppContext = createContext<AppContextType>({
     setIsLoggedIn: () => { },
     setIsSuper: () => { },
     item: '',
-    setItem: () => { }
+    setItem: () => { },
+    darkMode: false,
+    setDarkMode: () => { }
 })
 
 type Props = {
@@ -24,11 +26,26 @@ export const AppProvider = ({ children }: Props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
-
+    const [darkMode, setDarkMode] = useState(false)
 
     useEffect(() => {
         verifyUser()
+        const preferredMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
+        setDarkMode(preferredMode)
     }, [])
+
+    useEffect(() => {
+        const body = document.querySelector('body')
+        if (body) {
+            body.classList.remove('--dark') 
+            if(darkMode) body.classList.add('--dark')
+
+            document.documentElement.setAttribute(
+              "data-color-scheme",
+              darkMode ? "dark" : "light"
+            )
+        }
+    }, [darkMode])
 
     const verifyUser = async () => {
         const verified = await verifyToken()
@@ -48,7 +65,9 @@ export const AppProvider = ({ children }: Props) => {
             setIsLoggedIn,
             isLoggedIn,
             item,
-            setItem
+            setItem,
+            darkMode,
+            setDarkMode
         }}>
         {children}
     </AppContext.Provider>

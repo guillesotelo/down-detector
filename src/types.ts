@@ -10,4 +10,6 @@ export type AppContextType = {
     setIsSuper: (value: boolean) => void
     item: string
     setItem: (value: string) => void
+    darkMode: boolean
+    setDarkMode: (value: boolean) => void
 }

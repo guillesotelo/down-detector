@@ -1,12 +1,15 @@
 import axios from 'axios';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
+
+const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+
 const getHeaders = () => {
-    const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+    const { token }: { [key: string | number]: any } = user
     return { authorization: `Bearer ${token}` }
 }
 const getConfig = () => {
-    const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+    const { token }: { [key: string | number]: any } = user
     return { headers: { authorization: `Bearer ${token}` } }
 }
 
@@ -36,7 +39,7 @@ const verifyToken = async () => {
 
 const registerUser = async (data: { [key: string | number]: any }) => {
     try {
-        const newUser = await axios.post(`${API_URL}/api/user/create`, data, getConfig())
+        const newUser = await axios.post(`${API_URL}/api/user/create`, { ...data, user }, getConfig())
         return newUser.data
     } catch (err) { console.error(err) }
 }
@@ -50,19 +53,19 @@ const getAllUsers = async () => {
 
 const updateUser = async (data: { [key: string | number]: any }) => {
     try {
-        const user = await axios.post(`${API_URL}/api/user/update`, data, getConfig())
+        const updated = await axios.post(`${API_URL}/api/user/update`, { ...data, user }, getConfig())
         const localUser = JSON.parse(localStorage.getItem('user') || '{}')
         localStorage.setItem('user', JSON.stringify({
             ...localUser,
-            ...user.data
+            ...updated.data
         }))
-        return user.data
+        return updated.data
     } catch (err) { console.error(err) }
 }
 
 const deleteUser = async (data: { [key: string | number]: any }) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/user/remove`, data, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/user/remove`, { ...data, user }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }

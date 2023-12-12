@@ -16,6 +16,25 @@
         &:focus-within {
             border: 1px solid #105ec6;
         }
+
+        &--dark {
+            /* width: 20%; */
+            align-self: center;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            padding: .7vw 1vw;
+            border: 1px solid #525252;
+            border-radius: 1vw;
+            transition: 0.3s;
+            background-color: #3c3c3c;
+
+            &:focus-within {
+                border: 1px solid #105ec6;
+            }
+        }
     }
 
     &__input {
@@ -33,6 +52,24 @@
         &::placeholder {
             color: gray;
         }
+
+        &--dark {
+            border: none;
+            font-size: 1vw;
+            text-decoration: none;
+            width: 90%;
+            background-color: #3c3c3c;
+            margin: 0 .6vw;
+            color: lightgray;
+    
+            &:focus {
+                outline: none;
+            }
+    
+            &::placeholder {
+                color: gray;
+            }
+        }
     }
 
     &__icon {
@@ -43,6 +80,10 @@
 
         &:hover {
             filter: invert(19%) sepia(69%) saturate(3578%) hue-rotate(207deg) brightness(98%) contrast(87%);
+        }
+
+        &--dark {
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(110%) contrast(108%);
         }
     }
 

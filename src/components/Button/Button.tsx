@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../../AppContext'
 
 type Props = {
     label?: string
@@ -12,6 +13,8 @@ type Props = {
 }
 
 export default function Button({ label, handleClick, className, bgColor, textColor, disabled, svg, style }: Props) {
+    const { darkMode } = useContext(AppContext)
+   
     return svg ?
         <div
             className="button__default"
@@ -41,7 +44,7 @@ export default function Button({ label, handleClick, className, bgColor, textCol
             style={{
                 ...style,
                 backgroundColor: bgColor || '#EBCE98',
-                color: textColor || 'black',
+                color:  !textColor && darkMode ? 'lightgray' : textColor || 'black',
                 opacity: disabled ? '.3' : '',
                 cursor: disabled ? 'not-allowed' : ''
             }}

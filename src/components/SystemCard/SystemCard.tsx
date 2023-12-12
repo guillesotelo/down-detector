@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useMemo } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
 import { dataObj } from '../../types'
@@ -23,6 +23,7 @@ export default function SystemCard(props: Props) {
     const [completeData, setCompleteData] = useState<any[]>([])
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
+    const { darkMode } = useContext(AppContext)
 
     const chartHeight = '30vw'
     const chartWidth = '40vw'
@@ -55,7 +56,7 @@ export default function SystemCard(props: Props) {
     } = system
 
     const timeOptions: any = {
-        year: '2-digit',
+        year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
@@ -94,7 +95,7 @@ export default function SystemCard(props: Props) {
         })
 
         setCompleteChartData({
-            labels: completeData.length ? completeData.map(el => getDate(el.time).replace(',', ' -')) : [],
+            labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
                 {
                     data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
@@ -119,6 +120,16 @@ export default function SystemCard(props: Props) {
         })
 
     }, [lastDayData, completeData])
+
+    const parseCompleteDataTime = (time: Date) => {
+        const string = time ?
+            new Date(time).toLocaleDateString('sv-SE')
+            + ' - '
+            + new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+            : 'No data'
+        const parsed = string.split(' - ')
+        return parsed[1] + ' - ' + parsed[0]
+    }
 
     const processChartData = () => {
         const reportedHours: string[] = []
@@ -173,32 +184,24 @@ export default function SystemCard(props: Props) {
             return today
         }
 
-        let status: dataObj[] = Array.from({ length: 23 }).map((_, i) => {
+        let status: dataObj[] = Array.from({ length: 24 }).map((_, i) => {
             return {
-                status: 0,
+                status: 1,
                 time: getDateWithGivenHour(i)
             }
         }).reverse()
 
         const copyLastStatus = (status: dataObj[], last: dataObj) => {
-            let previousStatus: number = 0
             return status.map((item, i) => {
+                const newItem = { ...item }
                 // Replicate last saved register to the rest of status until now
-                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
-                    item.status = last.status
+                if (new Date(last.time).getTime() <= new Date(newItem.time).getTime()) {
+                    newItem.status = last.status
                 }
-                else if (upHours.includes(item.time.toLocaleString())) {
-                    item.status = 1
-                    previousStatus = 1
+                else if (downHours.includes(newItem.time.toLocaleString())) {
+                    newItem.status = 0
                 }
-                else if (downHours.includes(item.time.toLocaleString())) {
-                    item.status = 0
-                    previousStatus = 0
-                }
-                // Replicate status between two registered status
-                else item.status = previousStatus
-
-                return item
+                return newItem
             })
         }
 
@@ -234,30 +237,23 @@ export default function SystemCard(props: Props) {
 
         let status: dataObj[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
             return {
-                status: 0,
+                status: 1,
                 time: getDateWithGivenHour(i)
             }
         }).reverse()
 
         const copyLastStatus = (status: dataObj[], last: dataObj) => {
-            let previousStatus: number = 0
             return status.map((item, i) => {
+                const newItem = { ...item }
                 // Replicate last saved register to the rest of status until now
-                if (new Date(last.time).getTime() <= new Date(item.time).getTime()) {
-                    item.status = last.status
+                if (new Date(last.time).getTime() <= new Date(newItem.time).getTime()) {
+                    newItem.status = last.status
                 }
-                else if (upHours.includes(item.time.toLocaleString())) {
-                    item.status = 1
-                    previousStatus = 1
+                else if (downHours.includes(newItem.time.toLocaleString())) {
+                    newItem.status = 0
                 }
-                else if (downHours.includes(item.time.toLocaleString())) {
-                    item.status = 0
-                    previousStatus = 0
-                }
-                // Replicate status between two registered status
-                else item.status = previousStatus
 
-                return item
+                return newItem
             })
         }
         return allHours.length ? copyLastStatus(status, allHours[0]) : []
@@ -397,10 +393,13 @@ export default function SystemCard(props: Props) {
         <div className="systemcard__wrapper">
             <>
                 <div
-                    className="systemcard__container"
+                    className={`systemcard__container${darkMode ? '--dark' : ''}`}
                     style={{
                         borderColor: status ? 'green' : 'red',
-                        backgroundImage: `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                        backgroundImage: darkMode ?
+                            `linear-gradient(to bottom right, black, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                            :
+                            `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                     }}
                 >
                     <div className="systemcard__header">
@@ -427,12 +426,12 @@ export default function SystemCard(props: Props) {
                         />
                     </div>
                 </div>
-                {downtime && downtime.start ?
+                {/* {downtime && downtime.start ? */}
                     <div className="systemcard__event">
                         <p className="systemcard__event-title">Planned downtime:</p>
                         <p className="systemcard__event-downtime">{getDowntime(downtime)}</p>
                     </div>
-                    : ''}
+                    {/* : ''} */}
             </>
         </div>
     )

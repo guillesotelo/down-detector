@@ -5,6 +5,14 @@
         align-self: flex-start;
         width: 100%;
         transition: 1s;
+
+        &--dark {
+            display: flex;
+            flex-direction: column;
+            align-self: flex-start;
+            width: 100%;
+            transition: 1s;
+        }
     }
 
     &__titles {
@@ -35,6 +43,23 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+
+        &--dark {
+            display: flex;
+            flex-direction: row;
+            font-size: .8rem;
+            border-radius: .5VW;
+            padding: .6vw .4vw;
+            text-align: left;
+            height: fit-content;
+            cursor: pointer;
+            border-top-left-radius: .5vw;
+            border-top-right-radius: .5vw;
+            background-color: #2d2d2d;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     }
 
     &__header {
@@ -43,6 +68,14 @@
         text-align: left;
         color: #6b7280;
         transition: .3s;
+
+        &--dark {
+            margin: 0;
+            padding-right: .3vw;
+            text-align: left;
+            color: #b6b9bd;
+            transition: .3s;
+        }
     }
 
     &__header:hover {
@@ -85,6 +118,18 @@
             height: fit-content;
             cursor: pointer;
             align-items: center;
+
+            &--dark {
+                display: flex;
+                flex-direction: row;
+                font-size: .9rem;
+                border-radius: .5VW;
+                padding: .6vw .4vw;
+                text-align: left;
+                height: fit-content;
+                cursor: pointer;
+                align-items: center;
+            }
         }
 
         &-item {
@@ -99,6 +144,53 @@
             &:hover {
                 overflow: visible;
                 min-width: fit-content !important;
+            }
+        }
+
+        &--dark {
+            display: flex;
+            flex-direction: row;
+            font-size: .9rem;
+            border-radius: .5VW;
+            padding: .6vw .4vw;
+            text-align: left;
+            height: fit-content;
+            cursor: pointer;
+            align-items: center;
+            transition: .3s;
+            overflow: hidden;
+            background-color: #444444;
+
+            &:hover {
+                background-color: #626772 !important;
+            }
+
+            &-selected {
+                display: flex;
+                flex-direction: row;
+                font-size: .9rem;
+                border-radius: .5VW;
+                padding: .6vw .4vw;
+                text-align: left;
+                height: fit-content;
+                cursor: pointer;
+                align-items: center;
+            }
+
+            &-item {
+                margin: 0;
+                padding-right: .3vw;
+                font-weight: 600;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                font-weight: normal;
+                background-color: #2d2d2d;
+
+                &:hover {
+                    overflow: visible;
+                    min-width: fit-content !important;
+                }
             }
         }
 
@@ -123,11 +215,27 @@
         cursor: pointer;
         transition: 0.3s;
         font-size: 1rem;
+
+        &:hover {
+            background-color: #f6f9ff;
+        }
+        &--dark {
+            border: none;
+            border-bottom-left-radius: .5vw;
+            border-bottom-right-radius: .5vw;
+            background-color: #2d2d2d;
+            padding: 1vw .4vw;
+            color: lightgray;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+
+            &:hover {
+                background-color: #343434;
+            }
+        }
     }
 
-    &__lazy-btn:hover {
-        background-color: #f6f9ff;
-    }
 
     &__loading {
         display: flex;
@@ -138,7 +246,7 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        
+
         &>h4 {
             font-weight: normal;
             font-size: .8rem;

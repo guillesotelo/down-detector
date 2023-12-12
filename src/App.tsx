@@ -16,7 +16,7 @@ import Account from './pages/Account/Account';
 
 function App() {
   const location = useLocation()
-  const { isLoggedIn } = useContext(AppContext)
+  const { isLoggedIn, darkMode } = useContext(AppContext)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -29,78 +29,78 @@ function App() {
   return (
       <Switch>
         <Route exact path="/">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>
           </div>
         </Route>
         <Route exact path="/history">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <History />
             </div>
           </div>
         </Route>
         <Route exact path="/applogs">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <AppLogs />
             </div>
           </div>
         </Route>
         <Route exact path="/systems">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Systems />
             </div>
           </div>
         </Route>
         <Route exact path="/users">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Users />
             </div>
           </div>
         </Route>
         <Route exact path="/help">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Help />
             </div>
           </div>
         </Route>
         <Route exact path="/login">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
             <Login />
           </div>
         </Route>
         <Route exact path="/account">
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Account />
             </div>
           </div>
         </Route>
         <Route>
-          <div className='page__wrapper'>
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
-            <div className="page__row" style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Home />
             </div>

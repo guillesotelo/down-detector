@@ -7,11 +7,11 @@
         cursor: pointer;
 
         &:hover .switch__slider--on {
-            background-color: rgb(195, 195, 195);
+            background-color: #535353;
         }
 
         &:hover .switch__slider--off {
-            background-color: rgb(195, 195, 195);
+            background-color: #535353;
         }
 
     }
@@ -34,6 +34,14 @@
         font-weight: normal;
         width: 100%;
         color: #696869;
+
+        &--dark {
+            margin: 0 0 .5vh 0;
+            font-size: .8rem;
+            font-weight: normal;
+            width: 100%;
+            color: #adadad;
+        }
     }
 
     &__on {
@@ -46,7 +54,7 @@
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
         // background-color: rgb(218, 130, 130);
-        color: #4e4e4e;
+        color: #1b1b1b;
         transition: .3s;
     }
 
@@ -60,7 +68,7 @@
         border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
         // background-color: rgb(112, 191, 112);
-        color: #4e4e4e;
+        color: #383838;
         transition: .3s;
     }
 
@@ -69,8 +77,8 @@
             width: 2.5vw;
             height: 2rem;
             line-height: 2rem;
-            background-color: lightgray;
-            border: 2px solid gray;
+            background-color: #3d3d3d;
+            border: 2px solid #3d3d3d;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(-5%);
@@ -85,8 +93,8 @@
             width: 2.5vw;
             height: 2rem;
             line-height: 2rem;
-            background-color: lightgray;
-            border: 2px solid gray;
+            background-color: #3d3d3d;
+            border: 2px solid #3d3d3d;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(95%);

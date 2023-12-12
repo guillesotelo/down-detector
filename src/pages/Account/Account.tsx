@@ -18,7 +18,7 @@ export default function Account({ }: Props) {
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const { setIsLoggedIn } = useContext(AppContext) as AppContextType
+  const { setIsLoggedIn, darkMode } = useContext(AppContext) as AppContextType
   const history = useHistory()
 
   useEffect(() => {
@@ -80,9 +80,9 @@ export default function Account({ }: Props) {
       <h1 className="page__header-title">Account</h1>
       {loading ? <MoonLoader color='#0057ad' size={50} />
         :
-        <div className="account__details">
+        <div className={`account__details${darkMode ? '--dark' : ''}`}>
           <h2 className='account__details-title'>Account Information</h2>
-          <img src={UserIcon} alt="User Profile" className="account__details-icon" />
+          <img src={UserIcon} alt="User Profile" className={`account__details-icon${darkMode ? '--dark' : ''}`} />
           {edit ?
             <>
               <InputField

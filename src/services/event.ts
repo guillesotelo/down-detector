@@ -1,12 +1,16 @@
 import axios from 'axios';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
+
+const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+
 const getHeaders = () => {
-    const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+    const { token }: { [key: string | number]: any } = user
     return { authorization: `Bearer ${token}` }
 }
+
 const getConfig = () => {
-    const { token }: { [key: string | number]: any } = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+    const { token }: { [key: string | number]: any } = user
     return { headers: { authorization: `Bearer ${token}` } }
 }
 
@@ -26,21 +30,21 @@ const getEventById = async (_id: string) => {
 
 const createEvent = async (data: { [key: string | number]: any }) => {
     try {
-        const event = await axios.post(`${API_URL}/api/event/create`, data, getConfig())
+        const event = await axios.post(`${API_URL}/api/event/create`, { ...data, user }, getConfig())
         return event.data
     } catch (err) { console.log(err) }
 }
 
 const updateEvent = async (data: { [key: string | number]: any }) => {
     try {
-        const event = await axios.post(`${API_URL}/api/event/update`, data, getConfig())
+        const event = await axios.post(`${API_URL}/api/event/update`, { ...data, user }, getConfig())
         return event.data
     } catch (err) { console.log(err) }
 }
 
 const deleteEvent = async (data: { [key: string | number]: any }) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/event/remove`, data, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/event/remove`, { ...data, user }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }
