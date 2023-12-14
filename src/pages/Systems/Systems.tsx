@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Button from '../../components/Button/Button'
 import DataTable from '../../components/DataTable/DataTable'
 import { dataObj } from '../../types'
@@ -17,13 +17,17 @@ import {
   updateSystem,
   deleteEvent,
   getAllEvents,
-  deleteSystem
+  deleteSystem,
+  getAllUsers,
+  getSystemsByOwnerId
 } from '../../services'
 import { toast } from 'react-toastify'
 import Calendar from 'react-calendar'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
+import { AppContext } from '../../AppContext'
+import { APP_COLORS } from '../../constants/app'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -46,10 +50,15 @@ export default function Systems({ }: Props) {
   const [openEndCalendar, setOpenEndCalendar] = useState(false)
   const [downtimeArray, setDowntimeArray] = useState<any[]>([])
   const [onDeleteSystem, setOnDeleteSystem] = useState(false)
+  const [allUsers, setAllUsers] = useState<dataObj[]>([])
+  const [selectedOwner, setSelectedOwner] = useState<dataObj>({})
+  const { darkMode, isSuper } = useContext(AppContext)
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
   useEffect(() => {
     getSystems()
-  }, [])
+    getUsers()
+  }, [isSuper])
 
   useEffect(() => {
     if (selected !== -1 || newSystem) document.body.style.overflow = 'hidden'
@@ -62,6 +71,7 @@ export default function Systems({ }: Props) {
       if (select.type) setSelectedType(select.type)
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))
       if (select.timeout) setSelectedTimeout(getTimeOption(timeoutDefaultOptions, select.timeout))
+      if (select.owner) setSelectedOwner(JSON.parse(select.owner))
     }
   }, [selected, newSystem])
 
@@ -71,9 +81,24 @@ export default function Systems({ }: Props) {
 
   const getSystems = async () => {
     try {
-      const systems = await getAllSystems()
+      setLoading(true)
+      const systems = isSuper ? await getAllSystems() : await getSystemsByOwnerId(user._id)
       if (systems && systems.length) setTableData(systems)
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
+      console.error(error)
+    }
+  }
+
+  const getUsers = async () => {
+    try {
+      setLoading(true)
+      const users = isSuper ? await getAllUsers() : []
+      if (users && users.length) setAllUsers(users)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
       console.error(error)
     }
   }
@@ -101,6 +126,7 @@ export default function Systems({ }: Props) {
     setDowntimeArray([])
     setSelectedDowntime(-1)
     setOnDeleteSystem(false)
+    setSelectedOwner({})
   }
 
   const saveChanges = async () => {
@@ -112,6 +138,8 @@ export default function Systems({ }: Props) {
         type: selectedType,
         interval: selectedInterval.value,
         timeout: selectedTimeout.value,
+        owner: isSuper ? JSON.stringify(selectedOwner) : JSON.stringify(user),
+        ownerId: isSuper ? selectedOwner._id : user._id,
         updatedBy: user.username || '',
         downtimeArray
       }
@@ -133,13 +161,27 @@ export default function Systems({ }: Props) {
         else toast.error('Error updating system. Try again later')
       }
       setLoading(false)
+      localStorage.removeItem('localSystems')
+      localStorage.removeItem('localEvents')
     } catch (err) {
       console.error(err)
       setLoading(false)
     }
   }
 
+  const checkErrors = () => {
+    const errors = []
+    if (!start) errors.push('Select start date')
+    if (!end) errors.push('Select end date')
+    if (new Date(end).getTime() <= new Date().getTime()) errors.push('Wrong end date')
+    if (new Date(end).getTime() <= new Date(start).getTime()) errors.push('End date should be after start date')
+    return errors
+  }
+
   const saveDowntime = () => {
+    const errors = checkErrors()
+    if (errors.length) return errors.map((error: string) => toast.error(error))
+
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     if (selectedDowntime !== -1) {
       const newArr = [...downtimeArray]
@@ -160,6 +202,7 @@ export default function Systems({ }: Props) {
       url: data.url || ''
     }))
     setAddDowntime(false)
+    setSelectedDowntime(-1)
     setStart(null)
     setEnd(null)
   }
@@ -176,6 +219,8 @@ export default function Systems({ }: Props) {
         toast.success('Downtime removed successfully')
         setSelectedDowntime(-1)
         getDowntimeData(data)
+        localStorage.removeItem('localSystems')
+        localStorage.removeItem('localEvents')
       }
       else toast.error('Error removing downtime')
     } catch (error) {
@@ -185,8 +230,8 @@ export default function Systems({ }: Props) {
 
   const editDowntime = () => {
     const downtime = downtimeArray[selectedDowntime]
-    setStart(downtime.start)
-    setEnd(downtime.end)
+    setStart(new Date(downtime.start))
+    setEnd(new Date(downtime.end))
     setData({ ...data, downtimeNote: downtime.note })
     setAddDowntime(true)
   }
@@ -199,6 +244,8 @@ export default function Systems({ }: Props) {
         toast.success('System deleted successfully')
         discardChanges()
         getSystems()
+        localStorage.removeItem('localSystems')
+        localStorage.removeItem('localEvents')
       }
       else toast.error('Error deleting system. Try again later')
       setLoading(false)
@@ -218,7 +265,7 @@ export default function Systems({ }: Props) {
               <Button
                 label='Cancel'
                 handleClick={discardChanges}
-                bgColor='gray'
+                bgColor={APP_COLORS.GRAY_ONE}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -226,7 +273,7 @@ export default function Systems({ }: Props) {
               <Button
                 label='Confirm'
                 handleClick={removeSystem}
-                bgColor='#C45757'
+                bgColor={APP_COLORS.BLUE_TWO}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -249,12 +296,31 @@ export default function Systems({ }: Props) {
               updateData={updateData}
               value={data.url}
             />
-            <InputField
-              label='Description (optional)'
-              name='description'
-              updateData={updateData}
-              value={data.description}
-            />
+            <div className="systems__new-row">
+              {isSuper ?
+                <Dropdown
+                  label='Owner'
+                  options={allUsers}
+                  value={selectedOwner.username}
+                  selected={selectedOwner}
+                  setSelected={setSelectedOwner}
+                  maxHeight='20vh'
+                  objKey='username'
+                />
+                : <InputField
+                  label='Owner'
+                  name='owner'
+                  updateData={updateData}
+                  disabled
+                  value={user.username}
+                />}
+              <InputField
+                label='Description (optional)'
+                name='description'
+                updateData={updateData}
+                value={data.description}
+              />
+            </div>
             <div className="systems__new-row">
               <Dropdown
                 label='Type'
@@ -300,16 +366,16 @@ export default function Systems({ }: Props) {
                   <h4 className="systems__new-downtime-title">{selectedDowntime !== -1 ? 'Edit Downtime' : 'New Downtime'}</h4>
                   <div className="systems__new-row">
                     <Button
-                      label={openStartCalendar ? 'OK' : start ? getDate(start) : 'Select Start'}
+                      label={openStartCalendar ? 'OK' : start ? 'Start: ' + getDate(start) : 'Select Start'}
                       handleClick={() => setOpenStartCalendar(!openStartCalendar)}
-                      bgColor='#264875'
+                      bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
                     />
                     <Button
-                      label={openEndCalendar ? 'OK' : end ? getDate(end) : 'Select End'}
+                      label={openEndCalendar ? 'OK' : end ? 'End: ' + getDate(end) : 'Select End'}
                       handleClick={() => setOpenEndCalendar(!openEndCalendar)}
-                      bgColor='#264875'
+                      bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
                     />
@@ -349,16 +415,22 @@ export default function Systems({ }: Props) {
               <div className="systems__new-row">
                 <Button
                   label={addDowntime ? 'Discard' : 'New Downtime'}
-                  handleClick={() => setAddDowntime(!addDowntime)}
-                  bgColor={addDowntime ? 'gray' : '#264875'}
+                  handleClick={() => {
+                    setDowntimeArray([])
+                    setSelectedDowntime(-1)
+                    setStart(null)
+                    setEnd(null)
+                    setAddDowntime(!addDowntime)
+                  }}
+                  bgColor={addDowntime ? APP_COLORS.GRAY_ONE : APP_COLORS.ORANGE_ONE}
                   textColor='white'
                   style={{ width: '45%' }}
                 />
                 {addDowntime ?
                   <Button
-                    label={selectedDowntime !== -1 ? 'Save' : 'Add'}
+                    label={selectedDowntime !== -1 ? 'Save Downtime' : 'Add'}
                     handleClick={saveDowntime}
-                    bgColor='#264875'
+                    bgColor={APP_COLORS.BLUE_TWO}
                     textColor='white'
                     disabled={!start || !end}
                     style={{ width: '45%' }}
@@ -368,43 +440,45 @@ export default function Systems({ }: Props) {
                     <Button
                       label='Edit'
                       handleClick={editDowntime}
-                      bgColor='#264875'
+                      bgColor={APP_COLORS.BLUE_TWO}
                       textColor='white'
                       style={{ width: '22.5%' }}
                     />
                     <Button
                       label='Remove'
                       handleClick={removeDowntime}
-                      bgColor='#C45757'
+                      bgColor={APP_COLORS.RED_TWO}
                       textColor='white'
                       style={{ width: '22.5%' }}
                     />
                   </> : ''}
               </div>
             </div>
-            <div className="systems__new-row">
-              <Button
-                label='Close'
-                handleClick={discardChanges}
-                bgColor='gray'
-                textColor='white'
-                style={{ width: '45%' }}
-              />
-              <Button
-                label='Save Changes'
-                handleClick={saveChanges}
-                bgColor='#105ec6'
-                textColor='white'
-                style={{ width: '45%' }}
-              />
-            </div>
-            {!newSystem ?
+            {!addDowntime && selectedDowntime === -1 ?
+              <div className="systems__new-row">
+                <Button
+                  label='Close'
+                  handleClick={discardChanges}
+                  bgColor={APP_COLORS.GRAY_ONE}
+                  textColor='white'
+                  style={{ width: '45%' }}
+                />
+                <Button
+                  label='Save Changes'
+                  handleClick={saveChanges}
+                  bgColor={APP_COLORS.BLUE_TWO}
+                  textColor='white'
+                  style={{ width: '45%' }}
+                />
+              </div>
+              : ''}
+            {!newSystem && !addDowntime && selectedDowntime === -1 ?
               <>
                 <Separator />
                 <Button
                   label='Delete System'
                   handleClick={() => setOnDeleteSystem(true)}
-                  bgColor='#C45757'
+                  bgColor={APP_COLORS.RED_TWO}
                   textColor='white'
                   disabled={loading}
                 />
@@ -417,7 +491,7 @@ export default function Systems({ }: Props) {
         <Button
           label='New System'
           handleClick={() => setNewSystem(true)}
-          bgColor='#105ec6'
+          bgColor={APP_COLORS.BLUE_TWO}
           textColor='white'
         />
         <DataTable

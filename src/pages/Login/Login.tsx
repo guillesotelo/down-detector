@@ -5,6 +5,7 @@ import { loginUser } from '../../services'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
 import { AppContext } from '../../AppContext'
+import { APP_COLORS } from '../../constants/app'
 
 type Props = {}
 
@@ -14,7 +15,7 @@ export default function Login({ }: Props) {
     const [dataOk, setDataOk] = useState(false)
     const [logged, setLogged] = useState(false)
     const history = useHistory()
-    const { setIsLoggedIn, setIsSuper } = useContext(AppContext)
+    const { setIsLoggedIn, setIsSuper, darkMode } = useContext(AppContext)
 
     useEffect(() => {
         setDataOk(checkData())
@@ -75,15 +76,16 @@ export default function Login({ }: Props) {
                     <Button
                         label='Cancel'
                         handleClick={() => history.push('/')}
-                        bgColor="lightgray"
+                        bgColor={APP_COLORS.GRAY_ONE}
                         style={{ width: '45%' }}
                         disabled={logged}
+                        textColor='white'
                     />
                     <Button
                         label={loading ? 'Loggin in...' : 'Login'}
                         handleClick={login}
                         disabled={!dataOk || logged}
-                        bgColor='#105ec6'
+                        bgColor={APP_COLORS.BLUE_TWO}
                         textColor='white'
                         style={{ width: '45%' }}
                     />

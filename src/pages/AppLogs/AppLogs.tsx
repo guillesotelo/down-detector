@@ -13,8 +13,6 @@ export default function AppLogs({ }: Props) {
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<dataObj[]>([])
 
-  console.log(tableData)
-
   useEffect(() => {
     getHistory()
   }, [])

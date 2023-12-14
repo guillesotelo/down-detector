@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2'
 import { dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
+import { APP_COLORS } from '../../constants/app'
 Chart.register(...registerables);
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
     setSelected: (value: string) => void
     setSelectedData: (value: dataObj) => void
     setModalChartOptions: (value: dataObj[]) => void
+    lastCheck?: Date
 }
 
 export default function SystemCard(props: Props) {
@@ -37,7 +39,8 @@ export default function SystemCard(props: Props) {
         setSelected,
         setSelectedData,
         alerts,
-        setModalChartOptions
+        setModalChartOptions,
+        lastCheck
     } = props
 
     const {
@@ -51,7 +54,6 @@ export default function SystemCard(props: Props) {
         createdBy,
         updatedBy,
         updatedAt,
-        lastCheck,
         lastCheckStatus
     } = system
 
@@ -74,6 +76,12 @@ export default function SystemCard(props: Props) {
             datasets: [
                 {
                     data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
+                    backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
+                    borderColor: 'transparent',
+                    label: 'Reported DOWN by user'
+                },
+                {
+                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -84,12 +92,6 @@ export default function SystemCard(props: Props) {
                             label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
                         }
                     },
-                },
-                {
-                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
-                    backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? 'black' : 'transparent',
-                    borderColor: 'transparent',
-                    label: 'Reported DOWN by user'
                 }
             ]
         })
@@ -99,6 +101,12 @@ export default function SystemCard(props: Props) {
             datasets: [
                 {
                     data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
+                    backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
+                    borderColor: 'transparent',
+                    label: 'Reported DOWN by user'
+                },
+                {
+                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -109,12 +117,6 @@ export default function SystemCard(props: Props) {
                             label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
                         }
                     },
-                },
-                {
-                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
-                    backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? 'black' : 'transparent',
-                    borderColor: 'transparent',
-                    label: 'Reported DOWN by user'
                 }
             ]
         })
@@ -260,20 +262,38 @@ export default function SystemCard(props: Props) {
     }
 
     const getDate = (date: Date | undefined) => {
-        return date ? new Date(date).toLocaleString([], timeOptions) : 'No data'
+        return date ? new Date(date).toLocaleString('es',
+        { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+         : 'No data'
     }
 
-    const getDowntime = (schedule: any) => {
-        if (schedule && schedule.start && schedule.end) {
-            return `${getDate(schedule.start)} to ${getDate(schedule.end)}`
+    const getDowntime = (event: any) => {
+        if (event && event.start && event.end) {
+            return (<span>
+                <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
+                <span style={{ fontWeight: 'normal' }}> ➜ </span>
+                <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
+                <p className="systemcard__event-note">{event.note}</p>
+            </span>
+            )
         }
-        else return 'No data'
+        else return ''
     }
 
     const selectSystem = () => {
         setSelected(system._id)
         setSelectedData(completeChartData)
         setModalChartOptions(completeChartOptions)
+    }
+
+    const isLiveDowntime = (downtime: dataObj) => {
+        if (downtime && downtime.start) {
+            const now = new Date().getTime()
+            const start = new Date(downtime.start).getTime()
+            const end = new Date(downtime.end).getTime()
+            if (now - start > 0 && now - end < 0) return true
+        }
+        return false
     }
 
     const chartOptions: any = {
@@ -410,6 +430,7 @@ export default function SystemCard(props: Props) {
                             <span className='systemcard__status-dot'>●</span>&nbsp;&nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
                         </h2>
                     </div>
+                    {/* {downtime && downtime.start ? <p className="systemcard__planned-label">Planned downtime</p> : ''} */}
                     <div className="systemcard__graph" onClick={selectSystem}>
                         <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
                     </div>
@@ -421,17 +442,25 @@ export default function SystemCard(props: Props) {
                         <Button
                             label='Report Issue'
                             handleClick={() => reportIssue(_id)}
-                            bgColor='#C45757'
-                            textColor='white'
+                            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
+                            textColor={darkMode ? 'white' : 'black'}
                         />
                     </div>
                 </div>
-                {/* {downtime && downtime.start ? */}
-                    <div className="systemcard__event">
+                {downtime && downtime.start ?
+                    <div
+                        className={`systemcard__event${darkMode ? '--dark' : ''}`}
+                        style={{
+                            backgroundColor: isLiveDowntime(downtime) ? darkMode ?
+                                APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
+                                APP_COLORS.ORANGE_ONE : '#fcd9a5',
+                            border: darkMode ? '1px solid black' : '1px solid gray'
+                        }}
+                    >
                         <p className="systemcard__event-title">Planned downtime:</p>
                         <p className="systemcard__event-downtime">{getDowntime(downtime)}</p>
                     </div>
-                    {/* : ''} */}
+                    : ''}
             </>
         </div>
     )

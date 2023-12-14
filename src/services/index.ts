@@ -10,6 +10,7 @@ import {
 import {
     getAllSystems,
     getSystemById,
+    getSystemsByOwnerId,
     createSystem,
     updateSystem,
     deleteSystem,
@@ -57,6 +58,7 @@ export {
     deleteUser,
     getAllUsers,
     getAllSystems,
+    getSystemsByOwnerId,
     getSystemById,
     createSystem,
     updateSystem,

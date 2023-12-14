@@ -9,6 +9,7 @@ import MoonLoader from "react-spinners/MoonLoader"
 import { useHistory } from 'react-router-dom'
 import { AppContext, AppProvider } from '../../AppContext'
 import TextData from '../../components/TextData/TextData'
+import { APP_COLORS } from '../../constants/app'
 
 type Props = {}
 
@@ -70,8 +71,8 @@ export default function Account({ }: Props) {
     toast.info('See you later!')
     setTimeout(() => {
       setIsLoggedIn(false)
-      localStorage.clear()
-      history.push('/')
+      localStorage.removeItem('user')
+      history.push('/login')
     }, 1500)
   }
 
@@ -108,14 +109,14 @@ export default function Account({ }: Props) {
                 <Button
                   label='Discard Changes'
                   handleClick={discardChanges}
-                  bgColor='gray'
+                  bgColor={APP_COLORS.GRAY_ONE}
                   textColor='white'
                   style={{ width: '45%' }}
                 />
                 <Button
                   label='Save Changes'
                   handleClick={saveChanges}
-                  bgColor='#105ec6'
+                  bgColor={APP_COLORS.ORANGE_ONE}
                   textColor='white'
                   style={{ width: '45%' }}
                   disabled={!dataIsUpdated}
@@ -134,7 +135,7 @@ export default function Account({ }: Props) {
               <Button
                 label='Edit Details'
                 handleClick={() => setEdit(true)}
-                bgColor='#105ec6'
+                bgColor={APP_COLORS.ORANGE_ONE}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loggedOut}
@@ -143,7 +144,7 @@ export default function Account({ }: Props) {
               label='Logout'
               handleClick={logout}
               disabled={loggedOut}
-              bgColor='#105ec6'
+              bgColor={APP_COLORS.BLUE_TWO}
               textColor='white'
               style={{ width: edit ? '100%' : '45%' }}
             />

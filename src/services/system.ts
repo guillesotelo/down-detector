@@ -20,6 +20,13 @@ const getAllSystems = async () => {
     } catch (err) { console.log(err) }
 }
 
+const getSystemsByOwnerId = async (_id: string) => {
+    try {
+        const systems = await axios.get(`${API_URL}/api/system/getAllByOwnerId`, { params: { _id }, headers: getHeaders() })
+        return systems.data
+    } catch (err) { console.log(err) }
+}
+
 const getSystemById = async (_id: string) => {
     try {
         const system = await axios.get(`${API_URL}/api/system/getById`, { params: { _id }, headers: getHeaders() })
@@ -50,6 +57,7 @@ const deleteSystem = async (data: { [key: string | number]: any }) => {
 
 export {
     getAllSystems,
+    getSystemsByOwnerId,
     createSystem,
     getSystemById,
     updateSystem,

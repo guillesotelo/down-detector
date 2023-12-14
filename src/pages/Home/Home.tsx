@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts } from '../../services'
+import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents } from '../../services'
 import { dataObj } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -13,6 +13,7 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
+import { APP_COLORS } from '../../constants/app'
 Chart.register(...registerables);
 
 type Props = {}
@@ -22,6 +23,7 @@ export default function Home({ }: Props) {
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
   const [allSystems, setAllSystems] = useState<any[]>([])
+  const [allEvents, setAllEvents] = useState<any[]>([])
   const [statusAndAlerts, setStatusAndAlerts] = useState<any[]>([])
   const [allStatus, setAllStatus] = useState([])
   const [allAlerts, setAllAlerts] = useState([])
@@ -30,6 +32,7 @@ export default function Home({ }: Props) {
   const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState<dataObj>({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState<dataObj>({})
+  const [lastCheck, setLastCheck] = useState(new Date())
   const { darkMode } = useContext(AppContext)
 
   const chartHeight = '30vh'
@@ -49,14 +52,26 @@ export default function Home({ }: Props) {
     { name: 'Other (describe)' },
   ]
 
+  const loadData = useCallback(() => {
+    setData({})
+    setSelected('')
+    setReport('')
+    getSystems()
+    getAllStatus()
+    getAllUserAlerts()
+    getAllDownTimes()
+    setLastCheck(new Date())
+  }, [])
+
   useEffect(() => {
     loadData()
-  }, [])
+    const intervalId = setInterval(loadData, 1 * 60 * 1000)
+    return () => clearInterval(intervalId)
+  }, [loadData])
 
   useEffect(() => {
     getTotalRegisteredHours()
   }, [allStatus, selected])
-
 
   useEffect(() => {
     if (selected) getStatusAndAlerts()
@@ -73,15 +88,6 @@ export default function Home({ }: Props) {
     setStatusAndAlerts(statusAndAlertsByID)
   }
 
-  const loadData = () => {
-    setData({})
-    setSelected('')
-    setReport('')
-    getSystems()
-    getAllStatus()
-    getAllUserAlerts()
-  }
-
   const getTotalRegisteredHours = () => {
     const systemStatus = allStatus.filter((status: dataObj) => status.systemId === selected)
     const firstStatus: dataObj = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
@@ -90,12 +96,34 @@ export default function Home({ }: Props) {
     setTotalHours(timeSinceFirstCheck)
   }
 
+  const getAllDownTimes = async () => {
+    try {
+      setLoading(true)
+      let events = []
+      const { saved, data } = JSON.parse(localStorage.getItem('localEvents') || '{}') || {}
+      if (saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
+        events = data
+      }
+      else {
+        events = await getAllEvents()
+        localStorage.setItem('localEvents', JSON.stringify({ data: events, saved: new Date() }))
+      }
+      if (events && Array.isArray(events)) {
+        setAllEvents(events)
+      }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.error(error)
+    }
+  }
+
   const getSystems = async () => {
     try {
       setLoading(true)
       let systems = []
       const { saved, data } = JSON.parse(localStorage.getItem('localSystems') || '{}') || {}
-      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         systems = data
       }
       else {
@@ -117,7 +145,7 @@ export default function Home({ }: Props) {
       setLoading(true)
       let history = []
       const { saved, data } = JSON.parse(localStorage.getItem('localHistory') || '{}') || {}
-      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         history = data
       }
       else {
@@ -139,7 +167,7 @@ export default function Home({ }: Props) {
       setLoading(true)
       let alerts = []
       const { saved, data } = JSON.parse(localStorage.getItem('localAlerts') || '{}') || {}
-      if (saved && new Date().getTime() - new Date(saved).getTime() < 600000) {
+      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         alerts = data
       }
       else {
@@ -170,7 +198,9 @@ export default function Home({ }: Props) {
   }
 
   const getDate = (date: Date | undefined) => {
-    return date ? new Date(date).toLocaleString([], timeOptions) : 'No data'
+    return date ? new Date(date).toLocaleString('es',
+      { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+      : 'No data'
   }
 
   const sendReport = async () => {
@@ -188,11 +218,11 @@ export default function Home({ }: Props) {
 
       const sent = await createUserAlert(reportData)
       if (sent && sent._id) {
-        loadData()
         toast.success('Report sent successfully')
         localStorage.removeItem('localSystems')
         localStorage.removeItem('localHistory')
         localStorage.removeItem('localAlerts')
+        loadData()
       }
       setLoading(false)
     } catch (error) {
@@ -218,6 +248,41 @@ export default function Home({ }: Props) {
     return url.replace(/^((?:[^\/]*\/){3}).*$/, '$1')
   }
 
+  const isComingEvent = (event: dataObj) => {
+    const now = new Date().getTime()
+    const eventEnd = new Date(event.end).getTime()
+    if (eventEnd - now > 0) return true
+    return false
+  }
+
+  const getComingEvent = (events: dataObj[]) => {
+    let lastEvent: dataObj = events[0]
+    events.forEach(event => {
+      const lastEventStart = new Date(lastEvent.start).getTime()
+      const currentEventStart = new Date(event.start).getTime()
+      if (isComingEvent(event) && currentEventStart < lastEventStart) lastEvent = event
+    })
+    return isComingEvent(lastEvent) ? lastEvent : {}
+  }
+
+  const getDownTime = (system: dataObj) => {
+    const events = allEvents.filter((event: dataObj) => event.systemId === system._id)
+    return events.length ? getComingEvent(events) : {}
+  }
+
+  const getSelectedSystem = () => {
+    return allSystems.find(system => system._id === selected)
+  }
+
+  const getDowntimeString = () => {
+    const system = getSelectedSystem()
+    const event = getDownTime(system)
+    if (event && event.start && event.end) {
+      return `${getDate(event.start)} - ${getDate(event.end)}`
+    }
+    else return ''
+  }
+
   const renderReportModal = () => {
     return (
       <Modal
@@ -234,12 +299,6 @@ export default function Home({ }: Props) {
             label='URL'
             name='url'
             value={getSystemData(report, 'url')}
-            disabled={true}
-          />
-          <InputField
-            label='Name'
-            name='name'
-            value={getSystemData(report, 'name')}
             disabled={true}
           />
           <InputField
@@ -269,15 +328,18 @@ export default function Home({ }: Props) {
           <Button
             label='Cancel'
             handleClick={() => setReport('')}
-            bgColor='gray'
+            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_ONE}
+            textColor='white'
             disabled={loading}
+            style={{ width: '45%' }}
           />
           <Button
             label='Send Report'
             handleClick={sendReport}
             disabled={loading}
-            bgColor='#105ec6'
+            bgColor={APP_COLORS.BLUE_TWO}
             textColor='white'
+            style={{ width: '45%' }}
           />
         </div>
       </Modal>
@@ -290,10 +352,13 @@ export default function Home({ }: Props) {
         title={getSystemData(selected, 'name')}
         subtitle={parseUrl(getSystemData(selected, 'url'))}
         onClose={() => setSelected('')}>
+        {getDowntimeString() ?
+          <p className={`home__modal-downtime${darkMode ? '--dark' : ''}`}>Planned downtime: <br />{getDowntimeString()}</p>
+          : ''}
         <h2
           className="systemcard__status"
-          style={{ color: getCurrentStatus(allSystems.find(system => system._id === selected)) ? 'green' : 'red' }}>
-          ● &nbsp;Current status: <strong>{getCurrentStatus(allSystems.find(system => system._id === selected)) ? 'UP' : 'DOWN'}</strong>
+          style={{ color: getCurrentStatus(getSelectedSystem()) ? 'green' : 'red' }}>
+          ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
         </h2>
         <p className="home__modal-hours">Total registered: {totalHours} hours</p>
         <div className="home__modal-graph-wrapper">
@@ -308,17 +373,17 @@ export default function Home({ }: Props) {
             tableHeaders={hisrotyHeaders}
             name='history'
             loading={loading}
-            max={3}
+            max={getDowntimeString() ? 2 : 3}
             style={{ width: '50vw' }}
           />
         </div>
         <div className="home__modal-footer">
-          <p className="home__modal-updated">Last updated: {getDate(getSystemData(selected, 'lastCheck'))}</p>
+          <p className="home__modal-updated">Last updated: {getDate(lastCheck)}</p>
           <Button
             label='Report Issue'
             handleClick={() => setReport(selected)}
-            bgColor='#C45757'
-            textColor='white'
+            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
+            textColor={darkMode ? 'white' : 'black'}
           />
         </div>
       </Modal>
@@ -346,6 +411,8 @@ export default function Home({ }: Props) {
               setSelected={setSelected}
               setSelectedData={setChartData}
               setModalChartOptions={setModalChartOptions}
+              downtime={getDownTime(system)}
+              lastCheck={lastCheck}
             />)
           : loading ? <MoonLoader color='#0057ad' size={50} /> :
             <p className="home__system-void">No systems found</p>

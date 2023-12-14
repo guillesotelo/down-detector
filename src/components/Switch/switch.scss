@@ -5,13 +5,16 @@
         flex-direction: column;
         transition: .3s;
         cursor: pointer;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover .switch__slider--on {
-            background-color: #535353;
+            background-color: #9b9b9b;
         }
 
         &:hover .switch__slider--off {
-            background-color: #535353;
+            background-color: #9b9b9b;
         }
 
     }
@@ -77,8 +80,8 @@
             width: 2.5vw;
             height: 2rem;
             line-height: 2rem;
-            background-color: #3d3d3d;
-            border: 2px solid #3d3d3d;
+            background-color: #b2b2b2;
+            border: 2px solid #787878;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(-5%);
@@ -93,8 +96,8 @@
             width: 2.5vw;
             height: 2rem;
             line-height: 2rem;
-            background-color: #3d3d3d;
-            border: 2px solid #3d3d3d;
+            background-color: #b2b2b2;
+            border: 2px solid #787878;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(95%);

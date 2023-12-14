@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { deleteUser, getAllUsers, registerUser, updateUser } from '../../services'
 import { logHeaders, userHeaders } from '../../constants/tableHeaders'
@@ -9,6 +9,8 @@ import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import Switch from '../../components/Switch/Swith'
 import Separator from '../../components/Separator/Separator'
+import { AppContext } from '../../AppContext'
+import { APP_COLORS } from '../../constants/app'
 
 type Props = {}
 
@@ -20,6 +22,7 @@ export default function Users({ }: Props) {
   const [onDeleteUser, setOnDeleteUser] = useState(false)
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<dataObj[]>([])
+  const { darkMode } = useContext(AppContext)
 
   useEffect(() => {
     getUsers()
@@ -131,7 +134,7 @@ export default function Users({ }: Props) {
               <Button
                 label='Cancel'
                 handleClick={discardChanges}
-                bgColor='gray'
+                bgColor={APP_COLORS.GRAY_ONE}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -139,7 +142,7 @@ export default function Users({ }: Props) {
               <Button
                 label='Confirm'
                 handleClick={removeUser}
-                bgColor='#C45757'
+                bgColor={APP_COLORS.BLUE_TWO}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -187,7 +190,7 @@ export default function Users({ }: Props) {
               <Button
                 label='Close'
                 handleClick={discardChanges}
-                bgColor='gray'
+                bgColor={APP_COLORS.GRAY_ONE}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -195,7 +198,7 @@ export default function Users({ }: Props) {
               <Button
                 label='Save Changes'
                 handleClick={saveChanges}
-                bgColor='#105ec6'
+                bgColor={APP_COLORS.BLUE_TWO}
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loading}
@@ -205,7 +208,7 @@ export default function Users({ }: Props) {
             <Button
               label='Delete User'
               handleClick={() => setOnDeleteUser(true)}
-              bgColor='#C45757'
+              bgColor={APP_COLORS.RED_TWO}
               textColor='white'
               disabled={loading}
             />
@@ -216,7 +219,7 @@ export default function Users({ }: Props) {
         <Button
           label='New User'
           handleClick={() => setNewUser(true)}
-          bgColor='#105ec6'
+          bgColor={APP_COLORS.BLUE_TWO}
           textColor='white'
           disabled={loading}
         />

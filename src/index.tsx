@@ -11,10 +11,13 @@ ReactGA.initialize(TRACKING_ID);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
-);
+)
+
+const darkMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
+
 root.render(
   <BrowserRouter>
-    <ToastContainer autoClose={2000} />
+    <ToastContainer autoClose={2000} theme={darkMode ? 'dark' : 'light'} />
     <AppProvider>
       <App />
     </AppProvider>

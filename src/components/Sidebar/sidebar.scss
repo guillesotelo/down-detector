@@ -14,7 +14,7 @@
         left: 0;
         top: 0;
         margin-top: 8vh;
-        z-index: 1;
+        z-index: 3;
 
         &--dark {
             display: flex;
@@ -31,7 +31,7 @@
             left: 0;
             top: 0;
             margin-top: 8vh;
-            z-index: 1;
+            z-index: 3;
         }
     }
 
@@ -70,7 +70,7 @@
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            
+
             &:hover {
                 background-color: rgb(57, 57, 57);
             }
@@ -106,12 +106,23 @@
     &__separator {
         width: 15vw;
         border-bottom: 1px solid lightgray;
-        margin: 1rem 0;
+        margin: .5em 0;
 
         &--dark {
             width: 15vw;
             border-bottom: 1px solid rgb(84, 84, 84);
             margin: 1rem 0;
         }
+    }
+
+    &__version {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 2rem;
+        color: gray;
+        font-size: .9rem;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 }

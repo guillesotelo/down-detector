@@ -49,7 +49,7 @@
         flex-direction: row;
         align-items: flex-start;
         justify-content: space-between;
-        margin: 1rem;
+        margin: 1rem 1rem 0 1rem;
     }
 
     &__titles {
@@ -79,6 +79,9 @@
         font-size: 1.2rem;
         transition: .3s;
         padding: 0;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover {
             opacity: .5;
@@ -97,6 +100,9 @@
             transition: .3s;
             padding: 0;
             color: lightgray;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
 
             &:hover {
                 opacity: .5;

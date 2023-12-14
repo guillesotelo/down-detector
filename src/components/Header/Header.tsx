@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <div className={`header__container${darkMode ? '--dark' : ''}`}>
       <div className="header__col">
-        <img src={DDLogo} onClick={goHome} alt="DownDetector Logo" className={`header__downdetector-icon${darkMode ? '--dark' : ''}`} />
+        <img src={DDLogo} onClick={goHome} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
       </div>
       <div className="header__col">
       </div>
