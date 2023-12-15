@@ -278,9 +278,27 @@ export default function Home({ }: Props) {
     const system = getSelectedSystem()
     const event = getDownTime(system)
     if (event && event.start && event.end) {
-      return `${getDate(event.start)} - ${getDate(event.end)}`
+      return (<span>
+        <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
+        <span style={{ fontWeight: 'normal' }}> ➜ </span>
+        <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
+        <p className="systemcard__event-note">{event.note}</p>
+      </span>
+      )
     }
     else return ''
+  }
+
+  const isLiveDowntime = () => {
+    const system = getSelectedSystem()
+    const downtime = getDownTime(system)
+    if (downtime && downtime.start) {
+      const now = new Date().getTime()
+      const start = new Date(downtime.start).getTime()
+      const end = new Date(downtime.end).getTime()
+      if (now - start > 0 && now - end < 0) return true
+    }
+    return false
   }
 
   const renderReportModal = () => {
@@ -353,7 +371,17 @@ export default function Home({ }: Props) {
         subtitle={parseUrl(getSystemData(selected, 'url'))}
         onClose={() => setSelected('')}>
         {getDowntimeString() ?
-          <p className={`home__modal-downtime${darkMode ? '--dark' : ''}`}>Planned downtime: <br />{getDowntimeString()}</p>
+          <div
+            className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
+            style={{
+              backgroundColor: isLiveDowntime() ? darkMode ?
+                APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
+                APP_COLORS.ORANGE_ONE : '#fcd9a5',
+              border: darkMode ? '1px solid black' : '1px solid gray'
+            }}>
+            <p className='home__modal-downtime-text'>Planned downtime:</p>
+            <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
+          </div>
           : ''}
         <h2
           className="systemcard__status"

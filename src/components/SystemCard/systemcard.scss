@@ -168,6 +168,11 @@
         width: calc(13vw + 1.5rem);
         padding: 1.5rem .8rem .8rem .8rem;
 
+        &:hover .systemcard__event-note {
+            -webkit-line-clamp: unset;
+            transition: .3s;
+        }
+
         &--dark {
             display: flex;
             flex-direction: column;
@@ -182,6 +187,10 @@
             overflow: hidden;
             width: calc(13vw + 1.5rem);
             padding: 1.5rem .8rem .8rem .8rem;
+
+            &:hover .systemcard__event-note {
+                -webkit-line-clamp: unset;
+            }
         }
 
         &-title {
@@ -194,6 +203,8 @@
             margin: 0;
             font-size: .7vw;
             font-weight: bold;
+            transition: .3s;
+            text-align: center;
         }
 
         &-time {
@@ -211,7 +222,14 @@
         &-note {
             margin: .4rem 0 0 0;
             text-align: center;
+            font-size: .7vw;
             font-weight: normal;
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            transition: .3s;
         }
     }
 }
