@@ -181,7 +181,7 @@
         border-bottom-left-radius: 0.5vw;
         border-top: none;
         margin-top: 2.3rem;
-        width: inherit;
+        width: calc(100% - 2px);
         z-index: 2;
         max-height: 20vw;
         overflow-y: auto;
@@ -197,7 +197,7 @@
             border-bottom-left-radius: 0.5vw;
             border-top: none;
             margin-top: 2.3rem;
-            width: inherit;
+            width: calc(100% - 2px);
             z-index: 2;
             max-height: 20vw;
             overflow-y: auto;

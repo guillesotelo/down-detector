@@ -286,7 +286,11 @@ export default function Systems({ }: Props) {
           </div>
         </Modal>
         :
-        <Modal onClose={discardChanges} title={newSystem ? 'New System' : 'System Details'}>
+        <Modal
+          onClose={discardChanges}
+          title={newSystem ? 'New System' : 'System Details'}
+          style={{ maxWidth: '50vw' }}
+        >
           <div className="systems__new">
             <InputField
               label='Name'
@@ -310,6 +314,7 @@ export default function Systems({ }: Props) {
                   setSelected={setSelectedOwner}
                   maxHeight='20vh'
                   objKey='username'
+                  style={{ width: '100%' }}
                 />
                 : <InputField
                   label='Owner'
@@ -333,6 +338,7 @@ export default function Systems({ }: Props) {
                 selected={selectedType}
                 setSelected={setSelectedType}
                 maxHeight='20vh'
+                style={{ width: '100%' }}
               />
               <Dropdown
                 label='Interval'
@@ -342,6 +348,7 @@ export default function Systems({ }: Props) {
                 setSelected={setSelectedInterval}
                 maxHeight='20vh'
                 objKey='name'
+                style={{ width: '100%' }}
               />
               <Dropdown
                 label='Timeout'
@@ -351,6 +358,7 @@ export default function Systems({ }: Props) {
                 setSelected={setSelectedTimeout}
                 maxHeight='20vh'
                 objKey='name'
+                style={{ width: '100%' }}
               />
             </div>
             <div className="systems__new-downtime">
@@ -420,7 +428,7 @@ export default function Systems({ }: Props) {
                 <Button
                   label={addDowntime ? 'Discard' : 'New Downtime'}
                   handleClick={() => {
-                    setDowntimeArray([])
+                    setData({ ...data, downtimeNote: '' })
                     setSelectedDowntime(-1)
                     setStart(null)
                     setEnd(null)

@@ -79,14 +79,16 @@ export default function Account({ }: Props) {
     setTimeout(() => {
       setIsLoggedIn(false)
       setIsSuper(false)
-      localStorage.removeItem('user')
+      const mode = localStorage.getItem('preferredMode')
+      localStorage.clear()
+      localStorage.setItem('preferredMode', mode || 'false')
       history.push('/login')
     }, 1500)
   }
 
   const getOwnedSystemNames = () => {
     return ownedSystems.length ? ownedSystems.map(system => system.name).join(', ')
-    : 'No systems owned'
+      : 'No systems owned'
   }
 
   return (

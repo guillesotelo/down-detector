@@ -43,16 +43,18 @@ export default function Dropdown(props: Props) {
         })
     }, [])
 
-    useEffect(() => {
-        const dark = darkMode ? '--dark' : ''
-        const selection = document.querySelector(`.dropdown__select${dark}`) as HTMLElement
-        const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
-        if (selection && dropdown) {
-            const { width, height } = selection.getBoundingClientRect()
-            dropdown.style.marginTop = String(Math.floor(height)) + 'px'
-            dropdown.style.width = String(width) + 'px'
-        }
-    }, [openDrop])
+    // useEffect(() => {
+    //     const dark = darkMode ? '--dark' : ''
+    //     const selection = document.querySelector(`.dropdown__select-selection${dark}`) as HTMLElement
+    //     const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
+    //     if (selection && dropdown) {
+    //         const { width, height } = selection.getBoundingClientRect()
+    //         console.log('width', width.toFixed(0))
+    //         console.log('height', height.toFixed(0))
+    //         dropdown.style.marginTop = height.toFixed(0) + 'px'
+    //         dropdown.style.width = width.toFixed(0) + 'px'
+    //     }
+    // }, [openDrop])
 
     const getSelectValues = () => {
         if (value && Array.isArray(value) && value.length) {

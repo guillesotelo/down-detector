@@ -54,6 +54,8 @@ export default function Users({ }: Props) {
   }
 
   const getOwnedSystems = (user: dataObj) => {
+    console.log('user', user)
+    console.log('allSystems',allSystems)
     return allSystems.filter(system => system.ownerId === user._id)
   }
 

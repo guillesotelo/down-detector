@@ -57,7 +57,7 @@ export default function Login({ }: Props) {
 
     return (
         <div className="login__container">
-            <div className="login__box">
+            <div className={`login__box${darkMode ? '--dark' : ''}`}>
                 <h2 className='account__details-title'>Sign In</h2>
                 <InputField
                     label="Email"
