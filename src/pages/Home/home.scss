@@ -119,6 +119,10 @@
             border-radius: .5rem;
             margin: 1rem 0;
 
+            &-text {
+                margin: .4rem;
+            }
+
             &--dark {
                 text-align: center;
                 background-color: #7d490d;

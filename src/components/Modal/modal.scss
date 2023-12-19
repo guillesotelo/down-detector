@@ -10,7 +10,7 @@
         position: fixed;
         top: 0;
         background-color: transparent;
-        z-index: 2;
+        z-index: 3;
         align-self: center !important;
         justify-self: center !important;
     }
@@ -21,10 +21,10 @@
         padding: .5rem;
         background-color: white;
         min-width: 30vw;
-        max-width: 50vw;
         // min-height: 30vh;
         max-height: 85vh;
         overflow-y: auto;
+        overflow-x: hidden;
         border: 1px solid lightgray;
         border-radius: 1rem;
         box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.219);
@@ -37,7 +37,7 @@
             background-color: #000000;
             min-width: 30vw;
             // min-height: 30vh;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             border: 1px solid rgb(139, 139, 139);
             border-radius: 1rem;
@@ -116,6 +116,6 @@
     }
 
     &__content {
-        padding: 1rem;
+        margin: 1rem;
     }
 }

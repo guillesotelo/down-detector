@@ -383,6 +383,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
+                      disabled={loading}
                     />
                     <Button
                       label={openEndCalendar ? 'OK' : end ? 'End: ' + getDate(end) : 'Select End'}
@@ -390,6 +391,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
+                      disabled={loading}
                     />
                   </div>
                   <div className="systems__new-row">
@@ -437,14 +439,15 @@ export default function Systems({ }: Props) {
                   bgColor={addDowntime ? APP_COLORS.GRAY_ONE : APP_COLORS.ORANGE_ONE}
                   textColor='white'
                   style={{ width: '45%' }}
-                />
+                  disabled={loading}
+                  />
                 {addDowntime ?
                   <Button
                     label={selectedDowntime !== -1 ? 'Save Downtime' : 'Add'}
                     handleClick={saveDowntime}
                     bgColor={APP_COLORS.BLUE_TWO}
                     textColor='white'
-                    disabled={!start || !end}
+                    disabled={!start || !end || loading}
                     style={{ width: '45%' }}
                   /> : ''}
                 {!addDowntime && selectedDowntime !== -1 ?
@@ -455,6 +458,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.BLUE_TWO}
                       textColor='white'
                       style={{ width: '22.5%' }}
+                      disabled={loading}
                     />
                     <Button
                       label='Remove'
@@ -462,6 +466,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.RED_TWO}
                       textColor='white'
                       style={{ width: '22.5%' }}
+                      disabled={loading}
                     />
                   </> : ''}
               </div>
@@ -474,14 +479,16 @@ export default function Systems({ }: Props) {
                   bgColor={APP_COLORS.GRAY_ONE}
                   textColor='white'
                   style={{ width: '45%' }}
-                />
+                  disabled={loading}
+                  />
                 <Button
                   label='Save Changes'
                   handleClick={saveChanges}
                   bgColor={APP_COLORS.BLUE_TWO}
                   textColor='white'
                   style={{ width: '45%' }}
-                />
+                  disabled={loading}
+                  />
               </div>
               : ''}
             {!newSystem && !addDowntime && selectedDowntime === -1 ?
@@ -505,7 +512,8 @@ export default function Systems({ }: Props) {
           handleClick={() => setNewSystem(true)}
           bgColor={APP_COLORS.BLUE_TWO}
           textColor='white'
-        />
+          disabled={loading}
+          />
         <DataTable
           title='Systems'
           tableData={tableData}
