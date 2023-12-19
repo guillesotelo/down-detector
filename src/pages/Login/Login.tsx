@@ -71,6 +71,7 @@ export default function Login({ }: Props) {
                     value={data.password}
                     updateData={updateData}
                     type='password'
+                    onSubmit={login}
                 />
                 <div className="login__btns">
                     <Button

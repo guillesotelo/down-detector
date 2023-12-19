@@ -454,7 +454,7 @@ export default function SystemCard(props: Props) {
                             backgroundColor: isLiveDowntime(downtime) ? darkMode ?
                                 APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
                                 APP_COLORS.ORANGE_ONE : '#fcd9a5',
-                            border: darkMode ? '1px solid black' : '1px solid gray'
+                            border: darkMode ? '1px solid black' : '1px solid lightgray'
                         }}
                     >
                         <p className="systemcard__event-title">Planned downtime:</p>

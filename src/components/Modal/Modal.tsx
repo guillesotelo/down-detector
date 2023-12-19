@@ -1,19 +1,21 @@
 import React, { ReactNode, useContext } from 'react'
 import { AppContext } from '../../AppContext'
+import { dataObj } from '../../types'
 
 type Props = {
     children?: ReactNode
     onClose?: () => void
     title?: string
     subtitle?: string
+    style?: dataObj
 }
 
-export default function Modal({ children, onClose, title, subtitle }: Props) {
+export default function Modal({ children, onClose, title, subtitle, style }: Props) {
     const { darkMode } = useContext(AppContext)
 
     return (
         <div className="modal__wrapper">
-            <div className={`modal__container${darkMode ? '--dark' : ''}`}>
+            <div className={`modal__container${darkMode ? '--dark' : ''}`} style={style}>
                 <div className="modal__header">
                     <div className="modal__titles">
                         <h1 className="modal__title">{title}</h1>

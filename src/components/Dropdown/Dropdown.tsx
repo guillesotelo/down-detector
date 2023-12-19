@@ -5,7 +5,7 @@ import { AppContext } from '../../AppContext'
 type Props = {
     label: string
     options: any[]
-    value: string | number
+    value: string | number | dataObj[] | string[]
     objKey?: string | number
     selected: any
     setSelected: (value: any) => void
@@ -14,6 +14,7 @@ type Props = {
     locale?: string
     maxHeight?: string
     style?: { [key: string | number]: any }
+    multiselect?: boolean
 }
 
 export default function Dropdown(props: Props) {
@@ -31,19 +32,38 @@ export default function Dropdown(props: Props) {
         isDate,
         locale,
         maxHeight,
-        style
+        style,
+        multiselect
     } = props
 
     useEffect(() => {
         window.addEventListener('mouseup', (e: MouseEvent) => {
-            if (e.target && (e.target as HTMLElement).className) {
-                if ((e.target as HTMLElement).className !== 'dropdown__option') setOpenDrop(false)
-            } else setOpenDrop(false)
+            const className = (e.target as HTMLElement).className
+            if (className !== 'dropdown__option' && className !== 'dropdown__option--dark') setOpenDrop(false)
         })
     }, [])
 
+    useEffect(() => {
+        const dark = darkMode ? '--dark' : ''
+        const selection = document.querySelector(`.dropdown__select${dark}`) as HTMLElement
+        const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
+        if (selection && dropdown) {
+            const { width, height } = selection.getBoundingClientRect()
+            dropdown.style.marginTop = String(Math.floor(height)) + 'px'
+            dropdown.style.width = String(width) + 'px'
+        }
+    }, [openDrop])
+
+    const getSelectValues = () => {
+        if (value && Array.isArray(value) && value.length) {
+            return value.map((val: dataObj | string | number) =>
+                typeof val === 'string' || typeof val === 'number' ? val :
+                    objKey && val[objKey] ? val[objKey] : 'Select')
+        }
+    }
+
     const getSelectValue = () => {
-        if (value) {
+        if (value && typeof value === 'string' || typeof value === 'string') {
             if (isDate) return value ? new Date(value).toLocaleDateString(locale || 'sv-SE') : 'Select'
             if (isTime) return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             else return value
@@ -68,6 +88,39 @@ export default function Dropdown(props: Props) {
         </div>
     }
 
+    const removeItem = (index: number) => {
+        const newSelection = [...selected]
+        newSelection.splice(index, 1)
+        setSelected(newSelection)
+    }
+
+    const renderSelectedItems = () => {
+        return <div
+            className={`dropdown__select${darkMode ? '--dark' : ''}`}
+            style={{
+                border: !darkMode ? openDrop ? '1px solid #105ec6' : '1px solid lightgray' : '',
+                borderBottomRightRadius: openDrop ? 0 : '',
+                borderBottomLeftRadius: openDrop ? 0 : '',
+                backgroundColor: openDrop ? '#e1eeff' : ''
+            }}
+            onClick={() => setOpenDrop(!openDrop)}>
+            <h4
+                className={`dropdown__selected${darkMode ? '--dark' : ''}`}
+                style={{
+                    height: multiselect ? 'fit-content' : '',
+                    flexWrap: multiselect ? 'wrap' : 'unset',
+                }}>
+                {getSelectValues() ? getSelectValues()?.map((val, i) =>
+                    <span className={`dropdown__selected-multi-item${darkMode ? '--dark' : ''}`}>
+                        <p className='dropdown__selected-multi-label'>{val}</p>
+                        <p className='dropdown__selected-multi-remove' onClick={() => removeItem(i)}>X</p>
+                    </span>
+                ) : <p className='dropdown__selected-multi-label'>Select</p>}
+            </h4>
+            < h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>▾</h4>
+        </div>
+    }
+
     const renderDropDownOptions = () => {
         return <div
             className={`dropdown__options${darkMode ? '--dark' : ''}`}
@@ -82,7 +135,13 @@ export default function Dropdown(props: Props) {
                             borderTop: i === 0 ? 'none' : '1px solid #e7e7e7'
                         }}
                         onClick={() => {
-                            setSelected(option)
+                            if (multiselect) {
+                                if (objKey && selected.filter((el: dataObj) => el[objKey] && el[objKey] === option[objKey]).length) return setOpenDrop(false)
+                                if (selected.filter((el: any) => el === option).length) return setOpenDrop(false)
+                                const newSelection = [...selected]
+                                setSelected(newSelection.concat(option))
+                            }
+                            else setSelected(option)
                             setOpenDrop(false)
                         }}>
                         {isDate ? new Date(option).toLocaleDateString(locale || 'sv-SE') :
@@ -95,13 +154,30 @@ export default function Dropdown(props: Props) {
         </div>
     }
 
-    return (
-        <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
-            {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
-            <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
-                {renderSelectedItem()}
-                {openDrop ? renderDropDownOptions() : ''}
-            </div>
-        </div >
-    )
+    const renderMultiSelect = () => {
+        return (
+            <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
+                {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
+                <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
+                    {renderSelectedItems()}
+                    {openDrop ? renderDropDownOptions() : ''}
+                </div>
+            </div >
+        )
+    }
+
+    const renderSimpleSelect = () => {
+        return (
+            <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
+                {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
+                <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
+                    {renderSelectedItem()}
+                    {openDrop ? renderDropDownOptions() : ''}
+                </div>
+            </div >
+        )
+    }
+
+
+    return multiselect ? renderMultiSelect() : renderSimpleSelect()
 }

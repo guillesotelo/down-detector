@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
-import { deleteUser, getAllUsers, registerUser, updateUser } from '../../services'
+import { deleteUser, getAllSystems, getAllUsers, registerUser, updateUser, verifyToken } from '../../services'
 import { logHeaders, userHeaders } from '../../constants/tableHeaders'
 import { dataObj } from '../../types'
 import { toast } from 'react-toastify'
@@ -11,6 +11,8 @@ import Switch from '../../components/Switch/Swith'
 import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { useHistory } from 'react-router-dom'
 
 type Props = {}
 
@@ -22,10 +24,13 @@ export default function Users({ }: Props) {
   const [onDeleteUser, setOnDeleteUser] = useState(false)
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<dataObj[]>([])
+  const [allSystems, setAllSystems] = useState<dataObj[]>([])
+  const [ownedSystems, setOwnedSystems] = useState<dataObj[]>([])
   const { darkMode } = useContext(AppContext)
+  const history = useHistory()
 
   useEffect(() => {
-    getUsers()
+    loadData()
   }, [])
 
   useEffect(() => {
@@ -36,8 +41,21 @@ export default function Users({ }: Props) {
       const select = tableData[selected]
       setData(select)
       setIsSuper(select.isSuper || false)
+
+      setOwnedSystems(getOwnedSystems(select))
     }
   }, [selected, newUser])
+
+  const loadData = async () => {
+    const verified = await verifyToken()
+    if (!verified.isSuper) return history.push('/')
+    getUsers()
+    getSystems()
+  }
+
+  const getOwnedSystems = (user: dataObj) => {
+    return allSystems.filter(system => system.ownerId === user._id)
+  }
 
   const getUsers = async () => {
     try {
@@ -51,6 +69,19 @@ export default function Users({ }: Props) {
     }
   }
 
+  const getSystems = async () => {
+    try {
+      setLoading(true)
+      const systems = await getAllSystems()
+      if (systems && systems.length) setAllSystems(systems)
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
+  }
+
+
   const updateData = (key: string, e: { [key: string | number]: any }) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
@@ -62,15 +93,17 @@ export default function Users({ }: Props) {
     setSelected(-1)
     setIsSuper(false)
     setOnDeleteUser(false)
+    setOwnedSystems([])
   }
 
   const dataOk = () => {
     return data.email.includes('@') &&
       data.email.includes('.') &&
       data.email.length > 5 &&
-      (newUser ? (data.password && data.password2 &&
-        data.password.length > 5 &&
-        data.password === data.password2) : true)
+      ((!data.password && !data.passowrd2)
+        || (data.password && data.password2 &&
+          data.password.length > 5 &&
+          data.password === data.password2))
   }
 
   const removeUser = async () => {
@@ -96,7 +129,8 @@ export default function Users({ }: Props) {
     try {
       const userData: dataObj = {
         ...data,
-        isSuper
+        isSuper,
+        ownedSystems
       }
       if (data.passowrd === '') delete data.password
       if (newUser) {
@@ -108,6 +142,7 @@ export default function Users({ }: Props) {
         }
         else toast.error('Error creating user. Try again later')
       } else {
+        if (!userData.password) delete userData.password
         delete userData._id
         const updated = await updateUser({ _id: data._id, newData: userData })
         if (updated && updated._id) {
@@ -151,7 +186,10 @@ export default function Users({ }: Props) {
           </div>
         </Modal>
         :
-        <Modal onClose={discardChanges} title={newUser ? 'New User' : 'User Details'}>
+        <Modal
+          onClose={discardChanges}
+          title={newUser ? 'New User' : 'User Details'}
+          style={{ maxWidth: '20vw' }}>
           <div className="systems__new">
             <InputField
               label='Full Name'
@@ -171,6 +209,7 @@ export default function Users({ }: Props) {
               updateData={updateData}
               value={data.password}
               type='password'
+              placeholder={data.password || data.passowrd2 ? '' : '••••••••••'}
             />
             <InputField
               label='Repeat passowrd'
@@ -178,14 +217,28 @@ export default function Users({ }: Props) {
               updateData={updateData}
               value={data.password2}
               type='password'
+              placeholder={data.password || data.passowrd2 ? '' : '••••••••••'}
             />
-            <Switch
-              label='Super User'
-              value={isSuper}
-              setValue={setIsSuper}
-              on='Yes'
-              off='No'
-            />
+            <div className="systems__new-row">
+              <Switch
+                label='Super User'
+                value={isSuper}
+                setValue={setIsSuper}
+                on='Yes'
+                off='No'
+              />
+              <Dropdown
+                label='Owned Systems'
+                options={allSystems}
+                value={ownedSystems}
+                selected={ownedSystems}
+                setSelected={setOwnedSystems}
+                maxHeight='20vh'
+                objKey='name'
+                multiselect
+                style={{ minWidth: '60%' }}
+              />
+            </div>
             <div className="systems__new-row">
               <Button
                 label='Close'

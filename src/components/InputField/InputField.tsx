@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useContext } from 'react'
+import React, { SyntheticEvent, useContext, useEffect } from 'react'
 import { AppContext } from '../../AppContext'
 
 type Props = {
@@ -13,10 +13,13 @@ type Props = {
     rows?: number
     style?: { [key: string | number]: any }
     disabled?: boolean
+    onSubmit?: () => void
 }
 
 export default function InputField(props: Props) {
     const { darkMode } = useContext(AppContext)
+    let isEnterKeyListenerAdded = false
+
     const {
         value,
         name,
@@ -28,8 +31,23 @@ export default function InputField(props: Props) {
         cols,
         rows,
         style,
-        disabled
+        disabled,
+        onSubmit
     } = props
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (onSubmit && e.key === 'Enter') onSubmit()
+        }
+        if (!isEnterKeyListenerAdded) {
+            document.addEventListener('keydown', handleKeyDown)
+            isEnterKeyListenerAdded = true
+        }
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+            isEnterKeyListenerAdded = false
+        }
+    }, [onSubmit])
 
     return type === 'textarea' ?
         <div className='inputfield__container' style={style}>

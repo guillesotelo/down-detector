@@ -3,7 +3,7 @@ import { AppContextType, dataObj } from '../../types'
 import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
-import { updateUser } from '../../services'
+import { getSystemsByOwnerId, updateUser } from '../../services'
 import UserIcon from '../../assets/icons/user-icon.svg'
 import MoonLoader from "react-spinners/MoonLoader"
 import { useHistory } from 'react-router-dom'
@@ -19,15 +19,22 @@ export default function Account({ }: Props) {
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const { setIsLoggedIn, darkMode } = useContext(AppContext) as AppContextType
+  const [ownedSystems, setOwnedSystems] = useState<dataObj[]>([])
+  const { setIsLoggedIn, darkMode, setIsSuper } = useContext(AppContext) as AppContextType
   const history = useHistory()
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
   useEffect(() => {
     getUserData()
+    getOwnedSystems()
   }, [])
 
+  const getOwnedSystems = async () => {
+    const systems = await getSystemsByOwnerId(user._id)
+    setOwnedSystems(systems)
+  }
+
   const getUserData = () => {
-    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     if (user._id) {
       delete user.password
       setData(user)
@@ -71,9 +78,15 @@ export default function Account({ }: Props) {
     toast.info('See you later!')
     setTimeout(() => {
       setIsLoggedIn(false)
+      setIsSuper(false)
       localStorage.removeItem('user')
       history.push('/login')
     }, 1500)
+  }
+
+  const getOwnedSystemNames = () => {
+    return ownedSystems.length ? ownedSystems.map(system => system.name).join(', ')
+    : 'No systems owned'
   }
 
   return (
@@ -128,6 +141,7 @@ export default function Account({ }: Props) {
               <TextData label='Full Name' value={data.username} />
               <TextData label='Email' value={data.email} />
               <TextData label='Super User' value={data.isSuper ? 'Yes' : 'No'} />
+              <TextData label='Owned Systems' value={getOwnedSystemNames()} />
             </>
           }
           <div className="account__details-row">

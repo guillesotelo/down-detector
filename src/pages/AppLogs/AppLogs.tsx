@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
-import { getAllLogs } from '../../services'
+import { getAllLogs, verifyToken } from '../../services'
 import { logHeaders } from '../../constants/tableHeaders'
 import { dataObj } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import { useHistory } from 'react-router-dom'
 
 type Props = {}
 
@@ -12,10 +13,17 @@ export default function AppLogs({ }: Props) {
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<dataObj[]>([])
+  const history = useHistory()
 
   useEffect(() => {
+    verifyUser()
     getHistory()
   }, [])
+
+  const verifyUser = async () => {
+    const verified = await verifyToken()
+    if(!verified.isSuper) return history.push('/')
+  }
 
   const getHistory = async () => {
     try {

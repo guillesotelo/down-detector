@@ -4,16 +4,16 @@
         display: flex;
         flex-direction: column;
         background-color: transparent;
-        width: 100%;
-        min-width: fit-content;
+        // width: 100%;
+        // min-width: fit-content;
         transition: .3s;
 
         &--dark {
             display: flex;
             flex-direction: column;
             background-color: transparent;
-            width: 100%;
-            min-width: fit-content;
+            // width: 100%;
+            // min-width: fit-content;
             transition: .3s;
         }
     }
@@ -69,9 +69,9 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
         gap: 1vw;
         cursor: pointer;
-        width: 100%;
         position: relative;
         transition: .3s;
 
@@ -90,9 +90,9 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            align-items: center;
             gap: 1vw;
             cursor: pointer;
-            width: 100%;
             position: relative;
             transition: .3s;
         }
@@ -102,6 +102,8 @@
         color: rgb(99, 99, 99);
         font-weight: normal;
         margin: 0;
+        display: flex;
+        gap: .5rem;
         font-size: 1rem;
         border-radius: 0.5rem;
         height: 1.3rem;
@@ -110,8 +112,51 @@
         padding: 0.5rem;
         transition: .3s;
 
+        &-multi {
+            &-item {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: .5rem;
+                height: 1.3rem;
+                background-color: #e4e4e4;
+                border-radius: .5rem;
+
+                &--dark {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: .5rem;
+                    height: 1.3rem;
+                    background-color: rgb(156, 156, 156);
+                    border-radius: .5rem;
+                }
+            }
+
+            &-label {
+                margin: 0;
+                padding: .2rem .2rem .2rem .4rem;
+                color: rgb(57, 57, 57);
+            }
+
+            &-remove {
+                margin: 0;
+                transition: .3s;
+                color: rgb(57, 57, 57);
+                padding: .2rem .2rem .2rem 0;
+                cursor: pointer;
+                font-size: .9rem;
+
+                &:hover {
+                    color: #7a7a7a;
+                }
+            }
+        }
+
         &--dark {
             color: lightgray;
+            display: flex;
+            gap: .5rem;
             font-weight: normal;
             margin: 0;
             font-size: 1rem;
@@ -124,6 +169,7 @@
             background-color: #353535;
         }
     }
+
 
     &__options {
         position: absolute;
@@ -190,7 +236,7 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             font-weight: normal;
-    
+
             &:hover {
                 color: #105ec6;
             }

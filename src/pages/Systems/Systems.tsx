@@ -144,7 +144,11 @@ export default function Systems({ }: Props) {
         downtimeArray
       }
       if (newSystem) {
-        const saved = await createSystem(systemData)
+        const saved = await createSystem({
+          ...systemData,
+          owner: user.isSuper ? null : JSON.stringify(user),
+          ownerId: user.isSuper ? null : user._id
+        })
         if (saved && saved._id) {
           toast.success('System created successfully')
           discardChanges()

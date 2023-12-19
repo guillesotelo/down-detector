@@ -8,6 +8,7 @@ const getHeaders = () => {
     const { token }: { [key: string | number]: any } = user
     return { authorization: `Bearer ${token}` }
 }
+
 const getConfig = () => {
     const { token }: { [key: string | number]: any } = user
     return { headers: { authorization: `Bearer ${token}` } }
@@ -15,7 +16,7 @@ const getConfig = () => {
 
 const getAllSystems = async () => {
     try {
-        const systems = await axios.get(`${API_URL}/api/system/getAll`, { headers: getHeaders() })
+        const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: user._id }, headers: getHeaders() })
         return systems.data
     } catch (err) { console.log(err) }
 }
