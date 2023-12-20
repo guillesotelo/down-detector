@@ -52,10 +52,12 @@ export default function Home({ }: Props) {
     { name: 'Other (describe)' },
   ]
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback((reset?: boolean) => {
     setData({})
-    setSelected('')
-    setReport('')
+    if (reset) {
+      setSelected('')
+      setReport('')
+    }
     getSystems()
     getAllStatus()
     getAllUserAlerts()
@@ -85,6 +87,10 @@ export default function Home({ }: Props) {
   const getStatusAndAlerts = () => {
     const statusAndAlertsByID = allStatus.filter((status: dataObj) => status.systemId === selected)
       .concat(allAlerts.filter((alert: dataObj) => alert.systemId === selected))
+      .sort((a: dataObj, b: dataObj) => {
+        if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) return -1
+        return 1
+      })
     setStatusAndAlerts(statusAndAlertsByID)
   }
 
@@ -212,7 +218,7 @@ export default function Home({ }: Props) {
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
-        description: getSystemData(report, 'description') || '',
+        description: reportedStatus.name + ': ' + data.description || getSystemData(report, 'description') || '',
         createdBy: user.username || 'anonymous'
       }
 
@@ -222,7 +228,7 @@ export default function Home({ }: Props) {
         localStorage.removeItem('localSystems')
         localStorage.removeItem('localHistory')
         localStorage.removeItem('localAlerts')
-        loadData()
+        loadData(true)
       }
       setLoading(false)
     } catch (error) {

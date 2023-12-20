@@ -57,48 +57,5 @@
 }
 
 @media only screen and (max-width: 640px) {
-    .button {
-        &__default {
-            font-size: 5vw;
-            background-color: #D3AFAF;
-            width: fit-content;
-            padding: 3vw;
-            border-radius: 1.5vw;
-            cursor: pointer;
-            font-weight: normal;
-            transition: .3s;
-            border: none;
-            width: 100%;
-
-            &:hover {
-                filter: brightness(110%);
-                transition: .3s;
-            }
-
-        }
-
-        &__bright {
-            font-size: 5vw;
-            background-color: #fff !important;
-            width: fit-content;
-            padding: 3vw;
-            border-radius: 1.5vw;
-            cursor: pointer;
-            font-weight: normal;
-            transition: .3s;
-            border: none;
-            width: 100%;
-
-            &:hover {
-                filter: brightness(110%);
-                transition: .3s;
-            }
-
-        }
-
-        &__svg {
-            height: 8vw;
-            padding: 1vw;
-        }
-    }
+    
 }

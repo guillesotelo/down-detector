@@ -82,7 +82,7 @@ export default function Account({ }: Props) {
       const mode = localStorage.getItem('preferredMode')
       localStorage.clear()
       localStorage.setItem('preferredMode', mode || 'false')
-      history.push('/login')
+      history.push('/')
     }, 1500)
   }
 

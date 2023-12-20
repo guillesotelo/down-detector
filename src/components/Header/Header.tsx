@@ -17,9 +17,9 @@ export default function Header() {
     else history.push('/login')
   }
 
-  const goHome = () => {
-    setItem('/')
-    history.push('/')
+  const goToHelp = () => {
+    setItem('/help')
+    history.push('/help')
   }
 
   const switchMode = () => {
@@ -30,14 +30,14 @@ export default function Header() {
   return (
     <div className={`header__container${darkMode ? '--dark' : ''}`}>
       <div className="header__col">
-        <img src={DDLogo} onClick={goHome} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
+        <img src={DDLogo} onClick={goToHelp} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
       </div>
       <div className="header__col">
       </div>
       <div className="header__col">
         <div className="header__user-group">
           <img onClick={switchMode} src={darkMode ? Day : Night} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
-          <img src={isLoggedIn ? UserIcon : LoginIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
+          <img src={UserIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
         </div>
       </div>
     </div>

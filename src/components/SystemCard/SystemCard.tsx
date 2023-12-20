@@ -25,6 +25,7 @@ export default function SystemCard(props: Props) {
     const [completeData, setCompleteData] = useState<any[]>([])
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
+    const [loading, setLoading] = useState(true)
     const { darkMode } = useContext(AppContext)
 
     const chartHeight = '30vw'
@@ -40,7 +41,7 @@ export default function SystemCard(props: Props) {
         setSelectedData,
         alerts,
         setModalChartOptions,
-        lastCheck
+        lastCheck,
     } = props
 
     const {
@@ -161,6 +162,7 @@ export default function SystemCard(props: Props) {
         })
 
         setCompleteData(complete)
+        setLoading(false)
     }
 
     const processLastDayHistory = () => {
@@ -263,8 +265,8 @@ export default function SystemCard(props: Props) {
 
     const getDate = (date: Date | undefined) => {
         return date ? new Date(date).toLocaleString('es',
-        { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-         : 'No data'
+            { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+            : 'No data'
     }
 
     const getDowntime = (event: any) => {
@@ -415,8 +417,8 @@ export default function SystemCard(props: Props) {
                 <div
                     className={`systemcard__container${darkMode ? '--dark' : ''}`}
                     style={{
-                        borderColor: status ? 'green' : 'red',
-                        backgroundImage: darkMode ?
+                        borderColor: loading ? 'gray' : status ? 'green' : 'red',
+                        backgroundImage: loading ? '' : darkMode ?
                             `linear-gradient(to bottom right, black, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                             :
                             `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
@@ -424,21 +426,18 @@ export default function SystemCard(props: Props) {
                 >
                     <div className="systemcard__header">
                         <h1 className="systemcard__name">{name || 'Api Name'}</h1>
-                        <h2
-                            className="systemcard__status"
-                            style={{ color: status ? 'green' : 'red' }}>
-                            <span className='systemcard__status-dot'>●</span>&nbsp;&nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong>
-                        </h2>
                     </div>
-                    {/* {downtime && downtime.start ? <p className="systemcard__planned-label">Planned downtime</p> : ''} */}
                     <div className="systemcard__graph" onClick={selectSystem}>
                         <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
                     </div>
-                    {/* <h4 className="systemcard__url">{url}</h4> */}
                     <div className="systemcard__footer">
-                        <div className="systemcard__details">
-                            <h4 className="systemcard__updatedAt">Updated: <br />{getDate(lastCheck)}</h4>
-                        </div>
+                        <h2
+                            className="systemcard__status"
+                            style={{ color: loading ? 'gray' : status ? 'green' : 'red' }}>
+                            {loading ? <p>Loading...</p> :
+                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong></>
+                            }
+                        </h2>
                         <Button
                             label='Report Issue'
                             handleClick={() => reportIssue(_id)}

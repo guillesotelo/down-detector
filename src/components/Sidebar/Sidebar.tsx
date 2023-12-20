@@ -70,22 +70,24 @@ export default function Sidebar({ }: Props) {
                     <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Users</h4>
                 </div>
                 : ''}
-            <div className={`sidebar__separator${darkMode ? '--dark' : ''}`}></div>
             {isSuper ?
-                <div
-                    className={`sidebar__item${darkMode ? '--dark' : ''}`}
-                    style={{
-                        backgroundColor: item === '/applogs' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
-                    }}
-                    onClick={() => {
-                        history.push('/applogs')
-                        setItem('/applogs')
-                    }}>
-                    <img src={AppLogs} alt="App Logs" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
-                    <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>App Logs</h4>
-                </div>
+                <>
+                    <div className={`sidebar__separator${darkMode ? '--dark' : ''}`}></div>
+                    <div
+                        className={`sidebar__item${darkMode ? '--dark' : ''}`}
+                        style={{
+                            backgroundColor: item === '/applogs' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                        }}
+                        onClick={() => {
+                            history.push('/applogs')
+                            setItem('/applogs')
+                        }}>
+                        <img src={AppLogs} alt="App Logs" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                        <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>App Logs</h4>
+                    </div>
+                </>
                 : ''}
-            <div
+            {/* <div
                 className={`sidebar__item${darkMode ? '--dark' : ''}`}
                 style={{
                     backgroundColor: item === '/help' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
@@ -96,7 +98,7 @@ export default function Sidebar({ }: Props) {
                 }}>
                 <img src={Help} alt="Help" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Help</h4>
-            </div>
+            </div> */}
             <p className="sidebar__version">{APP_VERSION}</p>
         </div >
     )

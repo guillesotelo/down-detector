@@ -8,13 +8,14 @@
         border-top: 1px solid lightgray;
         box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
         background-color: white;
-        width: 15vw;
+        width: 18rem;
         height: calc(92vh - 1px);
         position: fixed;
         left: 0;
         top: 0;
         margin-top: 8vh;
         z-index: 3;
+        overflow-x: hidden;
 
         &--dark {
             display: flex;
@@ -25,14 +26,15 @@
             border-top: 1px solid rgb(84, 84, 84);
             box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
             background-color: #000000;
-            width: 15vw;
+            width: 18rem;
             height: calc(92vh - 1px);
             position: fixed;
             left: 0;
             top: 0;
             margin-top: 8vh;
             z-index: 3;
-        }
+        overflow-x: hidden;
+    }
     }
 
     &__item {
@@ -40,7 +42,7 @@
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        width: 10vw;
+        width: 12rem;
         gap: 1rem;
         cursor: pointer;
         transition: .2s;
@@ -104,12 +106,12 @@
     }
 
     &__separator {
-        width: 15vw;
+        width: 18rem;
         border-bottom: 1px solid lightgray;
         margin: .5em 0;
 
         &--dark {
-            width: 15vw;
+            width: 18rem;
             border-bottom: 1px solid rgb(84, 84, 84);
             margin: 1rem 0;
         }

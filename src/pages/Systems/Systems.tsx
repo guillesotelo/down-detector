@@ -7,10 +7,12 @@ import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import {
   downtimeHeaders,
-  intervalDefaultOptions,
   systemHeaders,
-  timeoutDefaultOptions
 } from '../../constants/tableHeaders'
+import {
+  intervalDefaultOptions,
+  timeoutDefaultOptions
+} from '../../constants/default'
 import {
   createSystem,
   getAllSystems,
@@ -41,9 +43,13 @@ export default function Systems({ }: Props) {
   const [typeOptions, setTypeOptions] = useState(['Detection', 'Other'])
   const [intervalOptions, setIntervalOptions] = useState(intervalDefaultOptions)
   const [timeoutOptions, setTimeoutOptions] = useState(timeoutDefaultOptions)
+  const [alertsThreshold, setAlertsThreshold] = useState(Array.from({ length: 20 }, (_, i) => i + 1))
+  const [alertsExpiration, setAlertsExpiration] = useState(Array.from({ length: 72 }, (_, i) => i + 1))
   const [selectedType, setSelectedType] = useState('')
   const [selectedInterval, setSelectedInterval] = useState({ name: '', value: null })
   const [selectedTimeout, setSelectedTimeout] = useState({ name: '', value: null })
+  const [selectedThreshold, setSelectedThreshold] = useState(3)
+  const [selectedAlertExpiration, setSelectedAlertExpiration] = useState(2)
   const [start, setStart] = useState<any>(null)
   const [end, setEnd] = useState<any>(null)
   const [openStartCalendar, setOpenStartCalendar] = useState(false)
@@ -129,7 +135,7 @@ export default function Systems({ }: Props) {
     setSelectedOwner({})
   }
 
-  const saveChanges = async () => {
+  const saveChanges = async (dtArray?: dataObj[]) => {
     setLoading(true)
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     try {
@@ -138,10 +144,12 @@ export default function Systems({ }: Props) {
         type: selectedType,
         interval: selectedInterval.value,
         timeout: selectedTimeout.value,
+        alertThreshold: selectedThreshold,
+        alertsExpiration: selectedAlertExpiration,
         owner: isSuper ? JSON.stringify(selectedOwner) : JSON.stringify(user),
         ownerId: isSuper ? selectedOwner._id : user._id,
         updatedBy: user.username || '',
-        downtimeArray
+        downtimeArray: dtArray || downtimeArray
       }
       if (newSystem) {
         const saved = await createSystem({
@@ -182,33 +190,38 @@ export default function Systems({ }: Props) {
     return errors
   }
 
-  const saveDowntime = () => {
-    const errors = checkErrors()
-    if (errors.length) return errors.map((error: string) => toast.error(error))
+  const saveDowntime = async () => {
+    try {
+      const errors = checkErrors()
+      if (errors.length) return errors.map((error: string) => toast.error(error))
 
-    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
-    if (selectedDowntime !== -1) {
-      const newArr = [...downtimeArray]
-      newArr[selectedDowntime] = {
-        ...downtimeArray[selectedDowntime],
+      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+      if (selectedDowntime !== -1) {
+        const newArr = [...downtimeArray]
+        newArr[selectedDowntime] = {
+          ...downtimeArray[selectedDowntime],
+          start,
+          end,
+          updatedBy: user.username || '',
+          note: data.downtimeNote,
+          url: data.url || ''
+        }
+        await saveChanges(newArr)
+      } else await saveChanges(downtimeArray.concat({
         start,
         end,
         updatedBy: user.username || '',
         note: data.downtimeNote,
         url: data.url || ''
-      }
-      setDowntimeArray(newArr)
-    } else setDowntimeArray(downtimeArray.concat({
-      start,
-      end,
-      updatedBy: user.username || '',
-      note: data.downtimeNote,
-      url: data.url || ''
-    }))
-    setAddDowntime(false)
-    setSelectedDowntime(-1)
-    setStart(null)
-    setEnd(null)
+      }))
+
+      setAddDowntime(false)
+      setSelectedDowntime(-1)
+      setStart(null)
+      setEnd(null)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const getDate = (date: Date) => {
@@ -297,12 +310,14 @@ export default function Systems({ }: Props) {
               name='name'
               updateData={updateData}
               value={data.name}
+              disabled={!isSuper}
             />
             <InputField
               label='URL'
               name='url'
               updateData={updateData}
               value={data.url}
+              disabled={!isSuper}
             />
             <div className="systems__new-row">
               {isSuper ?
@@ -328,39 +343,62 @@ export default function Systems({ }: Props) {
                 name='description'
                 updateData={updateData}
                 value={data.description}
+                disabled={!isSuper}
               />
             </div>
-            <div className="systems__new-row">
-              <Dropdown
-                label='Type'
-                options={typeOptions}
-                value={selectedType}
-                selected={selectedType}
-                setSelected={setSelectedType}
-                maxHeight='20vh'
-                style={{ width: '100%' }}
-              />
-              <Dropdown
-                label='Interval'
-                options={intervalOptions}
-                value={selectedInterval.name}
-                selected={selectedInterval}
-                setSelected={setSelectedInterval}
-                maxHeight='20vh'
-                objKey='name'
-                style={{ width: '100%' }}
-              />
-              <Dropdown
-                label='Timeout'
-                options={timeoutOptions}
-                value={selectedTimeout.name}
-                selected={selectedTimeout}
-                setSelected={setSelectedTimeout}
-                maxHeight='20vh'
-                objKey='name'
-                style={{ width: '100%' }}
-              />
-            </div>
+            {isSuper ?
+              <div className="systems__new-row">
+                <Dropdown
+                  label='Type'
+                  options={typeOptions}
+                  value={selectedType}
+                  selected={selectedType}
+                  setSelected={setSelectedType}
+                  maxHeight='20vh'
+                  style={{ width: '100%' }}
+                />
+                <Dropdown
+                  label='Interval'
+                  options={intervalOptions}
+                  value={selectedInterval.name}
+                  selected={selectedInterval}
+                  setSelected={setSelectedInterval}
+                  maxHeight='20vh'
+                  objKey='name'
+                  style={{ width: '100%' }}
+                />
+                <Dropdown
+                  label='Timeout'
+                  options={timeoutOptions}
+                  value={selectedTimeout.name}
+                  selected={selectedTimeout}
+                  setSelected={setSelectedTimeout}
+                  maxHeight='20vh'
+                  objKey='name'
+                  style={{ width: '100%' }}
+                />
+              </div> : ''}
+            {isSuper ?
+              <div className="systems__new-row">
+                <Dropdown
+                  label='User Alerts Threshold'
+                  options={alertsThreshold}
+                  value={selectedThreshold}
+                  selected={selectedThreshold}
+                  setSelected={setSelectedInterval}
+                  maxHeight='20vh'
+                  style={{ width: '100%' }}
+                />
+                <Dropdown
+                  label='User Alerts Expiration (hours)'
+                  options={alertsExpiration}
+                  value={selectedAlertExpiration}
+                  selected={selectedAlertExpiration}
+                  setSelected={setSelectedTimeout}
+                  maxHeight='20vh'
+                  style={{ width: '100%' }}
+                />
+              </div> : ''}
             <div className="systems__new-downtime">
               {!addDowntime ?
                 <DataTable
@@ -376,24 +414,6 @@ export default function Systems({ }: Props) {
               {addDowntime ?
                 <div>
                   <h4 className="systems__new-downtime-title">{selectedDowntime !== -1 ? 'Edit Downtime' : 'New Downtime'}</h4>
-                  <div className="systems__new-row">
-                    <Button
-                      label={openStartCalendar ? 'OK' : start ? 'Start: ' + getDate(start) : 'Select Start'}
-                      handleClick={() => setOpenStartCalendar(!openStartCalendar)}
-                      bgColor={APP_COLORS.ORANGE_ONE}
-                      textColor='white'
-                      style={{ width: '45%' }}
-                      disabled={loading}
-                    />
-                    <Button
-                      label={openEndCalendar ? 'OK' : end ? 'End: ' + getDate(end) : 'Select End'}
-                      handleClick={() => setOpenEndCalendar(!openEndCalendar)}
-                      bgColor={APP_COLORS.ORANGE_ONE}
-                      textColor='white'
-                      style={{ width: '45%' }}
-                      disabled={loading}
-                    />
-                  </div>
                   <div className="systems__new-row">
                     {openStartCalendar ?
                       <DatePicker
@@ -418,6 +438,24 @@ export default function Systems({ }: Props) {
                       : ''
                     }
                   </div>
+                  <div className="systems__new-row">
+                    <Button
+                      label={openStartCalendar ? 'OK' : start ? 'Start: ' + getDate(start) : 'Select Start'}
+                      handleClick={() => setOpenStartCalendar(!openStartCalendar)}
+                      bgColor={APP_COLORS.ORANGE_ONE}
+                      textColor='white'
+                      style={{ width: '45%' }}
+                      disabled={loading}
+                    />
+                    <Button
+                      label={openEndCalendar ? 'OK' : end ? 'End: ' + getDate(end) : 'Select End'}
+                      handleClick={() => setOpenEndCalendar(!openEndCalendar)}
+                      bgColor={APP_COLORS.ORANGE_ONE}
+                      textColor='white'
+                      style={{ width: '45%' }}
+                      disabled={loading}
+                    />
+                  </div>
                   <InputField
                     label='Note'
                     name='downtimeNote'
@@ -440,7 +478,7 @@ export default function Systems({ }: Props) {
                   textColor='white'
                   style={{ width: '45%' }}
                   disabled={loading}
-                  />
+                />
                 {addDowntime ?
                   <Button
                     label={selectedDowntime !== -1 ? 'Save Downtime' : 'Add'}
@@ -472,7 +510,7 @@ export default function Systems({ }: Props) {
               </div>
             </div>
             {!addDowntime && selectedDowntime === -1 ?
-              <div className="systems__new-row">
+              <div className="systems__new-row" style={{ marginTop: '1rem' }}>
                 <Button
                   label='Close'
                   handleClick={discardChanges}
@@ -480,7 +518,7 @@ export default function Systems({ }: Props) {
                   textColor='white'
                   style={{ width: '45%' }}
                   disabled={loading}
-                  />
+                />
                 <Button
                   label='Save Changes'
                   handleClick={saveChanges}
@@ -488,10 +526,10 @@ export default function Systems({ }: Props) {
                   textColor='white'
                   style={{ width: '45%' }}
                   disabled={loading}
-                  />
+                />
               </div>
               : ''}
-            {!newSystem && !addDowntime && selectedDowntime === -1 ?
+            {isSuper && !newSystem && !addDowntime && selectedDowntime === -1 ?
               <>
                 <Separator />
                 <Button
@@ -507,13 +545,14 @@ export default function Systems({ }: Props) {
         </Modal>
         : ''}
       <div className="systems__col" style={{ filter: selected !== -1 || newSystem ? 'blur(10px)' : '' }}>
-        <Button
-          label='New System'
-          handleClick={() => setNewSystem(true)}
-          bgColor={APP_COLORS.BLUE_TWO}
-          textColor='white'
-          disabled={loading}
-          />
+        {isSuper ?
+          <Button
+            label='New System'
+            handleClick={() => setNewSystem(true)}
+            bgColor={APP_COLORS.BLUE_TWO}
+            textColor='white'
+            disabled={loading}
+          /> : ''}
         <DataTable
           title='Systems'
           tableData={tableData}

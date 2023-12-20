@@ -1,7 +1,7 @@
 .systemcard {
     &__container {
-        width: 13vw;
-        height: 20vh;
+        width: 14rem;
+        height: 10rem;
         box-shadow: .2rem .3rem 1rem rgba(0, 0, 0, 0.172);
         border: 2px solid rgba(0, 0, 0, 0.074);
         border-radius: 1rem;
@@ -24,8 +24,8 @@
         }
 
         &--dark {
-            width: 13vw;
-            height: 20vh;
+            width: 14rem;
+            height: 10rem;
             border: 2px solid lightgray;
             border-radius: 1rem;
             padding: 1.5rem;
@@ -49,7 +49,7 @@
     }
 
     &__wrapper {
-        width: 13vw;
+        width: 14rem;
         //     &:hover>.systemcard__event {
         //         transform: translateY(0%);
         //         position: relative;
@@ -107,9 +107,9 @@
         align-items: center;
         justify-content: center;
         height: 4vw;
-        width: 13vw;
-        // border: 1px solid rgba(0, 0, 0, 0.093);
-        border-radius: .2rem;
+        width: 14rem;
+        border: 1px solid rgba(0, 0, 0, 0.207);
+        border-radius: .5rem;
         cursor: pointer;
         margin: .5rem 0;
     }
@@ -117,7 +117,7 @@
     &__footer {
         display: flex;
         flex-direction: row;
-        align-items: flex-end;
+        align-items: center;
         justify-content: space-between;
 
         &>button {
@@ -157,7 +157,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 2rem 1rem 1rem 1rem;
+        padding: 2rem .2rem 1rem .2rem;
         margin-top: -1rem;
         background-color: #ffe5b5;
         border-bottom-right-radius: 1rem;
@@ -165,7 +165,7 @@
         position: relative;
         z-index: 1;
         overflow: hidden;
-        width: calc(13vw + 1.5rem);
+        width: calc(14rem + 1.5rem);
         padding: 1.5rem .8rem .8rem .8rem;
 
         &:hover .systemcard__event-note {
@@ -177,7 +177,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem 1rem 1rem 1rem;
+            padding: 2rem .2rem 1rem .2rem;
             margin-top: -1rem;
             background-color: #7d490d;
             border-bottom-right-radius: 1rem;
@@ -185,7 +185,7 @@
             position: relative;
             z-index: 1;
             overflow: hidden;
-            width: calc(13vw + 1.5rem);
+            width: calc(14rem + 1.5rem);
             padding: 1.5rem .8rem .8rem .8rem;
 
             &:hover .systemcard__event-note {
@@ -211,11 +211,15 @@
             background-color: #e6e6e6;
             padding: .2rem .4rem;
             border-radius: .5rem;
+            white-space: nowrap;
+            font-size: .7rem;
 
             &--dark {
                 background-color: #5a5a5a;
                 padding: .2rem .4rem;
                 border-radius: .5rem;
+                white-space: nowrap;
+                font-size: .7rem;
             }
         }
 
