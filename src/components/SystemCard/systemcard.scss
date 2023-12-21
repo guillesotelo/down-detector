@@ -50,6 +50,8 @@
 
     &__wrapper {
         width: 14rem;
+        opacity: 0;
+        animation: fade-in .5s ease-in forwards;
         //     &:hover>.systemcard__event {
         //         transform: translateY(0%);
         //         position: relative;
@@ -106,7 +108,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 4vw;
+        height: 5rem;
         width: 14rem;
         border: 1px solid rgba(0, 0, 0, 0.207);
         border-radius: .5rem;
@@ -235,5 +237,15 @@
             -webkit-box-orient: vertical;
             transition: .3s;
         }
+    }
+
+    &__loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 }

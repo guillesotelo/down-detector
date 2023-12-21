@@ -38,6 +38,7 @@
             cursor: pointer;
             transition: .3s;
             padding-left: 10px;
+            opacity: .8;
 
             &:hover {
                 opacity: .5;
@@ -64,6 +65,7 @@
             cursor: pointer;
             transition: .3s;
             padding-right: 10px;
+            opacity: .8;
 
             &:hover {
                 opacity: .5;
@@ -94,6 +96,7 @@
         height: 1.5rem;
         cursor: pointer;
         transition: .3s;
+        opacity: .8;
 
         &:hover {
             opacity: .6;

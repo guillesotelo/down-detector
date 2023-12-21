@@ -11,21 +11,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 85vw;
+            width: 100%;
             background-color: #202020;
         }
     }
 
     &__system {
         &-list {
-            width: calc(100% - 16rem);
+            width: calc(100% - 12rem);
             display: flex;
             flex-wrap: wrap;
             gap: 5rem;
             row-gap: 1rem;
             align-items: flex-start;
             justify-content: center;
-            margin: 2rem auto;
+            margin: 2rem 0 2rem -3rem;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
@@ -40,7 +40,7 @@
     &__modal {
         &-graph {
             width: 100vw;
-            height: 6vw;
+            height: 8vw;
             margin: 0 auto;
 
             &-wrapper {

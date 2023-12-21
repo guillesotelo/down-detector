@@ -16,17 +16,15 @@ import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
 Chart.register(...registerables);
 
-type Props = {}
-
-export default function Home({ }: Props) {
+export default function Home() {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
-  const [allSystems, setAllSystems] = useState<any[]>([])
-  const [allEvents, setAllEvents] = useState<any[]>([])
-  const [statusAndAlerts, setStatusAndAlerts] = useState<any[]>([])
-  const [allStatus, setAllStatus] = useState([])
-  const [allAlerts, setAllAlerts] = useState([])
+  const [allSystems, setAllSystems] = useState<dataObj[]>([])
+  const [allEvents, setAllEvents] = useState<dataObj[]>([])
+  const [statusAndAlerts, setStatusAndAlerts] = useState<dataObj[]>([])
+  const [allStatus, setAllStatus] = useState<dataObj[]>([])
+  const [allAlerts, setAllAlerts] = useState<dataObj[]>([])
   const [data, setData] = useState<dataObj>({})
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
@@ -37,14 +35,7 @@ export default function Home({ }: Props) {
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
-  const timeOptions: any = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }
+
   const issueOptions = [
     { name: 'Unable to access' },
     { name: `Can access but doesn't work` },
@@ -251,7 +242,7 @@ export default function Home({ }: Props) {
   }
 
   const parseUrl = (url: string) => {
-    return url.replace(/^((?:[^\/]*\/){3}).*$/, '$1')
+    return url.replace(/^((?:[^]*){3}).*$/, '$1')
   }
 
   const isComingEvent = (event: dataObj) => {
@@ -277,12 +268,12 @@ export default function Home({ }: Props) {
   }
 
   const getSelectedSystem = () => {
-    return allSystems.find(system => system._id === selected)
+    return allSystems.find(system => system._id === selected) || {}
   }
 
   const getDowntimeString = () => {
     const system = getSelectedSystem()
-    const event = getDownTime(system)
+    const event = getDownTime(system || {})
     if (event && event.start && event.end) {
       return (<span>
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
@@ -297,7 +288,7 @@ export default function Home({ }: Props) {
 
   const isLiveDowntime = () => {
     const system = getSelectedSystem()
-    const downtime = getDownTime(system)
+    const downtime = getDownTime(system || {})
     if (downtime && downtime.start) {
       const now = new Date().getTime()
       const start = new Date(downtime.start).getTime()
@@ -382,18 +373,13 @@ export default function Home({ }: Props) {
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
                 APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
-                APP_COLORS.ORANGE_ONE : '#fcd9a5',
-              border: darkMode ? '1px solid black' : '1px solid gray'
+                'transparent' : '#fcd9a5',
+              border: darkMode ? '1px solid orange' : '1px solid gray'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
           </div>
           : ''}
-        <h2
-          className="systemcard__status"
-          style={{ color: getCurrentStatus(getSelectedSystem()) ? 'green' : 'red' }}>
-          ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
-        </h2>
         <p className="home__modal-hours">Total registered: {totalHours} hours</p>
         <div className="home__modal-graph-wrapper">
           <div className='home__modal-graph'>
@@ -412,7 +398,11 @@ export default function Home({ }: Props) {
           />
         </div>
         <div className="home__modal-footer">
-          <p className="home__modal-updated">Last updated: {getDate(lastCheck)}</p>
+          <h2
+            className="systemcard__status"
+            style={{ color: getCurrentStatus(getSelectedSystem()) ? 'green' : 'red' }}>
+            ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
+          </h2>
           <Button
             label='Report Issue'
             handleClick={() => setReport(selected)}
@@ -447,8 +437,14 @@ export default function Home({ }: Props) {
               setModalChartOptions={setModalChartOptions}
               downtime={getDownTime(system)}
               lastCheck={lastCheck}
+              delay={String(i ? i / 10 : 0) + 's'}
             />)
-          : loading ? <MoonLoader color='#0057ad' size={50} /> :
+          : loading ?
+            <div>
+              <MoonLoader color='#0057ad' size={50} />
+              <p>Loading systems...</p>
+            </div>
+            :
             <p className="home__system-void">No systems found</p>
         }
       </div>

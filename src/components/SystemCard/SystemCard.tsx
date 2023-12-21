@@ -5,6 +5,7 @@ import { dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
+import PuffLoader from "react-spinners/PuffLoader"
 Chart.register(...registerables);
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
     setSelectedData: (value: dataObj) => void
     setModalChartOptions: (value: dataObj[]) => void
     lastCheck?: Date
+    delay?: string
 }
 
 export default function SystemCard(props: Props) {
@@ -42,6 +44,7 @@ export default function SystemCard(props: Props) {
         alerts,
         setModalChartOptions,
         lastCheck,
+        delay
     } = props
 
     const {
@@ -412,7 +415,7 @@ export default function SystemCard(props: Props) {
     }
 
     return (
-        <div className="systemcard__wrapper">
+        <div className="systemcard__wrapper" style={{ animationDelay: `${delay || '0'}` }}>
             <>
                 <div
                     className={`systemcard__container${darkMode ? '--dark' : ''}`}
@@ -427,14 +430,19 @@ export default function SystemCard(props: Props) {
                     <div className="systemcard__header">
                         <h1 className="systemcard__name">{name || 'Api Name'}</h1>
                     </div>
-                    <div className="systemcard__graph" onClick={selectSystem}>
-                        <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
-                    </div>
+                    {loading ?
+                        <div className='systemcard__loading'>
+                            <PuffLoader color='lightgray' size={40} />
+                        </div>
+                        :
+                        <div className="systemcard__graph" onClick={selectSystem}>
+                            <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
+                        </div>}
                     <div className="systemcard__footer">
                         <h2
                             className="systemcard__status"
                             style={{ color: loading ? 'gray' : status ? 'green' : 'red' }}>
-                            {loading ? <p>Loading...</p> :
+                            {loading ? <p style={{ color: 'gray' }}>Loading status...</p> :
                                 <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong></>
                             }
                         </h2>
@@ -451,9 +459,9 @@ export default function SystemCard(props: Props) {
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
                             backgroundColor: isLiveDowntime(downtime) ? darkMode ?
-                                APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
-                                APP_COLORS.ORANGE_ONE : '#fcd9a5',
-                            border: darkMode ? '1px solid black' : '1px solid lightgray'
+                                'black' : '#ff6161' : darkMode ?
+                                'black' : '#fcd9a5',
+                            border: isLiveDowntime(downtime) ? '1px solid red' : '1px solid orange'
                         }}
                     >
                         <p className="systemcard__event-title">Planned downtime:</p>

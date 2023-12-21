@@ -13,15 +13,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 
-let darkMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
-
-window.addEventListener('storage', () => {
-  darkMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
-})
+const isDarkMode = () => {
+  return JSON.parse(localStorage.getItem('preferredMode') || 'false')
+}
 
 root.render(
   <BrowserRouter>
-    <ToastContainer autoClose={2000} theme={darkMode ? 'dark' : 'light'} />
+    <ToastContainer autoClose={2000} theme={isDarkMode() ? 'dark' : 'light'} />
     <AppProvider>
       <App />
     </AppProvider>
