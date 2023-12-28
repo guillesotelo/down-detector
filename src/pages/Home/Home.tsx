@@ -441,7 +441,7 @@ export default function Home() {
               delay={String(i ? i / 10 : 0) + 's'}
             />)
           : loading ?
-            <div style={{ textAlign: 'center' }}>
+            <div className='home__loading'>
               <MoonLoader color='#0057ad' size={50} />
               <p>Loading systems...</p>
             </div>
