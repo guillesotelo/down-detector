@@ -3,7 +3,7 @@ import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
 import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents } from '../../services'
-import { dataObj } from '../../types'
+import { alertType, dataObj, eventType, historyType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
@@ -20,18 +20,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
-  const [allSystems, setAllSystems] = useState<dataObj[]>([])
-  const [allEvents, setAllEvents] = useState<dataObj[]>([])
-  const [statusAndAlerts, setStatusAndAlerts] = useState<dataObj[]>([])
-  const [allStatus, setAllStatus] = useState<dataObj[]>([])
-  const [allAlerts, setAllAlerts] = useState<dataObj[]>([])
+  const [allSystems, setAllSystems] = useState<systemType[]>([])
+  const [allEvents, setAllEvents] = useState<eventType[]>([])
+  const [statusAndAlerts, setStatusAndAlerts] = useState<alertType & historyType[]>([])
+  const [allStatus, setAllStatus] = useState<historyType[]>([])
+  const [allAlerts, setAllAlerts] = useState<alertType[]>([])
   const [data, setData] = useState<dataObj>({})
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
-  const [reportedStatus, setReportedStatus] = useState<dataObj>({ name: 'Unable to access' })
-  const [modalChartOptions, setModalChartOptions] = useState<dataObj>({})
+  const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
+  const [modalChartOptions, setModalChartOptions] = useState({})
   const [lastCheck, setLastCheck] = useState(new Date())
-  const { darkMode } = useContext(AppContext)
+  const { darkMode, setHeaderLoading } = useContext(AppContext)
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -57,6 +57,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    setHeaderLoading(true)
     loadData()
     const intervalId = setInterval(loadData, 1 * 60 * 1000)
     return () => clearInterval(intervalId)
@@ -118,7 +119,7 @@ export default function Home() {
   const getSystems = async () => {
     try {
       setLoading(true)
-      let systems = []
+      let systems: dataObj[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localSystems') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         systems = data
@@ -140,7 +141,7 @@ export default function Home() {
   const getAllStatus = async () => {
     try {
       setLoading(true)
-      let history = []
+      let history: dataObj[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localHistory') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         history = data
@@ -149,7 +150,7 @@ export default function Home() {
         history = await getAllHistory()
         localStorage.setItem('localHistory', JSON.stringify({ data: history, saved: new Date() }))
       }
-      if (history && history.length) {
+      if (history && Array.isArray(history)) {
         setAllStatus(history)
       }
       setLoading(false)
@@ -162,7 +163,7 @@ export default function Home() {
   const getAllUserAlerts = async () => {
     try {
       setLoading(true)
-      let alerts = []
+      let alerts: dataObj[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localAlerts') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         alerts = data
@@ -171,7 +172,7 @@ export default function Home() {
         alerts = await getAllAlerts()
         localStorage.setItem('localAlerts', JSON.stringify({ data: alerts, saved: new Date() }))
       }
-      if (alerts && alerts.length) {
+      if (alerts && Array.isArray(alerts)) {
         setAllAlerts(alerts)
       }
       setLoading(false)
@@ -189,7 +190,7 @@ export default function Home() {
   const getSystemData = (id: string, type: string) => {
     if (allSystems.length) {
       const found = allSystems.find(system => system._id === id)
-      return found ? found[type] || null : null
+      return found ? String(found[type as keyof systemType]) || null : null
     }
     return null
   }
@@ -209,8 +210,8 @@ export default function Home() {
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
-        description: reportedStatus.name + ': ' + data.description || getSystemData(report, 'description') || '',
-        createdBy: user.username || 'anonymous'
+        description: `${reportedStatus.name}${data.description ? ': ' + data.description : ''}`,
+        createdBy: user.username || `${report}${String(new Date().getTime())}`
       }
 
       const sent = await createUserAlert(reportData)
@@ -365,16 +366,16 @@ export default function Home() {
     return (
       <Modal
         title={getSystemData(selected, 'name')}
-        subtitle={parseUrl(getSystemData(selected, 'url'))}
+        subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={() => setSelected('')}>
         {getDowntimeString() ?
           <div
             className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
-                APP_COLORS.RED_TWO : '#ff6161' : darkMode ?
+                'transparent' : '#ff6161' : darkMode ?
                 'transparent' : '#fcd9a5',
-              border: darkMode ? '1px solid orange' : '1px solid gray'
+              border: isLiveDowntime() ? darkMode ? '1px solid red' : '1px solid orange' : '1px solid gray'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
@@ -423,7 +424,7 @@ export default function Home() {
         className="home__system-list"
         style={{ filter: report || selected ? 'blur(10px)' : '' }}
       >
-        {allSystems.length && !loading ?
+        {allSystems.length ?
           allSystems.map((system: dataObj, i: number) =>
             <SystemCard
               key={i}
@@ -440,7 +441,7 @@ export default function Home() {
               delay={String(i ? i / 10 : 0) + 's'}
             />)
           : loading ?
-            <div>
+            <div style={{ textAlign: 'center' }}>
               <MoonLoader color='#0057ad' size={50} />
               <p>Loading systems...</p>
             </div>

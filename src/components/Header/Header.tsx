@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import LoginIcon from '../../assets/icons/login-icon.svg'
 import UserIcon from '../../assets/icons/user-icon.svg'
 import DDLogo from '../../assets/logos/down-logo.png'
@@ -8,8 +8,20 @@ import Day from '../../assets/icons/day.svg'
 import Night from '../../assets/icons/night.svg'
 
 export default function Header() {
-  const { isLoggedIn, setItem, darkMode, setDarkMode } = useContext(AppContext)
+  const [barWidth, setBarWidth] = useState('0%')
+  const { isLoggedIn, setItem, darkMode, setDarkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
   const history = useHistory()
+
+  useEffect(() => {
+    if (headerLoading) renderHeaderLoader()
+  }, [headerLoading])
+
+  const renderHeaderLoader = () => {
+    Array.from({ length: 110 }).forEach((_, i) => {
+      setTimeout(() => setBarWidth(`${i < 109 ? i : 0}%`), 10)
+    })
+    setHeaderLoading(false)
+  }
 
   const userOptions = () => {
     setItem('')
@@ -25,6 +37,8 @@ export default function Header() {
   const switchMode = () => {
     setDarkMode(!darkMode)
     localStorage.setItem('preferredMode', JSON.stringify(!darkMode))
+    const event = new Event('darkMode')
+    document.dispatchEvent(event)
   }
 
   return (
@@ -40,6 +54,7 @@ export default function Header() {
           <img src={UserIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
         </div>
       </div>
+      <div className="header__loading" style={{ width: barWidth }} />
     </div>
   )
 }

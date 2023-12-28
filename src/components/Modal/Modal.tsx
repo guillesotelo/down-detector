@@ -5,8 +5,8 @@ import { dataObj } from '../../types'
 type Props = {
     children?: ReactNode
     onClose?: () => void
-    title?: string
-    subtitle?: string
+    title?: string | null
+    subtitle?: string | null
     style?: dataObj
 }
 

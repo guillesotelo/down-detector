@@ -13,7 +13,9 @@ export const AppContext = createContext<AppContextType>({
     item: '',
     setItem: () => { },
     darkMode: false,
-    setDarkMode: () => { }
+    setDarkMode: () => { },
+    headerLoading: false,
+    setHeaderLoading: () => { },
 })
 
 type Props = {
@@ -27,6 +29,7 @@ export const AppProvider = ({ children }: Props) => {
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
     const [darkMode, setDarkMode] = useState(false)
+    const [headerLoading, setHeaderLoading] = useState(false)
 
     useEffect(() => {
         verifyUser()
@@ -37,12 +40,12 @@ export const AppProvider = ({ children }: Props) => {
     useEffect(() => {
         const body = document.querySelector('body')
         if (body) {
-            body.classList.remove('--dark') 
-            if(darkMode) body.classList.add('--dark')
+            body.classList.remove('--dark')
+            if (darkMode) body.classList.add('--dark')
 
             document.documentElement.setAttribute(
-              "data-color-scheme",
-              darkMode ? "dark" : "light"
+                "data-color-scheme",
+                darkMode ? "dark" : "light"
             )
         }
     }, [darkMode])
@@ -67,7 +70,9 @@ export const AppProvider = ({ children }: Props) => {
             item,
             setItem,
             darkMode,
-            setDarkMode
+            setDarkMode,
+            headerLoading,
+            setHeaderLoading
         }}>
         {children}
     </AppContext.Provider>

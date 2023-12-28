@@ -19,15 +19,33 @@
 @keyframes fade-in {
     0% {
         opacity: 0;
-        transform: translateY(-10%);
     }
 
-    50% {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in-down {
+    0% {
         opacity: 0;
+        transform: translateY(-10%);
     }
 
     100% {
         opacity: 1;
         transform: translateY(0%);
+    }
+}
+
+@keyframes fade-in-right {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0%);
     }
 }

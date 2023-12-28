@@ -13,6 +13,7 @@
         z-index: 3;
         align-self: center !important;
         justify-self: center !important;
+        animation: fade-in-down .2s ease-in forwards;
     }
 
     &__container {

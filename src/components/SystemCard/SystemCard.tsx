@@ -58,7 +58,8 @@ export default function SystemCard(props: Props) {
         createdBy,
         updatedBy,
         updatedAt,
-        lastCheckStatus
+        lastCheckStatus,
+        reportedlyDown
     } = system
 
     const timeOptions: any = {
@@ -442,8 +443,8 @@ export default function SystemCard(props: Props) {
                         <h2
                             className="systemcard__status"
                             style={{ color: loading ? 'gray' : status ? 'green' : 'red' }}>
-                            {loading ? <p style={{ color: 'gray' }}>Loading status...</p> :
-                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{status ? 'UP' : 'DOWN'}</strong></>
+                            {loading ? <p style={{ color: 'gray' }}>Checking status...</p> :
+                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{reportedlyDown ? 'Reported' : status ? 'UP' : 'DOWN'}</strong></>
                             }
                         </h2>
                         <Button

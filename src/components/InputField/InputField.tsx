@@ -8,7 +8,7 @@ type Props = {
     type?: string
     label?: string
     placeholder?: string
-    value?: string | number
+    value?: string | number | null
     cols?: number
     rows?: number
     style?: { [key: string | number]: any }
@@ -56,7 +56,7 @@ export default function InputField(props: Props) {
                 className={className || `textarea__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
-                value={value}
+                value={value || ''}
                 cols={cols}
                 rows={rows}
             />
@@ -69,7 +69,7 @@ export default function InputField(props: Props) {
                 className={className || `inputfield__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
-                value={value}
+                value={value || ''}
                 disabled={disabled}
             />
         </div>

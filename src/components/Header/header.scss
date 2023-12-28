@@ -10,6 +10,7 @@
         position: fixed;
         width: 100vw;
         z-index: 3;
+        animation: fade-in .5s ease-in forwards;
 
         &--dark {
             display: flex;
@@ -17,11 +18,12 @@
             justify-content: space-between;
             box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
             height: 8vh;
-            border-bottom: 1px solid  rgb(84, 84, 84);
+            border-bottom: 1px solid rgb(84, 84, 84);
             position: fixed;
             width: 100vw;
             z-index: 3;
             background-color: #000000;
+            animation: fade-in .5s ease-in forwards;
         }
     }
 
@@ -112,5 +114,13 @@
                 opacity: .6;
             }
         }
+    }
+
+    &__loading {
+        position: absolute;
+        top: calc(0% + 7.7vh);
+        width: 0%;
+        background-color: #7089AC;
+        height: .3vh;
     }
 }
