@@ -423,7 +423,7 @@ export default function SystemCard(props: Props) {
                     style={{
                         borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading ? '' : darkMode ?
-                            `linear-gradient(to bottom right, black, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                            `linear-gradient(to bottom right, #252525, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                             :
                             `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                     }}

@@ -373,9 +373,9 @@ export default function Home() {
             className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
-                'transparent' : '#ff6161' : darkMode ?
+                'transparent' : '#ffdada' : darkMode ?
                 'transparent' : '#fcd9a5',
-              border: isLiveDowntime() ? darkMode ? '1px solid red' : '1px solid orange' : '1px solid gray'
+              border: isLiveDowntime() ? '1px solid red' : '1px solid orange'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>

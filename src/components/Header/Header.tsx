@@ -3,7 +3,7 @@ import LoginIcon from '../../assets/icons/login-icon.svg'
 import UserIcon from '../../assets/icons/user-icon.svg'
 import DDLogo from '../../assets/logos/down-logo.png'
 import { AppContext, AppProvider } from '../../AppContext'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import Day from '../../assets/icons/day.svg'
 import Night from '../../assets/icons/night.svg'
 
@@ -11,6 +11,7 @@ export default function Header() {
   const [barWidth, setBarWidth] = useState('0%')
   const { isLoggedIn, setItem, darkMode, setDarkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
   const history = useHistory()
+  const location = useLocation()
 
   useEffect(() => {
     if (headerLoading) renderHeaderLoader()
@@ -30,6 +31,7 @@ export default function Header() {
   }
 
   const goToHelp = () => {
+    if (location.pathname.includes('help')) return history.push('/')
     setItem('/help')
     history.push('/help')
   }
