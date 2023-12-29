@@ -28,7 +28,7 @@ export default function SystemCard(props: Props) {
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [loading, setLoading] = useState(true)
-    const { darkMode } = useContext(AppContext)
+    const { darkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
 
     const chartHeight = '30vw'
     const chartWidth = '40vw'
@@ -70,6 +70,10 @@ export default function SystemCard(props: Props) {
         minute: '2-digit',
         hour12: false
     }
+
+    useEffect(() => {
+        if(!headerLoading) setHeaderLoading(true)
+    }, [loading])
 
     useEffect(() => {
         processChartData()
@@ -421,7 +425,8 @@ export default function SystemCard(props: Props) {
                 <div
                     className={`systemcard__container${darkMode ? '--dark' : ''}`}
                     style={{
-                        borderColor: loading ? 'gray' : status ? 'green' : 'red',
+                        borderColor: darkMode ? 'gray' : '#d3d3d361',
+                        // borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading ? '' : darkMode ?
                             `linear-gradient(to bottom right, #252525, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                             :
