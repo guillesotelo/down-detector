@@ -78,6 +78,8 @@ export default function Systems({ }: Props) {
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))
       if (select.timeout) setSelectedTimeout(getTimeOption(timeoutDefaultOptions, select.timeout))
       if (select.owner) setSelectedOwner(JSON.parse(select.owner))
+      if (select.alertThreshold) setSelectedThreshold(select.alertThreshold)
+      if (select.alertsExpiration) setSelectedAlertExpiration(select.alertsExpiration)
     }
   }, [selected, newSystem])
 
@@ -133,6 +135,8 @@ export default function Systems({ }: Props) {
     setSelectedDowntime(-1)
     setOnDeleteSystem(false)
     setSelectedOwner({})
+    setSelectedThreshold(3)
+    setSelectedAlertExpiration(2)
   }
 
   const saveChanges = async (dtArray?: dataObj[]) => {
@@ -141,22 +145,18 @@ export default function Systems({ }: Props) {
     try {
       const systemData = {
         ...data,
-        type: selectedType,
+        type: data.customType || selectedType,
         interval: selectedInterval.value,
         timeout: selectedTimeout.value,
         alertThreshold: selectedThreshold,
         alertsExpiration: selectedAlertExpiration,
         owner: isSuper ? JSON.stringify(selectedOwner) : JSON.stringify(user),
-        ownerId: isSuper ? selectedOwner._id : user._id,
+        ownerId: isSuper && selectedOwner._id ? selectedOwner._id : user._id,
         updatedBy: user.username || '',
-        downtimeArray: dtArray || downtimeArray
+        downtimeArray: Array.isArray(dtArray) ? dtArray : downtimeArray
       }
       if (newSystem) {
-        const saved = await createSystem({
-          ...systemData,
-          owner: user.isSuper ? null : JSON.stringify(user),
-          ownerId: user.isSuper ? null : user._id
-        })
+        const saved = await createSystem(systemData)
         if (saved && saved._id) {
           toast.success('System created successfully')
           discardChanges()
@@ -357,6 +357,14 @@ export default function Systems({ }: Props) {
                   maxHeight='20vh'
                   style={{ width: '100%' }}
                 />
+                {selectedType === 'Other' ?
+                  <InputField
+                    label='Describe type'
+                    name='customType'
+                    updateData={updateData}
+                    value={data.customType}
+                  />
+                  : ''}
                 <Dropdown
                   label='Interval'
                   options={intervalOptions}
@@ -385,7 +393,7 @@ export default function Systems({ }: Props) {
                   options={alertsThreshold}
                   value={selectedThreshold}
                   selected={selectedThreshold}
-                  setSelected={setSelectedInterval}
+                  setSelected={setSelectedThreshold}
                   maxHeight='20vh'
                   style={{ width: '100%' }}
                 />
@@ -394,7 +402,7 @@ export default function Systems({ }: Props) {
                   options={alertsExpiration}
                   value={selectedAlertExpiration}
                   selected={selectedAlertExpiration}
-                  setSelected={setSelectedTimeout}
+                  setSelected={setSelectedAlertExpiration}
                   maxHeight='20vh'
                   style={{ width: '100%' }}
                 />

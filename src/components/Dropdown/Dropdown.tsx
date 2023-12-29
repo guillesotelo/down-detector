@@ -65,7 +65,7 @@ export default function Dropdown(props: Props) {
     }
 
     const getSelectValue = () => {
-        if (value && typeof value === 'string' || typeof value === 'string') {
+        if (value && typeof value === 'string' || typeof value === 'number') {
             if (isDate) return value ? new Date(value).toLocaleDateString(locale || 'sv-SE') : 'Select'
             if (isTime) return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             else return value
