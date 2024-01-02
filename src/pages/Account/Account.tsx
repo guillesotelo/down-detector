@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContextType, dataObj } from '../../types'
+import { AppContextType, onChangeEventType, systemType, userType } from '../../types'
 import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
@@ -14,12 +14,12 @@ import { APP_COLORS } from '../../constants/app'
 type Props = {}
 
 export default function Account({ }: Props) {
-  const [data, setData] = useState<dataObj>({})
+  const [data, setData] = useState<userType>({})
   const [loading, setLoading] = useState(false)
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const [ownedSystems, setOwnedSystems] = useState<dataObj[]>([])
+  const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
   const { setIsLoggedIn, darkMode, setIsSuper } = useContext(AppContext) as AppContextType
   const history = useHistory()
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
@@ -41,7 +41,7 @@ export default function Account({ }: Props) {
     }
   }
 
-  const updateData = (key: string, e: { [key: string | number]: any }) => {
+  const updateData = (key: string, e: onChangeEventType) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
     setDataIsUpdated(true)

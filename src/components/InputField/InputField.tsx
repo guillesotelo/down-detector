@@ -1,9 +1,10 @@
-import React, { SyntheticEvent, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AppContext } from '../../AppContext'
+import { onChangeEventType } from '../../types'
 
 type Props = {
     name: string
-    updateData?: (name: string, e: SyntheticEvent) => void
+    updateData?: (name: string, e: onChangeEventType) => void
     className?: string
     type?: string
     label?: string
@@ -11,7 +12,7 @@ type Props = {
     value?: string | number | null
     cols?: number
     rows?: number
-    style?: { [key: string | number]: any }
+    style?: React.CSSProperties
     disabled?: boolean
     onSubmit?: () => void
 }

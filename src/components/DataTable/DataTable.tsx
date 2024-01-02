@@ -13,7 +13,7 @@ type Props = {
     selected?: number
     setSelected?: (value: number) => void
     max?: number
-    style?: dataObj
+    style?: React.CSSProperties
 }
 
 export default function DataTable(props: Props) {
@@ -54,12 +54,14 @@ export default function DataTable(props: Props) {
 
     const orderBy = (header: dataObj) => {
         const copyData = [...tableData]
-        const orderedData = copyData.sort((a, b) => {
+        const orderedData = copyData.slice().sort((a, b) => {
             if (ordered[header.name]) {
                 if (header.value === 'createdAt' || header.value === 'updatedAt') {
                     if (new Date(a[header.value]).getTime() < new Date(b[header.value]).getTime()) return -1
                     if (new Date(a[header.value]).getTime() > new Date(b[header.value]).getTime()) return 1
                 }
+                if (a[header.value] && !b[header.value]) return -1
+                if (!a[header.value] && b[header.value]) return 1
                 if (a[header.value] > b[header.value]) return -1
                 if (a[header.value] < b[header.value]) return 1
             } else {
@@ -67,6 +69,8 @@ export default function DataTable(props: Props) {
                     if (new Date(a[header.value]).getTime() > new Date(b[header.value]).getTime()) return -1
                     if (new Date(a[header.value]).getTime() < new Date(b[header.value]).getTime()) return 1
                 }
+                if (a[header.value] && !b[header.value]) return 1
+                if (!a[header.value] && b[header.value]) return -1
                 if (a[header.value] < b[header.value]) return -1
                 if (a[header.value] > b[header.value]) return 1
             }

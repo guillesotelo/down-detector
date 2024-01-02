@@ -1,17 +1,16 @@
 import axios from 'axios';
+import { logType } from '../types';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
 const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
 const getHeaders = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { authorization: `Bearer ${token}` }
+    return { authorization: `Bearer ${user.token}` }
 }
 
 const getConfig = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { headers: { authorization: `Bearer ${token}` } }
+    return { headers: { authorization: `Bearer ${user.token}` } }
 }
 
 const getAllLogs = async () => {
@@ -28,21 +27,21 @@ const getLogById = async (_id: string) => {
     } catch (err) { console.log(err) }
 }
 
-const createLog = async (data: { [key: string | number]: any }) => {
+const createLog = async (data: logType) => {
     try {
         const appLog = await axios.post(`${API_URL}/api/appLog/create`, { ...data, user }, getConfig())
         return appLog.data
     } catch (err) { console.log(err) }
 }
 
-const updateLog = async (data: { [key: string | number]: any }) => {
+const updateLog = async (data: logType) => {
     try {
         const appLog = await axios.post(`${API_URL}/api/appLog/update`, { ...data, user }, getConfig())
         return appLog.data
     } catch (err) { console.log(err) }
 }
 
-const deleteLog = async (data: { [key: string | number]: any }) => {
+const deleteLog = async (data: logType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/appLog/remove`, { ...data, user }, getConfig())
         return deleted.data

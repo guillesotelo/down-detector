@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Button from '../../components/Button/Button'
 import DataTable from '../../components/DataTable/DataTable'
-import { dataObj } from '../../types'
+import { eventType, onChangeEventType, systemType, userType } from '../../types'
 import Modal from '../../components/Modal/Modal'
 import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
@@ -30,24 +30,25 @@ import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
+import { getTimeOption } from '../../helpers'
 type Props = {}
 
 export default function Systems({ }: Props) {
-  const [data, setData] = useState<dataObj>({})
+  const [data, setData] = useState<systemType>({})
   const [newSystem, setNewSystem] = useState(false)
   const [loading, setLoading] = useState(false)
   const [addDowntime, setAddDowntime] = useState(false)
   const [selected, setSelected] = useState(-1)
   const [selectedDowntime, setSelectedDowntime] = useState(-1)
-  const [tableData, setTableData] = useState<dataObj[]>([])
+  const [tableData, setTableData] = useState<systemType[]>([])
   const [typeOptions, setTypeOptions] = useState(['Detection', 'Other'])
   const [intervalOptions, setIntervalOptions] = useState(intervalDefaultOptions)
   const [timeoutOptions, setTimeoutOptions] = useState(timeoutDefaultOptions)
   const [alertsThreshold, setAlertsThreshold] = useState(Array.from({ length: 20 }, (_, i) => i + 1))
   const [alertsExpiration, setAlertsExpiration] = useState(Array.from({ length: 72 }, (_, i) => i + 1))
   const [selectedType, setSelectedType] = useState('')
-  const [selectedInterval, setSelectedInterval] = useState({ name: '', value: null })
-  const [selectedTimeout, setSelectedTimeout] = useState({ name: '', value: null })
+  const [selectedInterval, setSelectedInterval] = useState({ name: '', value: 120000 })
+  const [selectedTimeout, setSelectedTimeout] = useState({ name: '', value: 10000 })
   const [selectedThreshold, setSelectedThreshold] = useState(3)
   const [selectedAlertExpiration, setSelectedAlertExpiration] = useState(2)
   const [start, setStart] = useState<any>(null)
@@ -56,8 +57,8 @@ export default function Systems({ }: Props) {
   const [openEndCalendar, setOpenEndCalendar] = useState(false)
   const [downtimeArray, setDowntimeArray] = useState<any[]>([])
   const [onDeleteSystem, setOnDeleteSystem] = useState(false)
-  const [allUsers, setAllUsers] = useState<dataObj[]>([])
-  const [selectedOwner, setSelectedOwner] = useState<dataObj>({})
+  const [allUsers, setAllUsers] = useState<userType[]>([])
+  const [selectedOwner, setSelectedOwner] = useState<userType>({})
   const { darkMode, isSuper } = useContext(AppContext)
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
@@ -83,10 +84,6 @@ export default function Systems({ }: Props) {
     }
   }, [selected, newSystem])
 
-  const getTimeOption = (arr: any[], value: number) => {
-    return arr.find(item => item.value === value) || { name: '', value: '' }
-  }
-
   const getSystems = async () => {
     try {
       setLoading(true)
@@ -111,14 +108,14 @@ export default function Systems({ }: Props) {
     }
   }
 
-  const getDowntimeData = async (system: dataObj) => {
+  const getDowntimeData = async (system: systemType) => {
     const allDowntimes = await getAllEvents()
     if (allDowntimes && allDowntimes.length) {
-      setDowntimeArray(allDowntimes.filter((downtime: dataObj) => downtime.systemId === system._id))
+      setDowntimeArray(allDowntimes.filter((downtime: eventType) => downtime.systemId === system._id))
     }
   }
 
-  const updateData = (key: string, e: { [key: string | number]: any }) => {
+  const updateData = (key: string, e: onChangeEventType) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
   }
@@ -129,8 +126,8 @@ export default function Systems({ }: Props) {
     setSelected(-1)
     setAddDowntime(false)
     setSelectedType('')
-    setSelectedInterval({ name: '', value: null })
-    setSelectedTimeout({ name: '', value: null })
+    setSelectedInterval({ name: '', value: 120000 })
+    setSelectedTimeout({ name: '', value: 10000 })
     setDowntimeArray([])
     setSelectedDowntime(-1)
     setOnDeleteSystem(false)
@@ -139,7 +136,7 @@ export default function Systems({ }: Props) {
     setSelectedAlertExpiration(2)
   }
 
-  const saveChanges = async (dtArray?: dataObj[]) => {
+  const saveChanges = async (dtArray?: systemType[]) => {
     setLoading(true)
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
     try {

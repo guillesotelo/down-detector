@@ -1,14 +1,14 @@
-import React, { SyntheticEvent, useContext } from 'react'
+import React, { KeyboardEvent, SyntheticEvent, useContext } from 'react'
 import SearchIcon from '../../assets/icons/search.svg'
-import { dataObj } from '../../types'
+import { onChangeEventType } from '../../types'
 import { AppContext } from '../../AppContext'
 
 type Props = {
-    handleChange: (value: SyntheticEvent) => void,
+    handleChange: (value: onChangeEventType) => void,
     triggerSearch: () => void,
     placeholder?: string,
     value?: string,
-    style?: dataObj
+    style?: React.CSSProperties
 }
 
 export default function SearchBar(props: Props) {
@@ -22,6 +22,10 @@ export default function SearchBar(props: Props) {
         style
     } = props
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> ) => {
+        if(e.key === 'Enter') triggerSearch()
+    }
+    
     return (
         <div className={`searchbar__container${darkMode ? '--dark' : ''}`} style={style}>
             <img src={SearchIcon} className={`searchbar__icon${darkMode ? '--dark' : ''}`} onClick={triggerSearch} />
@@ -31,6 +35,7 @@ export default function SearchBar(props: Props) {
                 placeholder={placeholder}
                 type='text'
                 value={value}
+                onKeyDown={handleKeyDown}
             />
         </div>
     )

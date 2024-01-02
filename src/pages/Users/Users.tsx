@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { deleteUser, getAllSystems, getAllUsers, registerUser, updateUser, verifyToken } from '../../services'
 import { logHeaders, userHeaders } from '../../constants/tableHeaders'
-import { dataObj } from '../../types'
+import { onChangeEventType, systemType, userType } from '../../types'
 import { toast } from 'react-toastify'
 import Modal from '../../components/Modal/Modal'
 import InputField from '../../components/InputField/InputField'
@@ -17,15 +17,15 @@ import { useHistory } from 'react-router-dom'
 type Props = {}
 
 export default function Users({ }: Props) {
-  const [data, setData] = useState<dataObj>({})
+  const [data, setData] = useState<userType>({})
   const [newUser, setNewUser] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isSuper, setIsSuper] = useState(false)
   const [onDeleteUser, setOnDeleteUser] = useState(false)
   const [selected, setSelected] = useState(-1)
-  const [tableData, setTableData] = useState<dataObj[]>([])
-  const [allSystems, setAllSystems] = useState<dataObj[]>([])
-  const [ownedSystems, setOwnedSystems] = useState<dataObj[]>([])
+  const [tableData, setTableData] = useState<userType[]>([])
+  const [allSystems, setAllSystems] = useState<systemType[]>([])
+  const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
   const { darkMode } = useContext(AppContext)
   const history = useHistory()
 
@@ -53,9 +53,7 @@ export default function Users({ }: Props) {
     getSystems()
   }
 
-  const getOwnedSystems = (user: dataObj) => {
-    console.log('user', user)
-    console.log('allSystems',allSystems)
+  const getOwnedSystems = (user: userType) => {
     return allSystems.filter(system => system.ownerId === user._id)
   }
 
@@ -84,7 +82,7 @@ export default function Users({ }: Props) {
   }
 
 
-  const updateData = (key: string, e: { [key: string | number]: any }) => {
+  const updateData = (key: string, e: onChangeEventType) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
   }
@@ -99,10 +97,10 @@ export default function Users({ }: Props) {
   }
 
   const dataOk = () => {
-    return data.email.includes('@') &&
+    return data.email && data.email.includes('@') &&
       data.email.includes('.') &&
       data.email.length > 5 &&
-      ((!data.password && !data.passowrd2)
+      ((!data.password && !data.password2)
         || (data.password && data.password2 &&
           data.password.length > 5 &&
           data.password === data.password2))
@@ -129,12 +127,12 @@ export default function Users({ }: Props) {
     if (!dataOk()) return toast.error('Check the fields')
     setLoading(true)
     try {
-      const userData: dataObj = {
+      const userData: userType = {
         ...data,
         isSuper,
         ownedSystems
       }
-      if (data.passowrd === '') delete data.password
+      if (data.password === '') delete data.password
       if (newUser) {
         const saved = await registerUser(userData)
         if (saved && saved._id) {
@@ -211,7 +209,7 @@ export default function Users({ }: Props) {
               updateData={updateData}
               value={data.password}
               type='password'
-              placeholder={data.password || data.passowrd2 ? '' : '••••••••••'}
+              placeholder={data.password || data.password2 ? '' : '••••••••••'}
             />
             <InputField
               label='Repeat passowrd'
@@ -219,7 +217,7 @@ export default function Users({ }: Props) {
               updateData={updateData}
               value={data.password2}
               type='password'
-              placeholder={data.password || data.passowrd2 ? '' : '••••••••••'}
+              placeholder={data.password || data.password2 ? '' : '••••••••••'}
             />
             <div className="systems__new-row">
               <Switch

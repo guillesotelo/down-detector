@@ -16,6 +16,17 @@ export type AppContextType = {
     setHeaderLoading: (value: boolean) => void
 }
 
+export type userType = {
+    _id?: string
+    username?: string
+    email?: string
+    password?: string
+    password2?: string
+    isSuper?: boolean
+    newData?: userType
+    ownedSystems?: systemType[]
+}
+
 export type systemType = {
     _id?: string
     name?: string
@@ -36,6 +47,10 @@ export type systemType = {
     reportedlyDown?: boolean
     createdAt?: Date
     updatedAt?: Date
+    downtimeArray?: eventType[]
+    newData?: systemType
+    customType?: string
+    downtimeNote?: string
 }
 
 export type eventType = {
@@ -47,16 +62,19 @@ export type eventType = {
     node?: string
     createdAt?: Date
     updatedAt?: Date
+    note?: string
+    newData?: eventType
 }
 
 export type historyType = {
     _id?: string
     url?: string
     systemId?: string
-    status?: string
+    status?: boolean
     description?: string
     createdAt?: Date
     updatedAt?: Date
+    newData?: historyType
 }
 
 export type alertType = {
@@ -68,4 +86,21 @@ export type alertType = {
     createdBy?: string
     createdAt?: Date
     updatedAt?: Date
+    newData?: alertType
 }
+
+export type logType = {
+    _id?: string
+    username?: string
+    email?: string
+    details?: string
+    module?: string
+    newData?: logType
+}
+
+export type statusType = {
+    time: Date
+    status: number
+}
+
+export type onChangeEventType = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>

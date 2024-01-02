@@ -45,3 +45,7 @@ export const getHistoryAndAlerts = async (systemId?: string) => {
         return []
     }
 }
+
+export const getTimeOption = (arr: any[], value: number) => {
+    return arr.find(item => item.value === value) || { name: '', value: '' }
+  }

@@ -3,7 +3,7 @@ import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
 import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents } from '../../services'
-import { alertType, dataObj, eventType, historyType, systemType } from '../../types'
+import { alertType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
@@ -25,7 +25,7 @@ export default function Home() {
   const [statusAndAlerts, setStatusAndAlerts] = useState<alertType & historyType[]>([])
   const [allStatus, setAllStatus] = useState<historyType[]>([])
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
-  const [data, setData] = useState<dataObj>({})
+  const [data, setData] = useState<alertType>({})
   const [chartData, setChartData] = useState<any>({})
   const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
@@ -77,20 +77,20 @@ export default function Home() {
   }, [report])
 
   const getStatusAndAlerts = () => {
-    const statusAndAlertsByID = allStatus.filter((status: dataObj) => status.systemId === selected)
-      .concat(allAlerts.filter((alert: dataObj) => alert.systemId === selected))
-      .sort((a: dataObj, b: dataObj) => {
-        if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) return -1
+    const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
+      .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
+      .sort((a: eventType & alertType, b: eventType & alertType) => {
+        if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
         return 1
       })
     setStatusAndAlerts(statusAndAlertsByID)
   }
 
   const getTotalRegisteredHours = () => {
-    const systemStatus = allStatus.filter((status: dataObj) => status.systemId === selected)
-    const firstStatus: dataObj = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
+    const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
+    const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
     const firstCheck = firstStatus ? firstStatus.createdAt : null
-    const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000)
+    const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
     setTotalHours(timeSinceFirstCheck)
   }
 
@@ -119,7 +119,7 @@ export default function Home() {
   const getSystems = async () => {
     try {
       setLoading(true)
-      let systems: dataObj[] = []
+      let systems: systemType[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localSystems') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         systems = data
@@ -141,7 +141,7 @@ export default function Home() {
   const getAllStatus = async () => {
     try {
       setLoading(true)
-      let history: dataObj[] = []
+      let history: historyType[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localHistory') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         history = data
@@ -163,7 +163,7 @@ export default function Home() {
   const getAllUserAlerts = async () => {
     try {
       setLoading(true)
-      let alerts: dataObj[] = []
+      let alerts: alertType[] = []
       const { saved, data } = JSON.parse(localStorage.getItem('localAlerts') || '{}') || {}
       if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
         alerts = data
@@ -182,9 +182,9 @@ export default function Home() {
     }
   }
 
-  const getCurrentStatus = (system: dataObj) => {
-    const history: any = allStatus.find((status: dataObj) => status.systemId === system._id) || null
-    return history ? history.status : null
+  const getCurrentStatus = (system: systemType) => {
+    const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
+    return history ? history.status : false
   }
 
   const getSystemData = (id: string, type: string) => {
@@ -229,15 +229,15 @@ export default function Home() {
     }
   }
 
-  const getAlertsBySystem = (system: dataObj) => {
-    return allAlerts.filter((alert: dataObj) => alert.systemId === system._id)
+  const getAlertsBySystem = (system: systemType) => {
+    return allAlerts.filter((alert: alertType) => alert.systemId === system._id)
   }
 
-  const getHistoryBySystem = (system: dataObj) => {
-    return allStatus.filter((alert: dataObj) => alert.systemId === system._id)
+  const getHistoryBySystem = (system: systemType) => {
+    return allStatus.filter((alert: alertType) => alert.systemId === system._id)
   }
 
-  const updateData = (key: string, e: { [key: string | number]: any }) => {
+  const updateData = (key: string, e: onChangeEventType) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
   }
@@ -246,25 +246,25 @@ export default function Home() {
     return url.replace(/^((?:[^]*){3}).*$/, '$1')
   }
 
-  const isComingEvent = (event: dataObj) => {
+  const isComingEvent = (event: eventType) => {
     const now = new Date().getTime()
-    const eventEnd = new Date(event.end).getTime()
+    const eventEnd = new Date(event.end || new Date()).getTime()
     if (eventEnd - now > 0) return true
     return false
   }
 
-  const getComingEvent = (events: dataObj[]) => {
-    let lastEvent: dataObj = events[0]
+  const getComingEvent = (events: eventType[]) => {
+    let lastEvent: eventType = events[0]
     events.forEach(event => {
-      const lastEventStart = new Date(lastEvent.start).getTime()
-      const currentEventStart = new Date(event.start).getTime()
+      const lastEventStart = new Date(lastEvent.start || new Date()).getTime()
+      const currentEventStart = new Date(event.start || new Date()).getTime()
       if (isComingEvent(event) && currentEventStart < lastEventStart) lastEvent = event
     })
     return isComingEvent(lastEvent) ? lastEvent : {}
   }
 
-  const getDownTime = (system: dataObj) => {
-    const events = allEvents.filter((event: dataObj) => event.systemId === system._id)
+  const getDownTime = (system: systemType) => {
+    const events = allEvents.filter((event: eventType) => event.systemId === system._id)
     return events.length ? getComingEvent(events) : {}
   }
 
@@ -292,8 +292,8 @@ export default function Home() {
     const downtime = getDownTime(system || {})
     if (downtime && downtime.start) {
       const now = new Date().getTime()
-      const start = new Date(downtime.start).getTime()
-      const end = new Date(downtime.end).getTime()
+      const start = new Date(downtime.start || new Date()).getTime()
+      const end = new Date(downtime.end || new Date()).getTime()
       if (now - start > 0 && now - end < 0) return true
     }
     return false
@@ -425,7 +425,7 @@ export default function Home() {
         style={{ filter: report || selected ? 'blur(10px)' : '' }}
       >
         {allSystems.length ?
-          allSystems.map((system: dataObj, i: number) =>
+          allSystems.map((system: systemType, i: number) =>
             <SystemCard
               key={i}
               status={getCurrentStatus(system)}

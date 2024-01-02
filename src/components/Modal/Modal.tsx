@@ -1,13 +1,12 @@
 import React, { ReactNode, useContext } from 'react'
 import { AppContext } from '../../AppContext'
-import { dataObj } from '../../types'
 
 type Props = {
     children?: ReactNode
     onClose?: () => void
     title?: string | null
     subtitle?: string | null
-    style?: dataObj
+    style?: React.CSSProperties
 }
 
 export default function Modal({ children, onClose, title, subtitle, style }: Props) {

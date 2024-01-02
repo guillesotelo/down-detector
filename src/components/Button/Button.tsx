@@ -10,7 +10,7 @@ type Props = {
     handleClick: () => any
     disabled?: boolean
     svg?: string
-    style?: { [key: string | number]: any }
+    style?: React.CSSProperties
 }
 
 export default function Button({ label, handleClick, className, bgColor, textColor, disabled, svg, style }: Props) {

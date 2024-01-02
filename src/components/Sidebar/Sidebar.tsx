@@ -16,6 +16,10 @@ export default function Sidebar({ }: Props) {
     const history = useHistory()
     const { isSuper, item, setItem, darkMode } = useContext(AppContext)
 
+    useEffect(() => {
+        setItem(window.location.pathname)
+    }, [window.location])
+
     return (
         <div className={`sidebar__container${darkMode ? '--dark' : ''}`}>
             <div

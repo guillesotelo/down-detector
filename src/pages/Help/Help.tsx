@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import Page from '../../assets/icons/page.svg'
 import { AppContext } from '../../AppContext'
+import { onChangeEventType } from '../../types'
 
 type Props = {}
 
@@ -12,7 +13,7 @@ export default function Help({ }: Props) {
   const history = useHistory()
   const { darkMode } = useContext(AppContext)
 
-  const onChangeSearch = (e: any) => {
+  const onChangeSearch = (e: onChangeEventType) => {
     const { value } = e.target || {}
     setSearch(value)
   }

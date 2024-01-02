@@ -7,7 +7,7 @@
         justify-content: space-between;
         align-items: center;
         margin: 0;
-        padding: .7vw 1vw;
+        padding: .5vw .7vw;
         border: 1px solid #E4E7EB;
         border-radius: 1vw;
         transition: 0.3s;
@@ -25,7 +25,7 @@
             justify-content: space-between;
             align-items: center;
             margin: 0;
-            padding: .7vw 1vw;
+            padding: .5vw .7vw;
             border: 1px solid #525252;
             border-radius: 1vw;
             transition: 0.3s;
@@ -39,7 +39,7 @@
 
     &__input {
         border: none;
-        font-size: 1vw;
+        font-size: .9vw;
         text-decoration: none;
         width: 90%;
         background-color: #F9FAFB;
@@ -51,23 +51,25 @@
 
         &::placeholder {
             color: gray;
+            font-size: .9vw;
         }
 
         &--dark {
             border: none;
-            font-size: 1vw;
+            font-size: .9vw;
             text-decoration: none;
             width: 90%;
             background-color: #3c3c3c;
             margin: 0 .6vw;
             color: lightgray;
-    
+
             &:focus {
                 outline: none;
             }
-    
+
             &::placeholder {
                 color: gray;
+                font-size: .9vw;
             }
         }
     }
@@ -84,6 +86,11 @@
 
         &--dark {
             filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(110%) contrast(108%);
+            cursor: pointer;
+
+            &:hover {
+                filter: invert(19%) sepia(69%) saturate(3578%) hue-rotate(207deg) brightness(98%) contrast(87%);
+            }
         }
     }
 

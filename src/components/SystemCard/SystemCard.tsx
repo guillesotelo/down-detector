@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
-import { dataObj } from '../../types'
+import { alertType, eventType, historyType, statusType, systemType } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
@@ -9,15 +9,15 @@ import PuffLoader from "react-spinners/PuffLoader"
 Chart.register(...registerables);
 
 type Props = {
-    system?: any
+    system?: systemType
     status?: boolean
     reportIssue: (value: string) => void
-    downtime?: any
-    history?: any
-    alerts?: any
+    downtime?: { start?: Date, end?: Date }
+    history?: historyType[]
+    alerts?: alertType[]
     setSelected: (value: string) => void
-    setSelectedData: (value: dataObj) => void
-    setModalChartOptions: (value: dataObj[]) => void
+    setSelectedData: (value: systemType) => void
+    setModalChartOptions: (value: systemType[]) => void
     lastCheck?: Date
     delay?: string
 }
@@ -60,9 +60,9 @@ export default function SystemCard(props: Props) {
         updatedAt,
         lastCheckStatus,
         reportedlyDown
-    } = system
+    } = system || {}
 
-    const timeOptions: any = {
+    const timeOptions = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -72,7 +72,7 @@ export default function SystemCard(props: Props) {
     }
 
     useEffect(() => {
-        if(!headerLoading) setHeaderLoading(true)
+        if (!headerLoading) setHeaderLoading(true)
     }, [loading])
 
     useEffect(() => {
@@ -81,16 +81,16 @@ export default function SystemCard(props: Props) {
 
     useEffect(() => {
         setLastDayChartData({
-            labels: lastDayData.length ? lastDayData.map((el: dataObj) => getDate(el.time)) : [],
+            labels: lastDayData.length ? lastDayData.map((el: statusType) => getDate(el.time)) : [],
             datasets: [
                 {
-                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
+                    data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: lastDayData.length ? lastDayData.map((el: dataObj) => el.status) : [],
+                    data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -109,13 +109,13 @@ export default function SystemCard(props: Props) {
             labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
                 {
-                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: completeData.length ? completeData.map((el: dataObj) => el.status) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
                     borderColor: status ? 'green' : 'red',
                     tension: .4,
@@ -145,8 +145,8 @@ export default function SystemCard(props: Props) {
     const processChartData = () => {
         const reportedHours: string[] = []
 
-        alerts.forEach((el: dataObj) => {
-            const date = new Date(el.createdAt)
+        alerts?.forEach((el: alertType) => {
+            const date = new Date(el.createdAt || new Date())
             date.setMinutes(0)
             date.setSeconds(0)
             reportedHours.push(date.toLocaleString())
@@ -176,10 +176,10 @@ export default function SystemCard(props: Props) {
     const processLastDayHistory = () => {
         const downHours: string[] = []
         const upHours: string[] = []
-        const allHours: dataObj[] = []
+        const allHours: statusType[] = []
 
-        history.forEach((el: dataObj) => {
-            const date = new Date(el.createdAt)
+        history?.forEach((el: historyType) => {
+            const date = new Date(el.createdAt || new Date())
             date.setMinutes(0)
             date.setSeconds(0)
 
@@ -196,14 +196,14 @@ export default function SystemCard(props: Props) {
             return today
         }
 
-        let status: dataObj[] = Array.from({ length: 24 }).map((_, i) => {
+        let status: statusType[] = Array.from({ length: 24 }).map((_, i) => {
             return {
                 status: 1,
                 time: getDateWithGivenHour(i)
             }
         }).reverse()
 
-        const copyLastStatus = (status: dataObj[], last: dataObj) => {
+        const copyLastStatus = (status: statusType[], last: statusType) => {
             return status.map((item, i) => {
                 const newItem = { ...item }
                 // Replicate last saved register to the rest of status until now
@@ -223,14 +223,14 @@ export default function SystemCard(props: Props) {
     const processCompleteHistory = () => {
         const downHours: string[] = []
         const upHours: string[] = []
-        const allHours: dataObj[] = []
-        const systemStatus = history.filter((status: dataObj) => status.systemId === _id)
-        const firstStatus = systemStatus.length ? systemStatus[systemStatus.length - 1] : null
+        const allHours: statusType[] = []
+        const systemStatus = history?.filter((status: historyType) => status.systemId === _id)
+        const firstStatus = systemStatus?.length ? systemStatus[systemStatus.length - 1] : null
         const firstCheck = firstStatus ? firstStatus.createdAt : null
-        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck).getTime()) / 3600000) + 2
+        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000) + 2
 
-        history.forEach((el: dataObj) => {
-            const date = new Date(el.createdAt)
+        history?.forEach((el: historyType) => {
+            const date = new Date(el.createdAt || new Date())
             date.setMinutes(0)
             date.setSeconds(0)
 
@@ -247,14 +247,14 @@ export default function SystemCard(props: Props) {
             return today
         }
 
-        let status: dataObj[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
+        let status: statusType[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
             return {
                 status: 1,
                 time: getDateWithGivenHour(i)
             }
         }).reverse()
 
-        const copyLastStatus = (status: dataObj[], last: dataObj) => {
+        const copyLastStatus = (status: statusType[], last: statusType) => {
             return status.map((item, i) => {
                 const newItem = { ...item }
                 // Replicate last saved register to the rest of status until now
@@ -277,7 +277,7 @@ export default function SystemCard(props: Props) {
             : 'No data'
     }
 
-    const getDowntime = (event: any) => {
+    const getDowntime = (event: eventType) => {
         if (event && event.start && event.end) {
             return (<span>
                 <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
@@ -291,16 +291,16 @@ export default function SystemCard(props: Props) {
     }
 
     const selectSystem = () => {
-        setSelected(system._id)
+        setSelected(system?._id || '')
         setSelectedData(completeChartData)
         setModalChartOptions(completeChartOptions)
     }
 
-    const isLiveDowntime = (downtime: dataObj) => {
+    const isLiveDowntime = (downtime: eventType) => {
         if (downtime && downtime.start) {
             const now = new Date().getTime()
-            const start = new Date(downtime.start).getTime()
-            const end = new Date(downtime.end).getTime()
+            const start = new Date(downtime.start || new Date()).getTime()
+            const end = new Date(downtime.end || new Date()).getTime()
             if (now - start > 0 && now - end < 0) return true
         }
         return false
@@ -454,7 +454,7 @@ export default function SystemCard(props: Props) {
                         </h2>
                         <Button
                             label='Report Issue'
-                            handleClick={() => reportIssue(_id)}
+                            handleClick={() => reportIssue(_id || '')}
                             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
                             textColor={darkMode ? 'white' : 'black'}
                         />

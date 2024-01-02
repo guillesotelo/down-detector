@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
-import { dataObj } from '../../types'
-import { getAllAlerts, getAllHistory } from '../../services'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
-import { getHistoryAndAlerts, sortArray } from '../../helpers'
+import { getHistoryAndAlerts } from '../../helpers'
+import { historyType, logType, onChangeEventType } from '../../types'
+import SearchBar from '../../components/SearchBar/SearchBar'
 
 type Props = {}
 
 export default function History({ }: Props) {
     const [loading, setLoading] = useState(false)
-    const [tableData, setTableData] = useState<dataObj[]>([])
+    const [search, setSearch] = useState('')
+    const [tableData, setTableData] = useState<historyType[]>([])
+    const [filteredData, setFilteredData] = useState<historyType[]>([])
 
     useEffect(() => {
         getHistory()
@@ -18,7 +20,9 @@ export default function History({ }: Props) {
     const getHistory = async () => {
         try {
             setLoading(true)
-            setTableData(await getHistoryAndAlerts())
+            const data = await getHistoryAndAlerts()
+            setTableData(data)
+            setFilteredData(data)
             setLoading(false)
         } catch (error) {
             setLoading(false)
@@ -26,12 +30,34 @@ export default function History({ }: Props) {
         }
     }
 
+    const onChangeSearch = (e: onChangeEventType) => {
+        const { value } = e.target || {}
+        if (!value) triggerSearch()
+        setSearch(value)
+    }
+
+    const triggerSearch = () => {
+        if (search) {
+            setFilteredData(tableData
+                .filter((log: logType) =>
+                    JSON.stringify(log).toLocaleLowerCase().includes(search.toLocaleLowerCase())
+                ))
+        } else setFilteredData(tableData)
+    }
+
     return (
         <div className="history__container">
+            <SearchBar
+                handleChange={onChangeSearch}
+                triggerSearch={triggerSearch}
+                value={search}
+                placeholder='Search histories...'
+            />
             <div className="history__col">
                 <DataTable
                     title='History'
-                    tableData={tableData}
+                    tableData={filteredData}
+                    setTableData={setFilteredData}
                     tableHeaders={hisrotyHeaders}
                     name='history'
                     loading={loading}

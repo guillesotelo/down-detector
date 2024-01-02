@@ -1,17 +1,16 @@
 import axios from 'axios';
+import { systemType } from '../types';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
 const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
 const getHeaders = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { authorization: `Bearer ${token}` }
+    return { authorization: `Bearer ${user.token}` }
 }
 
 const getConfig = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { headers: { authorization: `Bearer ${token}` } }
+    return { headers: { authorization: `Bearer ${user.token}` } }
 }
 
 const getAllSystems = async () => {
@@ -35,21 +34,21 @@ const getSystemById = async (_id: string) => {
     } catch (err) { console.log(err) }
 }
 
-const createSystem = async (data: { [key: string | number]: any }) => {
+const createSystem = async (data: systemType) => {
     try {
         const system = await axios.post(`${API_URL}/api/system/create`, { ...data, user }, getConfig())
         return system.data
     } catch (err) { console.log(err) }
 }
 
-const updateSystem = async (data: { [key: string | number]: any }) => {
+const updateSystem = async (data: systemType) => {
     try {
         const system = await axios.post(`${API_URL}/api/system/update`, { ...data, user }, getConfig())
         return system.data
     } catch (err) { console.log(err) }
 }
 
-const deleteSystem = async (data: { [key: string | number]: any }) => {
+const deleteSystem = async (data: systemType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/system/remove`, { ...data, user }, getConfig())
         return deleted.data

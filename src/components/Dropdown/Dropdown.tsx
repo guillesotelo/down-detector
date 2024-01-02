@@ -4,8 +4,8 @@ import { AppContext } from '../../AppContext'
 
 type Props = {
     label: string
-    options: any[]
-    value: string | number | dataObj[] | string[]
+    options: string[] | number[] | dataObj[]
+    value?: string | number | dataObj
     objKey?: string | number
     selected: any
     setSelected: (value: any) => void
@@ -13,7 +13,7 @@ type Props = {
     isDate?: boolean
     locale?: string
     maxHeight?: string
-    style?: { [key: string | number]: any }
+    style?: React.CSSProperties
     multiselect?: boolean
 }
 

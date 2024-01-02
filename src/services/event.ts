@@ -1,17 +1,16 @@
 import axios from 'axios';
+import { eventType } from '../types';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
 const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
 const getHeaders = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { authorization: `Bearer ${token}` }
+    return { authorization: `Bearer ${user.token}` }
 }
 
 const getConfig = () => {
-    const { token }: { [key: string | number]: any } = user
-    return { headers: { authorization: `Bearer ${token}` } }
+    return { headers: { authorization: `Bearer ${user.token}` } }
 }
 
 const getAllEvents = async () => {
@@ -28,21 +27,21 @@ const getEventById = async (_id: string) => {
     } catch (err) { console.log(err) }
 }
 
-const createEvent = async (data: { [key: string | number]: any }) => {
+const createEvent = async (data: eventType) => {
     try {
         const event = await axios.post(`${API_URL}/api/event/create`, { ...data, user }, getConfig())
         return event.data
     } catch (err) { console.log(err) }
 }
 
-const updateEvent = async (data: { [key: string | number]: any }) => {
+const updateEvent = async (data: eventType) => {
     try {
         const event = await axios.post(`${API_URL}/api/event/update`, { ...data, user }, getConfig())
         return event.data
     } catch (err) { console.log(err) }
 }
 
-const deleteEvent = async (data: { [key: string | number]: any }) => {
+const deleteEvent = async (data: eventType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/event/remove`, { ...data, user }, getConfig())
         return deleted.data
