@@ -12,7 +12,7 @@ type Props = {
     system?: systemType
     status?: boolean
     reportIssue: (value: string) => void
-    downtime?: { start?: Date, end?: Date }
+    downtime?: { start?: Date, end?: Date }[]
     history?: historyType[]
     alerts?: alertType[]
     setSelected: (value: string) => void
@@ -28,6 +28,7 @@ export default function SystemCard(props: Props) {
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [loading, setLoading] = useState(true)
+    const [showMoreDowntime, setShowMoreDowntime] = useState(false)
     const { darkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
 
     const chartHeight = '30vw'
@@ -460,18 +461,28 @@ export default function SystemCard(props: Props) {
                         />
                     </div>
                 </div>
-                {downtime && downtime.start ?
+                {downtime && downtime.length ?
                     <div
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
-                            backgroundColor: isLiveDowntime(downtime) ? darkMode ?
+                            backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161' : darkMode ?
                                 'black' : '#fcd9a5',
-                            border: isLiveDowntime(downtime) ? '1px solid red' : '1px solid orange'
+                            border: isLiveDowntime(downtime[0]) ? '1px solid red' : '1px solid orange'
                         }}
+                        onMouseEnter={() => setShowMoreDowntime(true)}
+                        onMouseLeave={() => setShowMoreDowntime(false)}
                     >
                         <p className="systemcard__event-title">Planned downtime:</p>
-                        <p className="systemcard__event-downtime">{getDowntime(downtime)}</p>
+                        {downtime.map((time, i) =>
+                            <p
+                                className="systemcard__event-downtime"
+                                style={{
+                                    borderTop: i > 0 ? '1px solid gray' : '',
+                                    paddingTop: i > 0 ? '1rem' : '',
+                                    marginTop: i > 0 ? '1rem' : '',
+                                    display: i > 0 && !showMoreDowntime ? 'none' : ''
+                                }}>{getDowntime(time)}</p>)}
                     </div>
                     : ''}
             </>

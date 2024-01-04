@@ -14,6 +14,7 @@ import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
+import { sortArray } from '../../helpers'
 Chart.register(...registerables);
 
 export default function Home() {
@@ -247,9 +248,11 @@ export default function Home() {
   }
 
   const isComingEvent = (event: eventType) => {
-    const now = new Date().getTime()
-    const eventEnd = new Date(event.end || new Date()).getTime()
-    if (eventEnd - now > 0) return true
+    if (event && event.end) {
+      const now = new Date().getTime()
+      const eventEnd = new Date(event.end || new Date()).getTime()
+      if (eventEnd - now > 0) return true
+    }
     return false
   }
 
@@ -260,12 +263,14 @@ export default function Home() {
       const currentEventStart = new Date(event.start || new Date()).getTime()
       if (isComingEvent(event) && currentEventStart < lastEventStart) lastEvent = event
     })
-    return isComingEvent(lastEvent) ? lastEvent : {}
+    return lastEvent
   }
 
   const getDownTime = (system: systemType) => {
-    const events = allEvents.filter((event: eventType) => event.systemId === system._id)
-    return events.length ? getComingEvent(events) : {}
+    return sortArray(
+      allEvents.filter((event: eventType) => event.systemId === system._id),
+      'start'
+    )
   }
 
   const getSelectedSystem = () => {
@@ -274,7 +279,7 @@ export default function Home() {
 
   const getDowntimeString = () => {
     const system = getSelectedSystem()
-    const event = getDownTime(system || {})
+    const event = getComingEvent(getDownTime(system || {}))
     if (event && event.start && event.end) {
       return (<span>
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
@@ -289,7 +294,7 @@ export default function Home() {
 
   const isLiveDowntime = () => {
     const system = getSelectedSystem()
-    const downtime = getDownTime(system || {})
+    const downtime = getComingEvent(getDownTime(system || {}))
     if (downtime && downtime.start) {
       const now = new Date().getTime()
       const start = new Date(downtime.start || new Date()).getTime()
