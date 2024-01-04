@@ -54,7 +54,13 @@ export default function Users({ }: Props) {
   }
 
   const getOwnedSystems = (user: userType) => {
-    return allSystems.filter(system => system.ownerId === user._id)
+    return allSystems.filter(system => {
+      let owned = false
+      system.owners?.forEach(owner => {
+        if (owner._id === user._id) owned = true
+      })
+      return owned
+    })
   }
 
   const getUsers = async () => {
@@ -138,7 +144,7 @@ export default function Users({ }: Props) {
         if (saved && saved._id) {
           toast.success('User created successfully')
           discardChanges()
-          getUsers()
+          loadData()
         }
         else toast.error('Error creating user. Try again later')
       } else {
@@ -148,7 +154,7 @@ export default function Users({ }: Props) {
         if (updated && updated._id) {
           toast.success('User updated successfully')
           discardChanges()
-          getUsers()
+          loadData()
         }
         else toast.error('Error updating user. Try again later')
       }

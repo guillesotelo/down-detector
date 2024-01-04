@@ -58,7 +58,7 @@ export default function Systems({ }: Props) {
   const [downtimeArray, setDowntimeArray] = useState<any[]>([])
   const [onDeleteSystem, setOnDeleteSystem] = useState(false)
   const [allUsers, setAllUsers] = useState<userType[]>([])
-  const [selectedOwner, setSelectedOwner] = useState<userType>({})
+  const [selectedOwners, setSelectedOwners] = useState<userType[]>([])
   const { darkMode, isSuper } = useContext(AppContext)
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
@@ -78,7 +78,7 @@ export default function Systems({ }: Props) {
       if (select.type) setSelectedType(select.type)
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))
       if (select.timeout) setSelectedTimeout(getTimeOption(timeoutDefaultOptions, select.timeout))
-      if (select.owner) setSelectedOwner(JSON.parse(select.owner))
+      if (select.owners) setSelectedOwners(select.owners)
       if (select.alertThreshold) setSelectedThreshold(select.alertThreshold)
       if (select.alertsExpiration) setSelectedAlertExpiration(select.alertsExpiration)
     }
@@ -131,7 +131,7 @@ export default function Systems({ }: Props) {
     setDowntimeArray([])
     setSelectedDowntime(-1)
     setOnDeleteSystem(false)
-    setSelectedOwner({})
+    setSelectedOwners([])
     setSelectedThreshold(3)
     setSelectedAlertExpiration(2)
   }
@@ -147,8 +147,7 @@ export default function Systems({ }: Props) {
         timeout: selectedTimeout.value,
         alertThreshold: selectedThreshold,
         alertsExpiration: selectedAlertExpiration,
-        owner: isSuper ? JSON.stringify(selectedOwner) : JSON.stringify(user),
-        ownerId: isSuper && selectedOwner._id ? selectedOwner._id : user._id,
+        selectedOwners,
         updatedBy: user.username || '',
         downtimeArray: Array.isArray(dtArray) ? dtArray : downtimeArray
       }
@@ -321,12 +320,13 @@ export default function Systems({ }: Props) {
                 <Dropdown
                   label='Owner'
                   options={allUsers}
-                  value={selectedOwner.username}
-                  selected={selectedOwner}
-                  setSelected={setSelectedOwner}
+                  value={selectedOwners}
+                  selected={selectedOwners}
+                  setSelected={setSelectedOwners}
                   maxHeight='20vh'
                   objKey='username'
                   style={{ width: '100%' }}
+                  multiselect
                 />
                 : <InputField
                   label='Owner'

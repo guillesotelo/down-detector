@@ -62,6 +62,7 @@ export default function Dropdown(props: Props) {
                 typeof val === 'string' || typeof val === 'number' ? val :
                     objKey && val[objKey] ? val[objKey] : 'Select')
         }
+        return []
     }
 
     const getSelectValue = () => {

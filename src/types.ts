@@ -37,8 +37,7 @@ export type systemType = {
     interval?: number
     alertThreshold?: number
     alertsExpiration?: number
-    owner?: string
-    ownerId?: string
+    owners?: userType[]
     createdBy?: string
     updatedBy?: string
     lastCheck?: Date
