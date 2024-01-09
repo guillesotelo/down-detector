@@ -1,0 +1,23 @@
+.about {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 85vw;
+        padding-bottom: 10rem;
+    }
+
+    &__section {
+        width: 50vw;
+    }
+
+    &__title {}
+
+    &__subtitle {
+        margin: 1.5rem 0 .5rem 0;
+    }
+
+    &__text {
+        margin: 0;
+    }
+}
