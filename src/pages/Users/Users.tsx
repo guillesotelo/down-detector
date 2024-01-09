@@ -171,7 +171,7 @@ export default function Users({ }: Props) {
         <Modal onClose={discardChanges} title='Delete User'>
           <div className='users__delete-modal'>
             <p>Are you sure you want to delete user <strong>{tableData[selected].username}</strong>?</p>
-            <div className="systems__new-row">
+            <div className="users__new-row">
               <Button
                 label='Cancel'
                 handleClick={discardChanges}
@@ -196,7 +196,7 @@ export default function Users({ }: Props) {
           onClose={discardChanges}
           title={newUser ? 'New User' : 'User Details'}
           style={{ maxWidth: '20vw' }}>
-          <div className="systems__new">
+          <div className="users__new">
             <InputField
               label='Full Name'
               name='username'
@@ -225,7 +225,7 @@ export default function Users({ }: Props) {
               type='password'
               placeholder={data.password || data.password2 ? '' : '••••••••••'}
             />
-            <div className="systems__new-row">
+            <div className="users__new-row">
               <Switch
                 label='Super User'
                 value={isSuper}
@@ -245,7 +245,7 @@ export default function Users({ }: Props) {
                 style={{ minWidth: '60%' }}
               />
             </div>
-            <div className="systems__new-row">
+            <div className="users__new-row">
               <Button
                 label='Close'
                 handleClick={discardChanges}

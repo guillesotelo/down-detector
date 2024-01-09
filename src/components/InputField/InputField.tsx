@@ -60,6 +60,7 @@ export default function InputField(props: Props) {
                 value={value || ''}
                 cols={cols}
                 rows={rows}
+                disabled={disabled}
             />
         </div>
         :

@@ -268,7 +268,10 @@ export default function Home() {
 
   const getDownTime = (system: systemType) => {
     return sortArray(
-      allEvents.filter((event: eventType) => event.systemId === system._id),
+      allEvents.filter((event: eventType) => {
+        if (event.systemId === system._id &&
+          new Date(event.end || '').getTime() > new Date().getTime()) return event
+      }),
       'start'
     )
   }

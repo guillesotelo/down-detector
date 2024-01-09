@@ -16,6 +16,21 @@
         align-items: flex-start;
     }
 
+    &__new {
+        display: flex;
+        flex-direction: column;
+        gap: .7rem;
+
+        &-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: .5rem;
+        }
+    }
+
     &__delete {
         &-modal {
             display: flex;

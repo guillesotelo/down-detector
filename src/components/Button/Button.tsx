@@ -23,6 +23,7 @@ export default function Button({ label, handleClick, className, bgColor, textCol
             style={{
                 ...style,
                 backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
+                border: `1px solid ${bgColor || APP_COLORS.BLUE_ONE}`,
                 color: textColor || 'black',
                 opacity: disabled ? '.3' : '',
                 padding: '.2vw',
@@ -45,6 +46,7 @@ export default function Button({ label, handleClick, className, bgColor, textCol
             style={{
                 ...style,
                 backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
+                border: `1px solid ${bgColor || APP_COLORS.BLUE_ONE}`,
                 color:  !textColor && darkMode ? 'lightgray' : textColor || 'black',
                 opacity: disabled ? '.3' : '',
                 cursor: disabled ? 'not-allowed' : ''

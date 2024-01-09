@@ -50,6 +50,7 @@ export type systemType = {
     newData?: systemType
     customType?: string
     downtimeNote?: string
+    raw?: string
 }
 
 export type eventType = {
@@ -74,6 +75,7 @@ export type historyType = {
     createdAt?: Date
     updatedAt?: Date
     newData?: historyType
+    raw?: string
 }
 
 export type alertType = {

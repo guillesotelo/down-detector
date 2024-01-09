@@ -58,7 +58,7 @@
         border: 1px solid lightgray;
         background-color: #fff;
         border-radius: 0.5rem;
-        font-size: 1rem;
+        font-size: .9rem;
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
@@ -79,7 +79,7 @@
             border: 1px solid rgb(120, 120, 120);
             background-color: #353535 !important;
             border-radius: 0.5rem;
-            font-size: 1rem;
+            font-size: .9rem;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -104,7 +104,7 @@
         margin: 0;
         display: flex;
         gap: .5rem;
-        font-size: 1rem;
+        font-size: .9rem;
         border-radius: 0.5rem;
         height: 1.3rem;
         line-height: 1.3rem;
@@ -159,7 +159,7 @@
             gap: .5rem;
             font-weight: normal;
             margin: 0;
-            font-size: 1rem;
+            font-size: .9rem;
             border-radius: 0.5rem;
             height: 1.3rem;
             line-height: 1.3rem;
@@ -206,7 +206,7 @@
     }
 
     &__option {
-        font-size: 1rem;
+        font-size: .9rem;
         color: gray;
         margin: 0;
         height: 1.5vw;
@@ -224,7 +224,7 @@
         }
 
         &--dark {
-            font-size: 1rem;
+            font-size: .9rem;
             color: lightgray;
             margin: 0;
             height: 1.5vw;
@@ -280,7 +280,7 @@
             border: 1px solid lightgray;
             background-color: #fff;
             border-radius: 0.5rem;
-            font-size: 1rem;
+            font-size: .9rem;
             // padding: 0.5vw;
             margin: 0;
             white-space: nowrap;
@@ -303,7 +303,7 @@
             color: rgb(99, 99, 99);
             font-weight: normal;
             margin: 0;
-            font-size: 1rem;
+            font-size: .9rem;
             border-radius: 0.5rem;
             height: 1.3rem;
             line-height: 1.3rem;
@@ -331,7 +331,7 @@
         }
 
         &__option {
-            font-size: 1rem;
+            font-size: .9rem;
             color: gray;
             margin: 0;
             height: 1.2rem;

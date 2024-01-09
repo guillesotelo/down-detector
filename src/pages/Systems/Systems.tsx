@@ -59,6 +59,7 @@ export default function Systems({ }: Props) {
   const [onDeleteSystem, setOnDeleteSystem] = useState(false)
   const [allUsers, setAllUsers] = useState<userType[]>([])
   const [selectedOwners, setSelectedOwners] = useState<userType[]>([])
+  const [showResponse, setShowResponse] = useState(false)
   const { darkMode, isSuper } = useContext(AppContext)
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
@@ -134,6 +135,7 @@ export default function Systems({ }: Props) {
     setSelectedOwners([])
     setSelectedThreshold(3)
     setSelectedAlertExpiration(2)
+    setShowResponse(false)
   }
 
   const saveChanges = async (dtArray?: systemType[]) => {
@@ -403,19 +405,38 @@ export default function Systems({ }: Props) {
                   maxHeight='20vh'
                   style={{ width: '100%' }}
                 />
+                <Button
+                  label={showResponse ? 'Hide Response' : 'Show Response'}
+                  handleClick={() => setShowResponse(!showResponse)}
+                  bgColor={showResponse ? APP_COLORS.GRAY_ONE : APP_COLORS.BLUE_TWO}
+                  textColor='white'
+                  style={{ width: '45%' }}
+                  disabled={loading && addDowntime}
+                />
               </div> : ''}
             <div className="systems__new-downtime">
-              {!addDowntime ?
-                <DataTable
-                  title='Planned downtime'
-                  tableData={downtimeArray}
-                  setTableData={setDowntimeArray}
-                  tableHeaders={downtimeHeaders}
-                  name='downtime'
-                  selected={selectedDowntime}
-                  setSelected={setSelectedDowntime}
-                  loading={loading}
-                /> : ''}
+              {showResponse ?
+                <InputField
+                  label='JSON Response'
+                  name='raw'
+                  updateData={updateData}
+                  value={data.raw}
+                  disabled={true}
+                  type='textarea'
+                  rows={6}
+                />
+                : !addDowntime ?
+                  <DataTable
+                    title='Planned downtime'
+                    tableData={downtimeArray}
+                    setTableData={setDowntimeArray}
+                    tableHeaders={downtimeHeaders}
+                    name='downtime'
+                    selected={selectedDowntime}
+                    setSelected={setSelectedDowntime}
+                    loading={loading}
+                  />
+                  : ''}
               {addDowntime ?
                 <div>
                   <h4 className="systems__new-downtime-title">{selectedDowntime !== -1 ? 'Edit Downtime' : 'New Downtime'}</h4>
@@ -469,50 +490,51 @@ export default function Systems({ }: Props) {
                   />
                 </div>
                 : ''}
-              <div className="systems__new-row">
-                <Button
-                  label={addDowntime ? 'Discard' : 'New Downtime'}
-                  handleClick={() => {
-                    setData({ ...data, downtimeNote: '' })
-                    setSelectedDowntime(-1)
-                    setStart(null)
-                    setEnd(null)
-                    setAddDowntime(!addDowntime)
-                  }}
-                  bgColor={addDowntime ? APP_COLORS.GRAY_ONE : APP_COLORS.ORANGE_ONE}
-                  textColor='white'
-                  style={{ width: '45%' }}
-                  disabled={loading}
-                />
-                {addDowntime ?
+              {!showResponse ?
+                <div className="systems__new-row">
                   <Button
-                    label={selectedDowntime !== -1 ? 'Save Downtime' : 'Add'}
-                    handleClick={saveDowntime}
-                    bgColor={APP_COLORS.BLUE_TWO}
+                    label={addDowntime ? 'Discard' : 'New Downtime'}
+                    handleClick={() => {
+                      setData({ ...data, downtimeNote: '' })
+                      setSelectedDowntime(-1)
+                      setStart(null)
+                      setEnd(null)
+                      setAddDowntime(!addDowntime)
+                    }}
+                    bgColor={addDowntime ? APP_COLORS.GRAY_ONE : APP_COLORS.ORANGE_ONE}
                     textColor='white'
-                    disabled={!start || !end || loading}
                     style={{ width: '45%' }}
-                  /> : ''}
-                {!addDowntime && selectedDowntime !== -1 ?
-                  <>
+                    disabled={loading}
+                  />
+                  {addDowntime ?
                     <Button
-                      label='Edit'
-                      handleClick={editDowntime}
+                      label={selectedDowntime !== -1 ? 'Save Downtime' : 'Add'}
+                      handleClick={saveDowntime}
                       bgColor={APP_COLORS.BLUE_TWO}
                       textColor='white'
-                      style={{ width: '22.5%' }}
-                      disabled={loading}
-                    />
-                    <Button
-                      label='Remove'
-                      handleClick={removeDowntime}
-                      bgColor={APP_COLORS.RED_TWO}
-                      textColor='white'
-                      style={{ width: '22.5%' }}
-                      disabled={loading}
-                    />
-                  </> : ''}
-              </div>
+                      disabled={!start || !end || loading}
+                      style={{ width: '45%' }}
+                    /> : ''}
+                  {!addDowntime && selectedDowntime !== -1 ?
+                    <>
+                      <Button
+                        label='Edit'
+                        handleClick={editDowntime}
+                        bgColor={APP_COLORS.BLUE_TWO}
+                        textColor='white'
+                        style={{ width: '22.5%' }}
+                        disabled={loading}
+                      />
+                      <Button
+                        label='Remove'
+                        handleClick={removeDowntime}
+                        bgColor={APP_COLORS.RED_TWO}
+                        textColor='white'
+                        style={{ width: '22.5%' }}
+                        disabled={loading}
+                      />
+                    </> : ''}
+                </div> : ''}
             </div>
             {!addDowntime && selectedDowntime === -1 ?
               <div className="systems__new-row" style={{ marginTop: '1rem' }}>
