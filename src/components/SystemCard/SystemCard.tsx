@@ -475,14 +475,15 @@ export default function SystemCard(props: Props) {
                     >
                         <p className="systemcard__event-title">Planned downtime:</p>
                         {downtime.map((time, i) =>
-                            <p
+                            <div
+                                key={i}
                                 className="systemcard__event-downtime"
                                 style={{
                                     borderTop: i > 0 ? '1px solid gray' : '',
                                     paddingTop: i > 0 ? '1rem' : '',
                                     marginTop: i > 0 ? '1rem' : '',
                                     display: i > 0 && !showMoreDowntime ? 'none' : ''
-                                }}>{getDowntime(time)}</p>)}
+                                }}>{getDowntime(time)}</div>)}
                     </div>
                     : ''}
             </>

@@ -98,15 +98,7 @@ export default function Home() {
   const getAllDownTimes = async () => {
     try {
       setLoading(true)
-      let events = []
-      const { saved, data } = JSON.parse(localStorage.getItem('localEvents') || '{}') || {}
-      if (saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
-        events = data
-      }
-      else {
-        events = await getAllEvents()
-        localStorage.setItem('localEvents', JSON.stringify({ data: events, saved: new Date() }))
-      }
+      let events = await getAllEvents()
       if (events && Array.isArray(events)) {
         setAllEvents(events)
       }
@@ -120,15 +112,7 @@ export default function Home() {
   const getSystems = async () => {
     try {
       setLoading(true)
-      let systems: systemType[] = []
-      const { saved, data } = JSON.parse(localStorage.getItem('localSystems') || '{}') || {}
-      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
-        systems = data
-      }
-      else {
-        systems = await getAllSystems()
-        localStorage.setItem('localSystems', JSON.stringify({ data: systems, saved: new Date() }))
-      }
+      let systems = await getAllSystems()
       if (systems && Array.isArray(systems)) {
         setAllSystems(systems)
       }
@@ -142,15 +126,7 @@ export default function Home() {
   const getAllStatus = async () => {
     try {
       setLoading(true)
-      let history: historyType[] = []
-      const { saved, data } = JSON.parse(localStorage.getItem('localHistory') || '{}') || {}
-      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
-        history = data
-      }
-      else {
-        history = await getAllHistory()
-        localStorage.setItem('localHistory', JSON.stringify({ data: history, saved: new Date() }))
-      }
+      let history = await getAllHistory()
       if (history && Array.isArray(history)) {
         setAllStatus(history)
       }
@@ -164,15 +140,7 @@ export default function Home() {
   const getAllUserAlerts = async () => {
     try {
       setLoading(true)
-      let alerts: alertType[] = []
-      const { saved, data } = JSON.parse(localStorage.getItem('localAlerts') || '{}') || {}
-      if (data && saved && new Date().getTime() - new Date(saved).getTime() < 59000) {
-        alerts = data
-      }
-      else {
-        alerts = await getAllAlerts()
-        localStorage.setItem('localAlerts', JSON.stringify({ data: alerts, saved: new Date() }))
-      }
+      let alerts = await getAllAlerts()
       if (alerts && Array.isArray(alerts)) {
         setAllAlerts(alerts)
       }

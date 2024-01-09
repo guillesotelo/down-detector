@@ -114,7 +114,7 @@ export default function Dropdown(props: Props) {
                     flexWrap: multiselect ? 'wrap' : 'unset',
                 }}>
                 {getSelectValues() ? getSelectValues()?.map((val, i) =>
-                    <span className={`dropdown__selected-multi-item${darkMode ? '--dark' : ''}`}>
+                    <span key={i} className={`dropdown__selected-multi-item${darkMode ? '--dark' : ''}`}>
                         <p className='dropdown__selected-multi-label'>{val}</p>
                         <p className='dropdown__selected-multi-remove' onClick={() => removeItem(i)}>X</p>
                     </span>

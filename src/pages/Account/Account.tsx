@@ -31,7 +31,7 @@ export default function Account({ }: Props) {
 
   const getOwnedSystems = async () => {
     const systems = await getSystemsByOwnerId(user._id)
-    setOwnedSystems(systems)
+    setOwnedSystems(systems && Array.isArray(systems) ? systems : [])
   }
 
   const getUserData = () => {
