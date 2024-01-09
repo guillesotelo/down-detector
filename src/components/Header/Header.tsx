@@ -30,10 +30,10 @@ export default function Header() {
     else history.push('/login')
   }
 
-  const goToHelp = () => {
-    if (location.pathname.includes('help')) return history.push('/')
-    setItem('/help')
-    history.push('/help')
+  const gotoAbout = () => {
+    if (location.pathname.includes('about')) return history.push('/')
+    setItem('/about')
+    history.push('/about')
   }
 
   const switchMode = () => {
@@ -46,7 +46,7 @@ export default function Header() {
   return (
     <div className={`header__container${darkMode ? '--dark' : ''}`}>
       <div className="header__col">
-        <img src={DDLogo} onClick={goToHelp} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
+        <img src={DDLogo} onClick={gotoAbout} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
       </div>
       <div className="header__col">
       </div>

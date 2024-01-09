@@ -11,7 +11,7 @@ import History from './pages/History/History';
 import AppLogs from './pages/AppLogs/AppLogs';
 import Systems from './pages/Systems/Systems';
 import Users from './pages/Users/Users';
-import Help from './pages/Help/Help';
+import Help from './pages/About/About';
 import Account from './pages/Account/Account';
 
 function App() {
@@ -73,7 +73,7 @@ function App() {
             </div>
           </div>
         </Route>
-        <Route exact path="/help">
+        <Route exact path="/about">
           <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
             <Header />
             <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
