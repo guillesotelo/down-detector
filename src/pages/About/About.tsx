@@ -68,6 +68,7 @@ export default function Help({ }: Props) {
           We value your feedback, suggestions, and any concerns you may have regarding the system status monitoring application. The Stargate team is here to assist you and welcomes your input to enhance the developer experience.
         </p>
         <h4 className="about__subtitle">Stargate Team</h4>
+        94530 HP System Architecture
         <p className="about__text"><a href="mailto:hpdevp@volvocars.net">hpdev@volvocars.net</a></p>
       </div>
     </div>

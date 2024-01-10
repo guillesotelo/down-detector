@@ -146,8 +146,20 @@ export default function Account({ }: Props) {
               <TextData label='Owned Systems' value={getOwnedSystemNames()} />
             </>
           }
-          <div className="account__details-row">
-            {!edit &&
+
+          {edit ?
+            <div className="account__details-row">
+              <Button
+                label='Logout'
+                handleClick={logout}
+                disabled={loggedOut}
+                bgColor={APP_COLORS.BLUE_TWO}
+                textColor='white'
+                style={{ width: '100%' }}
+              />
+            </div>
+            :
+            <div className="account__details-row">
               <Button
                 label='Edit Details'
                 handleClick={() => setEdit(true)}
@@ -155,16 +167,16 @@ export default function Account({ }: Props) {
                 textColor='white'
                 style={{ width: '45%' }}
                 disabled={loggedOut}
-              />}
-            <Button
-              label='Logout'
-              handleClick={logout}
-              disabled={loggedOut}
-              bgColor={APP_COLORS.BLUE_TWO}
-              textColor='white'
-              style={{ width: edit ? '100%' : '45%' }}
-            />
-          </div>
+              />
+              <Button
+                label='Logout'
+                handleClick={logout}
+                disabled={loggedOut}
+                bgColor={APP_COLORS.BLUE_TWO}
+                textColor='white'
+                style={{ width: '45%' }}
+              />
+            </div>}
         </div>
       }
     </div>

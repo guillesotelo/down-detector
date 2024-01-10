@@ -48,4 +48,18 @@ export const getHistoryAndAlerts = async (systemId?: string) => {
 
 export const getTimeOption = (arr: any[], value: number) => {
     return arr.find(item => item.value === value) || { name: '', value: '' }
-  }
+}
+
+export const isTooBright = (color: string | undefined) => {
+    color = color === 'gray' ? '#808080' :
+        color === 'lightgray' ? '#d3d3d3' :
+            color === 'black' ? '#000000' :
+                color === 'white' ? '#ffffff' : color
+    if (!color || !color.includes('#')) return false
+    const hexToRgb = (hex: string) =>
+        hex.match(/[A-Za-z0-9]{2}/g)?.map((v) => parseInt(v, 16))
+    const [r, g, b] = hexToRgb(color) || []
+    const luminance = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255)
+    const threshold = 0.5
+    return luminance > threshold
+}

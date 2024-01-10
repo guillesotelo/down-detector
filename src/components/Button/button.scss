@@ -16,15 +16,25 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
 
-        &:hover {
-            filter: brightness(120%);
-            transition: .3s;
-            // background-color: transparent !important;
-            // border-color: black;
-            // color: black !important;
-        }
-
+    &__icon {
+        font-size: .9rem;
+        background-color: #D3AFAF;
+        // width: 100%;
+        padding: .55rem;
+        border-radius: .3vw;
+        cursor: pointer;
+        font-weight: normal;
+        transition: .3s;
+        border: none;
+        border: 1px solid transparent;
+        min-height: 1.3rem;
+        overflow: hidden;
+        min-width: fit-content;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     &__svg {
@@ -49,10 +59,6 @@
             transition: .4s;
         }
 
-    }
-
-    &__svg {
-        height: 1.5vw;
     }
 }
 

@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
+import { isTooBright } from '../../helpers'
 
 type Props = {
     label?: string
@@ -14,14 +15,22 @@ type Props = {
 }
 
 export default function Button({ label, handleClick, className, bgColor, textColor, disabled, svg, style }: Props) {
+    const [buttonStyle, setButtonStyle] = useState<React.CSSProperties>({ ...style })
     const { darkMode } = useContext(AppContext)
-   
+
+    useEffect(() => {
+        setButtonStyle({
+            ...buttonStyle,
+            backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
+            color: textColor || 'black',
+        })
+    }, [darkMode])
+
     return svg ?
         <div
-            className="button__default"
+            className="button__icon"
             onClick={handleClick}
             style={{
-                ...style,
                 backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
                 border: `1px solid ${bgColor || APP_COLORS.BLUE_ONE}`,
                 color: textColor || 'black',
@@ -33,8 +42,19 @@ export default function Button({ label, handleClick, className, bgColor, textCol
                 minHeight: '2rem',
                 alignItems: 'center',
                 gap: '.5rem',
-                paddingInline: '.5rem'
+                paddingInline: '.5rem',
+                ...buttonStyle
             }}
+            onMouseEnter={() => setButtonStyle({
+                ...style,
+                backgroundColor: 'transparent',
+                color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white' || APP_COLORS.BLUE_ONE
+            })}
+            onMouseLeave={() => setButtonStyle({
+                ...style,
+                backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
+                color: textColor || 'black',
+            })}
         >
             <img src={svg} alt="Button" className='button__svg' />
             {label || ''}
@@ -44,16 +64,25 @@ export default function Button({ label, handleClick, className, bgColor, textCol
             className={className || 'button__default'}
             onClick={handleClick}
             style={{
-                ...style,
                 backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
                 border: `1px solid ${bgColor || APP_COLORS.BLUE_ONE}`,
-                color:  !textColor && darkMode ? 'lightgray' : textColor || 'black',
+                color: !textColor && darkMode ? 'lightgray' : textColor || 'black',
                 opacity: disabled ? '.3' : '',
-                cursor: disabled ? 'not-allowed' : ''
+                cursor: disabled ? 'not-allowed' : '',
+                ...buttonStyle
             }}
             disabled={disabled}
+            onMouseEnter={() => setButtonStyle({
+                ...style,
+                backgroundColor: 'transparent',
+                color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white' || APP_COLORS.BLUE_ONE
+            })}
+            onMouseLeave={() => setButtonStyle({
+                ...style,
+                backgroundColor: bgColor || APP_COLORS.BLUE_ONE,
+                color: textColor || 'black',
+            })}
         >
             {label || ''}
         </button>
-
 }

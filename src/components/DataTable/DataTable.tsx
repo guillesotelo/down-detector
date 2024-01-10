@@ -14,6 +14,7 @@ type Props = {
     setSelected?: (value: number) => void
     max?: number
     style?: React.CSSProperties
+    orderDataBy?: dataObj
 }
 
 export default function DataTable(props: Props) {
@@ -27,7 +28,8 @@ export default function DataTable(props: Props) {
         selected,
         setSelected,
         max,
-        style
+        style,
+        orderDataBy
     } = props
 
     const [maxItems, setMaxItems] = useState(max || 10)
@@ -35,6 +37,10 @@ export default function DataTable(props: Props) {
     const [startTime, setStartTime] = useState(new Date())
     const [loadingTime, setLoadingTime] = useState(0)
     const { darkMode } = useContext(AppContext)
+
+    useEffect(() => {
+        if(orderDataBy) orderBy(orderDataBy)
+    }, [])
 
     useEffect(() => {
         setStartTime(new Date())
