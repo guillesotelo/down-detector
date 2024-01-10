@@ -48,15 +48,16 @@
         gap: 1rem;
         cursor: pointer;
         transition: .2s;
+        border: 1px solid transparent;
         border-radius: 1rem;
         padding: .4rem 1rem;
-        transition: .4s;
+        transition: .3s;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
 
         &:hover {
-            background-color: rgb(237, 237, 237);
+            border-color: rgb(211, 211, 211);
         }
 
         &--dark {
@@ -68,15 +69,16 @@
             gap: 1rem;
             cursor: pointer;
             transition: .2s;
+            border: 1px solid transparent;
             border-radius: 1rem;
             padding: .4rem 1rem;
-            transition: .4s;
+            transition: .3s;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
 
             &:hover {
-                background-color: rgb(57, 57, 57);
+                border-color: rgb(88, 88, 88);
             }
         }
 

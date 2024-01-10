@@ -37,16 +37,18 @@ export default function InputField(props: Props) {
     } = props
 
     useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (onSubmit && e.key === 'Enter') onSubmit()
-        }
-        if (!isEnterKeyListenerAdded) {
-            document.addEventListener('keydown', handleKeyDown)
-            isEnterKeyListenerAdded = true
-        }
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown)
-            isEnterKeyListenerAdded = false
+        if (onSubmit) {
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.key === 'Enter') onSubmit()
+            }
+            if (!isEnterKeyListenerAdded) {
+                document.addEventListener('keydown', handleKeyDown)
+                isEnterKeyListenerAdded = true
+            }
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown)
+                isEnterKeyListenerAdded = false
+            }
         }
     }, [onSubmit])
 

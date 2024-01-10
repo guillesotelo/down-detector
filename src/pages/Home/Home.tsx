@@ -45,10 +45,10 @@ export default function Home() {
   ]
 
   const loadData = useCallback((reset?: boolean) => {
-    setData({})
     if (reset) {
       setSelected('')
       setReport('')
+      setData({})
     }
     getSystems()
     getAllStatus()
@@ -275,6 +275,12 @@ export default function Home() {
     return false
   }
 
+  const discardReport = () => {
+    setReport('')
+    setData({})
+    setReportedStatus({ name: 'Unable to access' })
+  }
+
   const renderReportModal = () => {
     return (
       <Modal
@@ -319,7 +325,7 @@ export default function Home() {
         <div className="home__modal-issue-btns">
           <Button
             label='Cancel'
-            handleClick={() => setReport('')}
+            handleClick={discardReport}
             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_ONE}
             textColor='white'
             disabled={loading}
@@ -367,11 +373,12 @@ export default function Home() {
           <DataTable
             title='Latest system logs'
             tableData={statusAndAlerts}
+            setTableData={setStatusAndAlerts}
             tableHeaders={hisrotyHeaders}
             name='history'
             loading={loading}
             max={getDowntimeString() ? 2 : 3}
-            style={{ width: '50vw' }}
+            orderDataBy={hisrotyHeaders[0]}
           />
         </div>
         <div className="home__modal-footer">
