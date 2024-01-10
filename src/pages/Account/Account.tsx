@@ -54,7 +54,17 @@ export default function Account({ }: Props) {
     getUserData()
   }
 
+  const checkErrors = () => {
+    let errors: string[] = []
+    if (!data.username || !data.username.trim().includes(' ')) errors.push('Enter your full name')
+    if (!data.email || !data.email.includes('@') || !data.email.includes('.')) errors.push('Enter a valid email')
+    if (!data.password || data.password.length < 6) errors.push('Password must contain at least 6 characters')
+    if (!data.password2 || data.password2 !== data.password) errors.push(`Passwords don't match`)
+    return errors
+  }
+
   const saveChanges = async () => {
+    if (checkErrors().length) return checkErrors().map((error: string) => toast.error(error))
     setLoading(true)
     try {
       const newData = { ...data }
@@ -118,6 +128,13 @@ export default function Account({ }: Props) {
                 name='password'
                 updateData={updateData}
                 value={data.password}
+                type='password'
+              />
+              <InputField
+                label='Repeat passowrd'
+                name='password2'
+                updateData={updateData}
+                value={data.password2}
                 type='password'
               />
               <div className="account__details-row">

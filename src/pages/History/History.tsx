@@ -32,15 +32,15 @@ export default function History({ }: Props) {
 
     const onChangeSearch = (e: onChangeEventType) => {
         const { value } = e.target || {}
-        if (!value) triggerSearch()
         setSearch(value)
+        triggerSearch(value)
     }
 
-    const triggerSearch = () => {
-        if (search) {
+    const triggerSearch = (searchString?: string) => {
+        if (searchString) {
             setFilteredData(tableData
                 .filter((log: logType) =>
-                    JSON.stringify(log).toLocaleLowerCase().includes(search.toLocaleLowerCase())
+                    JSON.stringify(log).toLocaleLowerCase().includes(searchString.trim().toLocaleLowerCase())
                 ))
         } else setFilteredData(tableData)
     }
