@@ -63,3 +63,16 @@ export const isTooBright = (color: string | undefined) => {
     const threshold = 0.5
     return luminance > threshold
 }
+
+export const getLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => position,
+            (error) => {
+                console.error("Error getting location:", error)
+            }
+        );
+    } else {
+        console.error("Geolocation is not supported by this browser")
+    }
+}

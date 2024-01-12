@@ -3,7 +3,7 @@ import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
 import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents } from '../../services'
-import { alertType, eventType, historyType, onChangeEventType, systemType } from '../../types'
+import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
@@ -21,6 +21,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
+  const [showDowntime, setShowDowntime] = useState<downtimeModalType>(null)
   const [allSystems, setAllSystems] = useState<systemType[]>([])
   const [allEvents, setAllEvents] = useState<eventType[]>([])
   const [statusAndAlerts, setStatusAndAlerts] = useState<alertType & historyType[]>([])
@@ -174,13 +175,16 @@ export default function Home() {
     try {
       setLoading(true)
       const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+      let nav: dataObj = {}
+      for (let i in navigator) nav[i] = (navigator as any)[i]
+
       const reportData = {
         ...data,
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
         description: `${reportedStatus.name}${data.description ? ': ' + data.description : ''}`,
-        createdBy: user.username || `${report}${String(new Date().getTime())}`
+        createdBy: user.username || `${report}${JSON.stringify(nav)}`
       }
 
       const sent = await createUserAlert(reportData)
@@ -379,6 +383,7 @@ export default function Home() {
             loading={loading}
             max={getDowntimeString() ? 2 : 3}
             orderDataBy={hisrotyHeaders[0]}
+            style={{ width: '50vw' }}
           />
         </div>
         <div className="home__modal-footer">
@@ -398,19 +403,48 @@ export default function Home() {
     )
   }
 
+  const renderDowntimeModal = () => {
+    if (showDowntime) {
+      const { system, start, end, note, index } = showDowntime
+      return (
+        <Modal
+          title='Planned Downtime'
+          subtitle={system?.name}
+          onClose={() => setShowDowntime(null)}>
+          <div className="home__modal-col">
+            <p className="home__modal-downtime-note">
+              The system will probably be down between <strong>{new Date(start || '').toDateString()}</strong> and <strong>{new Date(end || '').toDateString()}</strong>
+            </p>
+            {note ? <p className="home__modal-downtime-note">The reason: <br />{note}</p> : ''}
+          </div>
+          <Button
+            label='System Details'
+            handleClick={() => {
+              setShowDowntime(null)
+              const systemCard = Array.from(document.querySelectorAll('.systemcard__graph'))[index || 0] as HTMLElement
+              systemCard.click()
+            }}
+            textColor='white'
+          />
+        </Modal>
+      )
+    }
+  }
 
   return (
     <div className={`home__container${darkMode ? '--dark' : ''}`}>
-      {report ? renderReportModal() : ''}
-      {!report && selected ? renderSystemDetailsModal() : ''}
+      {showDowntime ? renderDowntimeModal()
+        : report ? renderReportModal()
+          : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{ filter: report || selected ? 'blur(10px)' : '' }}
+        style={{ filter: showDowntime || report || selected ? 'blur(10px)' : '' }}
       >
         {allSystems.length ?
           allSystems.map((system: systemType, i: number) =>
             <SystemCard
               key={i}
+              index={i}
               status={getCurrentStatus(system)}
               system={system}
               reportIssue={setReport}
@@ -422,6 +456,7 @@ export default function Home() {
               downtime={getDownTime(system)}
               lastCheck={lastCheck}
               delay={String(i ? i / 10 : 0) + 's'}
+              setShowDowntime={setShowDowntime}
             />)
           : loading ?
             <div className='home__loading'>

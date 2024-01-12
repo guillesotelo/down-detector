@@ -303,13 +303,22 @@ export default function Systems({ }: Props) {
           style={{ maxWidth: '50vw' }}
         >
           <div className="systems__new">
-            <InputField
-              label='Name'
-              name='name'
-              updateData={updateData}
-              value={data.name}
-              disabled={!isSuper}
-            />
+            <div className="systems__new-row">
+              <InputField
+                label='Name'
+                name='name'
+                updateData={updateData}
+                value={data.name}
+                disabled={!isSuper}
+              />
+              <InputField
+                label='Logo URL (optional)'
+                name='logo'
+                updateData={updateData}
+                value={data.logo}
+                disabled={!isSuper}
+              />
+            </div>
             <InputField
               label='URL'
               name='url'
@@ -329,6 +338,7 @@ export default function Systems({ }: Props) {
                   objKey='username'
                   style={{ width: '100%' }}
                   multiselect
+                  loading={loading}
                 />
                 : <InputField
                   label='Owner'
@@ -355,6 +365,7 @@ export default function Systems({ }: Props) {
                   setSelected={setSelectedType}
                   maxHeight='20vh'
                   style={{ width: '100%' }}
+                  loading={loading}
                 />
                 {selectedType === 'Other' ?
                   <InputField
@@ -373,6 +384,7 @@ export default function Systems({ }: Props) {
                   maxHeight='20vh'
                   objKey='name'
                   style={{ width: '100%' }}
+                  loading={loading}
                 />
                 <Dropdown
                   label='Timeout'
@@ -383,6 +395,7 @@ export default function Systems({ }: Props) {
                   maxHeight='20vh'
                   objKey='name'
                   style={{ width: '100%' }}
+                  loading={loading}
                 />
               </div> : ''}
             {isSuper ?
@@ -395,6 +408,7 @@ export default function Systems({ }: Props) {
                   setSelected={setSelectedThreshold}
                   maxHeight='20vh'
                   style={{ width: '100%' }}
+                  loading={loading}
                 />
                 <Dropdown
                   label='User Alerts Expiration (hours)'
@@ -404,6 +418,7 @@ export default function Systems({ }: Props) {
                   setSelected={setSelectedAlertExpiration}
                   maxHeight='20vh'
                   style={{ width: '100%' }}
+                  loading={loading}
                 />
                 <Button
                   label={showResponse ? 'Hide Response' : 'Show Response'}

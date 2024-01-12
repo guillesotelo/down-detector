@@ -79,6 +79,10 @@
         max-width: 8vw;
     }
 
+    &__logo {
+        height: 1rem;
+    }
+
     &__status {
         font-size: .9rem;
         font-weight: normal;
@@ -210,6 +214,11 @@
             transition: .3s;
             text-align: center;
             animation: fade-in .5s ease-in-out forwards;
+            cursor: pointer;
+
+            &:hover {
+                filter: brightness(150%);
+            }
         }
 
         &-time {

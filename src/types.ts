@@ -51,6 +51,7 @@ export type systemType = {
     customType?: string
     downtimeNote?: string
     raw?: string
+    logo?: string
 }
 
 export type eventType = {
@@ -105,3 +106,11 @@ export type statusType = {
 }
 
 export type onChangeEventType = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+
+export type downtimeModalType = {
+    system?: systemType,
+    index?: number,
+    start?: Date,
+    end?: Date,
+    note?: string
+} | null

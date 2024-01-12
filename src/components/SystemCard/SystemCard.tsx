@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
-import { alertType, eventType, historyType, statusType, systemType } from '../../types'
+import { alertType, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
@@ -20,6 +20,8 @@ type Props = {
     setModalChartOptions: (value: systemType[]) => void
     lastCheck?: Date
     delay?: string
+    setShowDowntime: (value: downtimeModalType) => void
+    index: number
 }
 
 export default function SystemCard(props: Props) {
@@ -45,7 +47,9 @@ export default function SystemCard(props: Props) {
         alerts,
         setModalChartOptions,
         lastCheck,
-        delay
+        delay,
+        setShowDowntime,
+        index
     } = props
 
     const {
@@ -60,7 +64,8 @@ export default function SystemCard(props: Props) {
         updatedBy,
         updatedAt,
         lastCheckStatus,
-        reportedlyDown
+        reportedlyDown,
+        logo
     } = system || {}
 
     const timeOptions = {
@@ -280,12 +285,13 @@ export default function SystemCard(props: Props) {
 
     const getDowntime = (event: eventType) => {
         if (event && event.start && event.end) {
-            return (<span>
-                <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
-                <span style={{ fontWeight: 'normal' }}> ➜ </span>
-                <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
-                <p className="systemcard__event-note">{event.note}</p>
-            </span>
+            return (
+                <span>
+                    <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
+                    <span style={{ fontWeight: 'normal' }}> ➜ </span>
+                    <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
+                    <p className="systemcard__event-note">{event.note}</p>
+                </span>
             )
         }
         else return ''
@@ -436,6 +442,7 @@ export default function SystemCard(props: Props) {
                 >
                     <div className="systemcard__header">
                         <h1 className="systemcard__name">{name || 'Api Name'}</h1>
+                        {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
                     {loading ?
                         <div className='systemcard__loading'>
@@ -478,6 +485,7 @@ export default function SystemCard(props: Props) {
                             <div
                                 key={i}
                                 className="systemcard__event-downtime"
+                                onClick={() => setShowDowntime({ ...time, system, index })}
                                 style={{
                                     borderTop: i > 0 ? '1px solid gray' : '',
                                     paddingTop: i > 0 ? '1rem' : '',
