@@ -3,7 +3,7 @@ import { AppContextType, onChangeEventType, systemType, userType } from '../../t
 import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
-import { getSystemsByOwnerId, updateUser } from '../../services'
+import { getAllSystems, getSystemsByOwnerId, updateUser } from '../../services'
 import UserIcon from '../../assets/icons/user-icon.svg'
 import MoonLoader from "react-spinners/MoonLoader"
 import { useHistory } from 'react-router-dom'
@@ -20,19 +20,19 @@ export default function Account({ }: Props) {
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
   const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
+  const [allSystems, setAllSystems] = useState<systemType[]>([])
   const { setIsLoggedIn, darkMode, setIsSuper } = useContext(AppContext) as AppContextType
   const history = useHistory()
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
   useEffect(() => {
     getUserData()
-    getOwnedSystems()
+    getSystems()
   }, [])
 
-  const getOwnedSystems = async () => {
-    const systems = await getSystemsByOwnerId(user._id)
-    setOwnedSystems(systems && Array.isArray(systems) ? systems : [])
-  }
+  useEffect(() => {
+    if (!ownedSystems.length) setOwnedSystems(getOwnedSystems())
+  }, [allSystems, data])
 
   const getUserData = () => {
     if (user._id) {
@@ -45,6 +45,28 @@ export default function Account({ }: Props) {
     const value = e.target.value
     setData({ ...data, [key]: value })
     setDataIsUpdated(true)
+  }
+
+  const getOwnedSystems = () => {
+    return allSystems.filter(system => {
+      let owned = false
+      system.owners?.forEach(owner => {
+        if (owner._id === user._id) owned = true
+      })
+      return owned
+    })
+  }
+
+  const getSystems = async () => {
+    try {
+      setLoading(true)
+      const systems = await getAllSystems()
+      if (systems && systems.length) setAllSystems(systems)
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
   }
 
   const discardChanges = () => {

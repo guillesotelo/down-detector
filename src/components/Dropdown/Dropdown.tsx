@@ -1,6 +1,7 @@
 import React, { SyntheticEvent, useContext, useEffect, useState } from 'react'
 import { dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
+import { BeatLoader } from 'react-spinners'
 
 type Props = {
     label: string
@@ -15,6 +16,7 @@ type Props = {
     maxHeight?: string
     style?: React.CSSProperties
     multiselect?: boolean
+    loading?: boolean
 }
 
 export default function Dropdown(props: Props) {
@@ -33,13 +35,14 @@ export default function Dropdown(props: Props) {
         locale,
         maxHeight,
         style,
-        multiselect
+        multiselect,
+        loading
     } = props
 
     useEffect(() => {
         window.addEventListener('mouseup', (e: MouseEvent) => {
             const className = (e.target as HTMLElement).className
-            if (className !== 'dropdown__option' && className !== 'dropdown__option--dark') setOpenDrop(false)
+            if (!className.includes('dropdown')) setOpenDrop(false)
         })
     }, [])
 
@@ -157,12 +160,27 @@ export default function Dropdown(props: Props) {
         </div>
     }
 
+    const renderLoading = () => {
+        return (
+            <div className={`dropdown__select${darkMode ? '--dark' : ''}`}>
+                <h4
+                    className={`dropdown__selected${darkMode ? '--dark' : ''}`}
+                    style={{
+                        height: multiselect ? 'fit-content' : '',
+                        flexWrap: multiselect ? 'wrap' : 'unset',
+                    }}>
+                    <BeatLoader color='lightgray' size='1rem' />
+                </h4>
+            </div >
+        )
+    }
+
     const renderMultiSelect = () => {
         return (
             <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
                 {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
                 <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
-                    {renderSelectedItems()}
+                    {loading ? renderLoading() : renderSelectedItems()}
                     {openDrop ? renderDropDownOptions() : ''}
                 </div>
             </div >
@@ -174,7 +192,7 @@ export default function Dropdown(props: Props) {
             <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
                 {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
                 <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
-                    {renderSelectedItem()}
+                    {loading ? renderLoading() : renderSelectedItem()}
                     {openDrop ? renderDropDownOptions() : ''}
                 </div>
             </div >

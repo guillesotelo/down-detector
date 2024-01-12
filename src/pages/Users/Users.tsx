@@ -243,6 +243,7 @@ export default function Users({ }: Props) {
                 objKey='name'
                 multiselect
                 style={{ minWidth: '60%' }}
+                loading={loading}
               />
             </div>
             <div className="users__new-row">
