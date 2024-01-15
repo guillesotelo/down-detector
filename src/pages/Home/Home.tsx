@@ -371,7 +371,9 @@ const Home = () => {
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
           </div>
           : ''}
-        <p className="home__modal-hours">Total registered: {totalHours} hours</p>
+        <div className="home__modal-downtime-row">
+          <p className="home__modal-hours">Last two weeks</p>
+        </div>
         <div className="home__modal-graph-wrapper">
           <div className='home__modal-graph'>
             <Line data={chartData} height={chartHeight} width={chartWidth} options={modalChartOptions} />
@@ -470,7 +472,9 @@ const Home = () => {
           : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{ filter: showDowntime || report || selected ? 'blur(10px)' : '' }}
+        style={{
+          filter: showDowntime || report || selected ? 'blur(6px)' : ''
+        }}
       >
         {renderSystemList()}
       </div>

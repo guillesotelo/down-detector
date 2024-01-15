@@ -39,7 +39,7 @@ export default function DataTable(props: Props) {
     const { darkMode } = useContext(AppContext)
 
     useEffect(() => {
-        if(orderDataBy) orderBy(orderDataBy)
+        if (orderDataBy) orderBy(orderDataBy)
     }, [])
 
     useEffect(() => {
@@ -130,8 +130,9 @@ export default function DataTable(props: Props) {
                                 header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
                                     header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
                                         header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
-                                            row && row[header.value] ? String(row[header.value])
-                                                : '--'}
+                                            header.value === 'description' ? row[header.value] ? row[header.value] : row['raw'] || '--' :
+                                                row && row[header.value] ? String(row[header.value])
+                                                    : '--'}
                         </h4>
                     )}
                 </div>
