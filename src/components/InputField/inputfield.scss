@@ -43,6 +43,7 @@
 
         &::placeholder {
             color: #b5b5b5;
+            font-size: .9rem;
         }
 
         &--dark {
@@ -71,6 +72,7 @@
 
             &::placeholder {
                 color: #b5b5b5;
+                font-size: .9rem;
             }
         }
     }
@@ -80,7 +82,7 @@
     &__default {
         border: 1px solid lightgray;
         border-radius: .5vw;
-        font-size: 1vw;
+        font-size: .9rem;
         padding: .4vw;
         font-weight: normal;
         resize: none;
@@ -89,6 +91,7 @@
 
         &::placeholder {
             color: #b5b5b5;
+            font-size: .9rem;
         }
 
         &:focus {
@@ -104,7 +107,7 @@
         &--dark {
             border: 1px solid rgb(120, 120, 120);
             border-radius: .5vw;
-            font-size: 1vw;
+            font-size: .9rem;
             padding: .4vw;
             font-weight: normal;
             resize: none;
@@ -115,6 +118,7 @@
 
             &::placeholder {
                 color: #b5b5b5;
+                font-size: .9rem;
             }
 
             &:focus {

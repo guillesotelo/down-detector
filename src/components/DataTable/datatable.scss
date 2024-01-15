@@ -4,14 +4,12 @@
         flex-direction: column;
         align-self: flex-start;
         width: 100%;
-        transition: 1s;
 
         &--dark {
             display: flex;
             flex-direction: column;
             align-self: flex-start;
             width: 100%;
-            transition: 1s;
         }
     }
 
@@ -88,7 +86,6 @@
         flex-direction: column;
         align-self: flex-start;
         width: 100%;
-        transition: .3s;
     }
 
     &__row {
@@ -101,7 +98,6 @@
         height: fit-content;
         cursor: pointer;
         align-items: center;
-        transition: .3s;
         overflow: hidden;
 
         &:hover {
@@ -157,7 +153,6 @@
             height: fit-content;
             cursor: pointer;
             align-items: center;
-            transition: .3s;
             overflow: hidden;
             background-color: #444444;
 

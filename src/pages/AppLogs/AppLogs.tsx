@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { getAllLogs, verifyToken } from '../../services'
 import { logHeaders } from '../../constants/tableHeaders'
@@ -14,6 +14,7 @@ export default function AppLogs({ }: Props) {
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<logType[]>([])
   const [filteredData, setFilteredData] = useState<logType[]>([])
+  const [pending, startTransition] = useTransition()
   const history = useHistory()
 
   useEffect(() => {
@@ -46,10 +47,12 @@ export default function AppLogs({ }: Props) {
 
   const triggerSearch = (searchString?: string) => {
     if (searchString) {
-      setFilteredData(tableData
-        .filter((log: logType) =>
-          JSON.stringify(log).toLocaleLowerCase().includes(searchString.trim().toLocaleLowerCase())
-        ))
+      startTransition(() => {
+        setFilteredData(tableData
+          .filter((log: logType) =>
+            JSON.stringify(log).toLocaleLowerCase().includes(searchString.trim().toLocaleLowerCase())
+          ))
+      })
     } else setFilteredData(tableData)
   }
 
@@ -70,7 +73,7 @@ export default function AppLogs({ }: Props) {
           name='logs'
           selected={selected}
           setSelected={setSelected}
-          loading={loading}
+          loading={loading || pending}
         />
       </div>
     </div>

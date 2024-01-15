@@ -4,8 +4,6 @@ import { AppContextType } from './types'
 
 export const AppContext = createContext<AppContextType>({
     isMobile: false,
-    search: [],
-    setSearch: () => { },
     isLoggedIn: false,
     isSuper: false,
     setIsLoggedIn: () => { },
@@ -24,17 +22,14 @@ type Props = {
 
 export const AppProvider = ({ children }: Props) => {
     const isMobile = window.screen.width <= 768
-    const [search, setSearch] = useState<string[]>([])
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
-    const [darkMode, setDarkMode] = useState(false)
+    const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('preferredMode') || 'false'))
     const [headerLoading, setHeaderLoading] = useState(false)
 
     useEffect(() => {
         verifyUser()
-        const preferredMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
-        setDarkMode(preferredMode)
     }, [])
 
     useEffect(() => {
@@ -58,22 +53,35 @@ export const AppProvider = ({ children }: Props) => {
         }
     }
 
+    const contextValue = React.useMemo(() => ({
+        isSuper,
+        setIsSuper,
+        isMobile,
+        setIsLoggedIn,
+        isLoggedIn,
+        item,
+        setItem,
+        darkMode,
+        setDarkMode,
+        headerLoading,
+        setHeaderLoading
+    }), [
+        isSuper,
+        setIsSuper,
+        isMobile,
+        setIsLoggedIn,
+        isLoggedIn,
+        item,
+        setItem,
+        darkMode,
+        setDarkMode,
+        headerLoading,
+        setHeaderLoading
+    ])
+
+
     return <AppContext.Provider
-        value={{
-            search,
-            setSearch,
-            isSuper,
-            setIsSuper,
-            isMobile,
-            setIsLoggedIn,
-            isLoggedIn,
-            item,
-            setItem,
-            darkMode,
-            setDarkMode,
-            headerLoading,
-            setHeaderLoading
-        }}>
+        value={contextValue}>
         {children}
     </AppContext.Provider>
 }

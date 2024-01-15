@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
 import { alertType, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
@@ -24,7 +24,7 @@ type Props = {
     index: number
 }
 
-export default function SystemCard(props: Props) {
+const SystemCard = (props: Props) => {
     const [lastDayData, setLastDayData] = useState<any[]>([])
     const [completeData, setCompleteData] = useState<any[]>([])
     const [lastDayChartData, setLastDayChartData] = useState<any>({ datasets: [{}], labels: [''] })
@@ -54,28 +54,10 @@ export default function SystemCard(props: Props) {
 
     const {
         _id,
-        url,
         name,
-        type,
-        description,
-        timeout,
-        interval,
-        createdBy,
-        updatedBy,
-        updatedAt,
-        lastCheckStatus,
         reportedlyDown,
         logo
     } = system || {}
-
-    const timeOptions = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    }
 
     useEffect(() => {
         if (!headerLoading) setHeaderLoading(true)
@@ -83,9 +65,14 @@ export default function SystemCard(props: Props) {
 
     useEffect(() => {
         processChartData()
-    }, [history, system, alerts])
+    }, [history, alerts, system])
 
     useEffect(() => {
+        if(lastDayData.length !==  lastDayChartData.labels.length) generateLastDayData()
+        if(completeData.length !==  completeChartData.labels.length) generateCompleteData()
+    }, [lastDayData, completeData])
+
+    const generateLastDayData = () => {
         setLastDayChartData({
             labels: lastDayData.length ? lastDayData.map((el: statusType) => getDate(el.time)) : [],
             datasets: [
@@ -110,7 +97,9 @@ export default function SystemCard(props: Props) {
                 }
             ]
         })
+    }
 
+    const generateCompleteData = () => {
         setCompleteChartData({
             labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
@@ -135,8 +124,7 @@ export default function SystemCard(props: Props) {
                 }
             ]
         })
-
-    }, [lastDayData, completeData])
+    }
 
     const parseCompleteDataTime = (time: Date) => {
         const string = time ?
@@ -498,3 +486,5 @@ export default function SystemCard(props: Props) {
         </div>
     )
 }
+
+export default React.memo(SystemCard)

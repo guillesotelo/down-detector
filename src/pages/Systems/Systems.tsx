@@ -310,6 +310,7 @@ export default function Systems({ }: Props) {
                 updateData={updateData}
                 value={data.name}
                 disabled={!isSuper}
+                placeholder='Write system name...'
               />
               <InputField
                 label='Logo URL (optional)'
@@ -317,6 +318,7 @@ export default function Systems({ }: Props) {
                 updateData={updateData}
                 value={data.logo}
                 disabled={!isSuper}
+                placeholder='https://system-logo.png'
               />
             </div>
             <InputField
@@ -325,6 +327,7 @@ export default function Systems({ }: Props) {
               updateData={updateData}
               value={data.url}
               disabled={!isSuper}
+              placeholder='https://...'
             />
             <div className="systems__new-row">
               {isSuper ?
@@ -353,6 +356,7 @@ export default function Systems({ }: Props) {
                 updateData={updateData}
                 value={data.description}
                 disabled={!isSuper}
+                placeholder='Write a description...'
               />
             </div>
             {isSuper ?
@@ -373,6 +377,7 @@ export default function Systems({ }: Props) {
                     name='customType'
                     updateData={updateData}
                     value={data.customType}
+                    placeholder='Write something...'
                   />
                   : ''}
                 <Dropdown
@@ -436,7 +441,7 @@ export default function Systems({ }: Props) {
                   name='raw'
                   updateData={updateData}
                   value={data.raw}
-                  disabled={true}
+                  disabled
                   type='textarea'
                   rows={6}
                 />
@@ -502,6 +507,7 @@ export default function Systems({ }: Props) {
                     name='downtimeNote'
                     updateData={updateData}
                     value={data.downtimeNote}
+                    placeholder='Write the downtime reason...'
                   />
                 </div>
                 : ''}
