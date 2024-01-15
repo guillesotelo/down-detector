@@ -146,8 +146,8 @@ const SystemCard = (props: Props) => {
             reportedHours.push(date.toLocaleString())
         })
 
-        const lastDay = processLastDayHistory()
-        let complete = processCompleteHistory()
+        const lastDay = processHistoryByHours(24)
+        let complete = processHistoryByHours(336)
 
         setLastDayData(lastDay.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
@@ -167,61 +167,14 @@ const SystemCard = (props: Props) => {
         setLoading(false)
     }
 
-    const processLastDayHistory = () => {
-        const downHours: string[] = []
-        const upHours: string[] = []
-        const allHours: statusType[] = []
-
-        history?.forEach((el: historyType) => {
-            const date = new Date(el.createdAt || new Date())
-            date.setMinutes(0)
-            date.setSeconds(0)
-
-            if (!el.status) downHours.push(date.toLocaleString())
-            else upHours.push(date.toLocaleString())
-            allHours.push({ time: date, status: el.status ? 1 : 0 })
-        })
-
-        const getDateWithGivenHour = (hour: number) => {
-            const today = new Date()
-            today.setMinutes(0)
-            today.setSeconds(0)
-            today.setHours(today.getHours() - hour)
-            return today
-        }
-
-        let status: statusType[] = Array.from({ length: 24 }).map((_, i) => {
-            return {
-                status: 1,
-                time: getDateWithGivenHour(i)
-            }
-        }).reverse()
-
-        const copyLastStatus = (status: statusType[], last: statusType) => {
-            return status.map((item, i) => {
-                const newItem = { ...item }
-                // Replicate last saved register to the rest of status until now
-                if (new Date(last.time).getTime() <= new Date(newItem.time).getTime()) {
-                    newItem.status = last.status
-                }
-                else if (downHours.includes(newItem.time.toLocaleString())) {
-                    newItem.status = 0
-                }
-                return newItem
-            })
-        }
-
-        return allHours.length ? copyLastStatus(status, allHours[0]) : []
-    }
-
-    const processCompleteHistory = () => {
+    const processHistoryByHours = (hours: number = 0) => {
         const downHours: string[] = []
         const upHours: string[] = []
         const allHours: statusType[] = []
         const systemStatus = history?.filter((status: historyType) => status.systemId === _id)
         const firstStatus = systemStatus?.length ? systemStatus[systemStatus.length - 1] : null
         const firstCheck = firstStatus ? firstStatus.createdAt : null
-        const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000) + 2
+        const timeSinceFirstCheck = hours || Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000) + 2
 
         history?.forEach((el: historyType) => {
             const date = new Date(el.createdAt || new Date())
