@@ -1,7 +1,7 @@
 import { AppContext, AppProvider } from './AppContext';
 import ReactGA from 'react-ga4';
 import { Switch, Route, useLocation } from "react-router-dom";
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Header from './components/Header/Header';
@@ -17,6 +17,7 @@ import Account from './pages/Account/Account';
 function App() {
   const location = useLocation()
   const { isLoggedIn, darkMode } = useContext(AppContext)
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -25,7 +26,7 @@ function App() {
       page: window.location.pathname
     })
   }, [location, window.location.pathname])
-
+  
   return (
       <Switch>
         <Route exact path="/">
@@ -110,4 +111,4 @@ function App() {
   )
 }
 
-export default App;
+export default React.memo(App)

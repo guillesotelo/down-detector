@@ -65,6 +65,7 @@ export default function Login({ }: Props) {
                     name='email'
                     value={data.email}
                     updateData={updateData}
+                    placeholder='your.email@company.com'
                 />
                 <InputField
                     label="Password"

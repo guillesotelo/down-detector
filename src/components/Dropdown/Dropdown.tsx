@@ -81,10 +81,10 @@ export default function Dropdown(props: Props) {
         return <div
             className={`dropdown__select${darkMode ? '--dark' : ''}`}
             style={{
-                border: !darkMode ? openDrop ? '1px solid #105ec6' : '1px solid lightgray' : '',
+                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
                 borderBottomLeftRadius: openDrop ? 0 : '',
-                backgroundColor: openDrop ? '#e1eeff' : ''
+                filter: openDrop ? 'brightness(120%)' : ''
             }}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>
@@ -104,10 +104,9 @@ export default function Dropdown(props: Props) {
         return <div
             className={`dropdown__select${darkMode ? '--dark' : ''}`}
             style={{
-                border: !darkMode ? openDrop ? '1px solid #105ec6' : '1px solid lightgray' : '',
+                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
-                borderBottomLeftRadius: openDrop ? 0 : '',
-                backgroundColor: openDrop ? '#e1eeff' : ''
+                borderBottomLeftRadius: openDrop ? 0 : ''
             }}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4
@@ -137,8 +136,7 @@ export default function Dropdown(props: Props) {
                         key={i}
                         className={`dropdown__option${darkMode ? '--dark' : ''}`}
                         style={{
-                            marginTop: i === 0 ? '.3rem' : 0,
-                            borderTop: i === 0 ? 'none' : '1px solid #e7e7e7'
+                            borderTop: i === 0 ? '1px solid #105ec6' : '1px solid #e7e7e7'
                         }}
                         onClick={() => {
                             if (multiselect) {
@@ -155,7 +153,7 @@ export default function Dropdown(props: Props) {
                                 objKey ? option[objKey] : option}
                     </h4>)
                 :
-                <h4 className={`dropdown__option${darkMode ? '--dark' : ''}`} style={{ borderTop: 'none' }}>Cargando...</h4>
+                <h4 className={`dropdown__option${darkMode ? '--dark' : ''}`} style={{ borderTop: 'none' }}>Loading...</h4>
             }
         </div>
     }

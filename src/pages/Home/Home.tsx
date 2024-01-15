@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
@@ -17,7 +17,7 @@ import { APP_COLORS } from '../../constants/app'
 import { sortArray } from '../../helpers'
 Chart.register(...registerables);
 
-export default function Home() {
+const Home = () => {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState('')
   const [selected, setSelected] = useState('')
@@ -34,6 +34,7 @@ export default function Home() {
   const [modalChartOptions, setModalChartOptions] = useState({})
   const [lastCheck, setLastCheck] = useState(new Date())
   const { darkMode, setHeaderLoading } = useContext(AppContext)
+  const [pending, startTransition] = useTransition()
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -45,55 +46,53 @@ export default function Home() {
     { name: 'Other (describe)' },
   ]
 
-  const loadData = useCallback((reset?: boolean) => {
-    if (reset) {
-      setSelected('')
-      setReport('')
-      setData({})
+  const loadData = useMemo(() => {
+    return () => {
+      getSystems()
+      getAllStatus()
+      getAllUserAlerts()
+      getAllDownTimes()
+      setLastCheck(new Date())
     }
-    getSystems()
-    getAllStatus()
-    getAllUserAlerts()
-    getAllDownTimes()
-    setLastCheck(new Date())
   }, [])
 
   useEffect(() => {
     setHeaderLoading(true)
     loadData()
-    const intervalId = setInterval(loadData, 1 * 60 * 1000)
+    const intervalId = setInterval(() => loadData(), 1 * 60 * 1000)
     return () => clearInterval(intervalId)
   }, [loadData])
 
   useEffect(() => {
-    getTotalRegisteredHours()
-  }, [allStatus, selected])
-
-  useEffect(() => {
-    if (selected) getStatusAndAlerts()
-  }, [selected])
-
-  useEffect(() => {
-    if (report) document.body.style.overflow = 'hidden'
-    else document.body.style.overflow = 'auto'
-  }, [report])
+    if (selected || report) {
+      document.body.style.overflow = 'hidden'
+      if (allStatus.length) {
+        getTotalRegisteredHours()
+        getStatusAndAlerts()
+      }
+    } else document.body.style.overflow = 'auto'
+  }, [selected, report])
 
   const getStatusAndAlerts = () => {
-    const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
-      .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
-      .sort((a: eventType & alertType, b: eventType & alertType) => {
-        if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
-        return 1
-      })
-    setStatusAndAlerts(statusAndAlertsByID)
+    startTransition(() => {
+      const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
+        .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
+        .sort((a: eventType & alertType, b: eventType & alertType) => {
+          if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
+          return 1
+        })
+      setStatusAndAlerts(statusAndAlertsByID)
+    })
   }
 
   const getTotalRegisteredHours = () => {
-    const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
-    const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
-    const firstCheck = firstStatus ? firstStatus.createdAt : null
-    const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
-    setTotalHours(timeSinceFirstCheck)
+    startTransition(() => {
+      const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
+      const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
+      const firstCheck = firstStatus ? firstStatus.createdAt : null
+      const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
+      setTotalHours(timeSinceFirstCheck)
+    })
   }
 
   const getAllDownTimes = async () => {
@@ -193,7 +192,10 @@ export default function Home() {
         localStorage.removeItem('localSystems')
         localStorage.removeItem('localHistory')
         localStorage.removeItem('localAlerts')
-        loadData(true)
+        setSelected('')
+        setReport('')
+        setData({})
+        loadData()
       }
       setLoading(false)
     } catch (error) {
@@ -295,19 +297,19 @@ export default function Home() {
             label='Name'
             name='name'
             value={getSystemData(report, 'name')}
-            disabled={true}
+            disabled
           />
           <InputField
             label='URL'
             name='url'
             value={getSystemData(report, 'url')}
-            disabled={true}
+            disabled
           />
           <InputField
             label='Status'
             name='status'
             value='DOWN'
-            disabled={true}
+            disabled
           />
           <Dropdown
             label='Issue type'
@@ -324,6 +326,8 @@ export default function Home() {
             value={data.description}
             updateData={updateData}
             type='textarea'
+            placeholder='Describe what happened...'
+            rows={5}
           />
         </div>
         <div className="home__modal-issue-btns">
@@ -380,7 +384,7 @@ export default function Home() {
             setTableData={setStatusAndAlerts}
             tableHeaders={hisrotyHeaders}
             name='history'
-            loading={loading}
+            loading={loading || pending}
             max={getDowntimeString() ? 2 : 3}
             orderDataBy={hisrotyHeaders[0]}
             style={{ width: '50vw' }}
@@ -431,6 +435,34 @@ export default function Home() {
     }
   }
 
+  const renderSystemList = () => {
+    return allSystems.length ?
+      allSystems.map((system: systemType, i: number) =>
+        <SystemCard
+          key={i}
+          index={i}
+          status={getCurrentStatus(system)}
+          system={system}
+          reportIssue={setReport}
+          history={getHistoryBySystem(system)}
+          alerts={getAlertsBySystem(system)}
+          setSelected={setSelected}
+          setSelectedData={setChartData}
+          setModalChartOptions={setModalChartOptions}
+          downtime={getDownTime(system)}
+          lastCheck={lastCheck}
+          delay={String(i ? i / 10 : 0) + 's'}
+          setShowDowntime={setShowDowntime}
+        />)
+      : loading ?
+        <div className='home__loading'>
+          <MoonLoader color='#0057ad' size={50} />
+          <p>Loading systems...</p>
+        </div>
+        :
+        <p className="home__system-void">No systems found</p>
+  }
+
   return (
     <div className={`home__container${darkMode ? '--dark' : ''}`}>
       {showDowntime ? renderDowntimeModal()
@@ -440,33 +472,10 @@ export default function Home() {
         className="home__system-list"
         style={{ filter: showDowntime || report || selected ? 'blur(10px)' : '' }}
       >
-        {allSystems.length ?
-          allSystems.map((system: systemType, i: number) =>
-            <SystemCard
-              key={i}
-              index={i}
-              status={getCurrentStatus(system)}
-              system={system}
-              reportIssue={setReport}
-              history={getHistoryBySystem(system)}
-              alerts={getAlertsBySystem(system)}
-              setSelected={setSelected}
-              setSelectedData={setChartData}
-              setModalChartOptions={setModalChartOptions}
-              downtime={getDownTime(system)}
-              lastCheck={lastCheck}
-              delay={String(i ? i / 10 : 0) + 's'}
-              setShowDowntime={setShowDowntime}
-            />)
-          : loading ?
-            <div className='home__loading'>
-              <MoonLoader color='#0057ad' size={50} />
-              <p>Loading systems...</p>
-            </div>
-            :
-            <p className="home__system-void">No systems found</p>
-        }
+        {renderSystemList()}
       </div>
     </div>
   )
 }
+
+export default React.memo(Home)

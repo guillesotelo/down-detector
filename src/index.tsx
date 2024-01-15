@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReactGA from 'react-ga4';
 import './index.css';
 import { AppProvider } from './AppContext';
-const TRACKING_ID = "G-";
+const TRACKING_ID = "G-W3HH0CSRXZ";
 ReactGA.initialize(TRACKING_ID);
 
 const root = ReactDOM.createRoot(

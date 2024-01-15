@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
 import { getHistoryAndAlerts } from '../../helpers'
@@ -12,6 +12,7 @@ export default function History({ }: Props) {
     const [search, setSearch] = useState('')
     const [tableData, setTableData] = useState<historyType[]>([])
     const [filteredData, setFilteredData] = useState<historyType[]>([])
+    const [pending, startTransition] = useTransition()
 
     useEffect(() => {
         getHistory()
@@ -38,10 +39,12 @@ export default function History({ }: Props) {
 
     const triggerSearch = (searchString?: string) => {
         if (searchString) {
-            setFilteredData(tableData
-                .filter((log: logType) =>
-                    JSON.stringify(log).toLocaleLowerCase().includes(searchString.trim().toLocaleLowerCase())
-                ))
+            startTransition(() => {
+                setFilteredData(tableData
+                    .filter((log: logType) =>
+                        JSON.stringify(log).toLocaleLowerCase().includes(searchString.trim().toLocaleLowerCase())
+                    ))
+            })
         } else setFilteredData(tableData)
     }
 
@@ -60,7 +63,8 @@ export default function History({ }: Props) {
                     setTableData={setFilteredData}
                     tableHeaders={hisrotyHeaders}
                     name='history'
-                    loading={loading}
+                    loading={loading || pending}
+                    max={20}
                 />
             </div>
         </div>

@@ -2,8 +2,6 @@ export type dataObj<T = any> = Record<string | number, T>
 
 export type AppContextType = {
     isMobile: boolean
-    search: string[]
-    setSearch: (search: string[]) => void
     isLoggedIn: boolean
     isSuper: boolean
     setIsLoggedIn: (value: boolean) => void

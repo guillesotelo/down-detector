@@ -138,12 +138,14 @@ export default function Account({ }: Props) {
                 name='username'
                 updateData={updateData}
                 value={data.username}
+                placeholder='Mikael Bloom'
               />
               <InputField
                 label='Email'
                 name='email'
                 updateData={updateData}
                 value={data.email}
+                placeholder='mikael.bloom@company.com'
               />
               <InputField
                 label='Password'
