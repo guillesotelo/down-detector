@@ -6,6 +6,7 @@ import { AppContext, AppProvider } from '../../AppContext'
 import { useHistory, useLocation } from 'react-router-dom'
 import Day from '../../assets/icons/day.svg'
 import Night from '../../assets/icons/night.svg'
+import Tooltip from '../Tooltip/Tooltip'
 
 export default function Header() {
   const [barWidth, setBarWidth] = useState('0%')
@@ -46,7 +47,16 @@ export default function Header() {
   return (
     <div className={`header__container${darkMode ? '--dark' : ''}`}>
       <div className="header__col">
-        <img src={DDLogo} onClick={gotoAbout} alt="Down Logo" className={`header__down-icon${darkMode ? '--dark' : ''}`} />
+        <Tooltip
+          tooltip={location.pathname.includes('about') ? 'Down@Volvo' : 'About Down@Volvo'}
+          inline>
+          <img
+            src={DDLogo}
+            onClick={gotoAbout}
+            alt={location.pathname.includes('about') ? 'Down@Volvo' : 'About Down@Volvo'}
+            className={`header__down-icon${darkMode ? '--dark' : ''}`}
+          />
+        </Tooltip>
       </div>
       <div className="header__col">
       </div>
