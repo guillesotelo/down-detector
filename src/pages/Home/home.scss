@@ -39,8 +39,8 @@
 
     &__modal {
         &-graph {
-            width: 100vw;
-            height: 8vw;
+            width: 200vw;
+            height: 4vw;
             margin: 0 auto;
 
             &-wrapper {
@@ -50,7 +50,7 @@
                 justify-content: center;
                 align-items: center;
                 width: 50vw;
-                height: 10vw;
+                height: 6vw;
                 overflow: auto;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;

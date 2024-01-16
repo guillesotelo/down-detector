@@ -85,7 +85,7 @@ const SystemCard = (props: Props) => {
                 {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: status ? 'green' : 'red',
+                    borderColor: reportedlyDown ? 'orange' : status ? 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
                     label: 'Status',
@@ -112,7 +112,7 @@ const SystemCard = (props: Props) => {
                 {
                     data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: status ? 'green' : 'red',
+                    borderColor: reportedlyDown ? 'orange' : status ? 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
                     label: 'Status',
@@ -164,7 +164,7 @@ const SystemCard = (props: Props) => {
         })
 
         setCompleteData(complete)
-        setLoading(false)
+        setTimeout(() => setLoading(false), 500)
     }
 
     const processHistoryByHours = (hours: number = 0) => {
@@ -176,12 +176,18 @@ const SystemCard = (props: Props) => {
         const firstCheck = firstStatus ? firstStatus.createdAt : null
         const timeSinceFirstCheck = hours || Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000) + 2
 
-        history?.forEach((el: historyType) => {
+        history?.forEach((el: historyType, index) => {
             const date = new Date(el.createdAt || new Date())
             date.setMinutes(0)
             date.setSeconds(0)
 
-            if (!el.status) downHours.push(date.toLocaleString())
+            if (!el.status) {
+                if (history[index - 1]) {
+                    const current = new Date(el.createdAt || new Date()).getTime()
+                    const previous = new Date(history[index - 1].createdAt || new Date()).getTime()
+                    if (previous - current >= 180000) downHours.push(date.toLocaleString())
+                } else downHours.push(date.toLocaleString())
+            }
             else upHours.push(date.toLocaleString())
             allHours.push({ time: date, status: el.status ? 1 : 0 })
         })
@@ -215,6 +221,7 @@ const SystemCard = (props: Props) => {
                 return newItem
             })
         }
+
         return allHours.length ? copyLastStatus(status, allHours[0]) : []
     }
 
@@ -345,23 +352,23 @@ const SystemCard = (props: Props) => {
                     // color: 'gray'
                 },
                 grid: {
-                    // display: false,
-                    // drawBorder: false,
-                    // drawChartArea: false
+                    display: false,
+                    drawBorder: false,
+                    drawChartArea: false
                 }
             },
             y: {
                 // beginAtZero: true,
                 border: {
-                    // display: false
+                    display: false
                 },
                 ticks: {
                     display: false
                 },
                 grid: {
-                    // display: false,
-                    // drawBorder: false,
-                    // drawChartArea: false
+                    display: false,
+                    drawBorder: false,
+                    drawChartArea: false
                 }
             }
         }
@@ -396,9 +403,9 @@ const SystemCard = (props: Props) => {
                     <div className="systemcard__footer">
                         <h2
                             className="systemcard__status"
-                            style={{ color: loading ? 'gray' : status ? 'green' : 'red' }}>
+                            style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? 'green' : 'red' }}>
                             {loading ? <p style={{ color: 'gray' }}>Checking status...</p> :
-                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{reportedlyDown ? 'Reported' : status ? 'UP' : 'DOWN'}</strong></>
+                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}</strong></>
                             }
                         </h2>
                         {status ? <Button
@@ -407,8 +414,9 @@ const SystemCard = (props: Props) => {
                             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
                             textColor={darkMode ? 'white' : 'black'}
                         />
-                            : <p className="systemcard__status-caption">For {lastCheck} min</p>
-                        }
+                            : !loading && lastCheck ?
+                                <p className="systemcard__status-caption">For {lastCheck} min</p>
+                                : ''}
                     </div>
                 </div>
                 {downtime && downtime.length ?

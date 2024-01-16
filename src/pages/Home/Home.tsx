@@ -157,6 +157,7 @@ const Home = () => {
   }
 
   const getLastCheckMinutes = (system: systemType) => {
+    if(!allStatus || !allStatus.length) return 0
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
     const now = new Date().getTime()
     const historyDate = new Date(history?.createdAt || '').getTime()
