@@ -156,6 +156,13 @@ const Home = () => {
     return history ? history.status : false
   }
 
+  const getLastCheckMinutes = (system: systemType) => {
+    const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
+    const now = new Date().getTime()
+    const historyDate = new Date(history?.createdAt || '').getTime()
+    return (now - historyDate) / 60000
+  }
+
   const getSystemData = (id: string, type: string) => {
     if (allSystems.length) {
       const found = allSystems.find(system => system._id === id)
@@ -176,9 +183,17 @@ const Home = () => {
       const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
       let nav: dataObj = {}
       for (let i in navigator) nav[i] = (navigator as any)[i]
+      let geoLocation = ''
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => geoLocation = JSON.stringify(pos),
+          (err) => geoLocation = err.message
+        )
+      }
 
       const reportData = {
         ...data,
+        geoLocation,
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
@@ -189,9 +204,6 @@ const Home = () => {
       const sent = await createUserAlert(reportData)
       if (sent && sent._id) {
         toast.success('Report sent successfully')
-        localStorage.removeItem('localSystems')
-        localStorage.removeItem('localHistory')
-        localStorage.removeItem('localAlerts')
         setSelected('')
         setReport('')
         setData({})
@@ -452,7 +464,7 @@ const Home = () => {
           setSelectedData={setChartData}
           setModalChartOptions={setModalChartOptions}
           downtime={getDownTime(system)}
-          lastCheck={lastCheck}
+          lastCheck={getLastCheckMinutes(system)}
           delay={String(i ? i / 10 : 0) + 's'}
           setShowDowntime={setShowDowntime}
         />)

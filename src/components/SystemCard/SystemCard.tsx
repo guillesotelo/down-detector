@@ -18,7 +18,7 @@ type Props = {
     setSelected: (value: string) => void
     setSelectedData: (value: systemType) => void
     setModalChartOptions: (value: systemType[]) => void
-    lastCheck?: Date
+    lastCheck?: string | number
     delay?: string
     setShowDowntime: (value: downtimeModalType) => void
     index: number
@@ -68,8 +68,8 @@ const SystemCard = (props: Props) => {
     }, [history, alerts, system])
 
     useEffect(() => {
-        if(lastDayData.length !==  lastDayChartData.labels.length) generateLastDayData()
-        if(completeData.length !==  completeChartData.labels.length) generateCompleteData()
+        if (lastDayData.length !== lastDayChartData.labels.length) generateLastDayData()
+        if (completeData.length !== completeChartData.labels.length) generateCompleteData()
     }, [lastDayData, completeData])
 
     const generateLastDayData = () => {
@@ -401,12 +401,14 @@ const SystemCard = (props: Props) => {
                                 <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{reportedlyDown ? 'Reported' : status ? 'UP' : 'DOWN'}</strong></>
                             }
                         </h2>
-                        <Button
+                        {status ? <Button
                             label='Report Issue'
                             handleClick={() => reportIssue(_id || '')}
                             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
                             textColor={darkMode ? 'white' : 'black'}
                         />
+                            : <p className="systemcard__status-caption">For {lastCheck} min</p>
+                        }
                     </div>
                 </div>
                 {downtime && downtime.length ?
