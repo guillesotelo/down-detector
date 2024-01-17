@@ -16,7 +16,7 @@ type Props = {
     history?: historyType[]
     alerts?: alertType[]
     setSelected: (value: string) => void
-    setSelectedData: (value: systemType) => void
+    setSelectedData: (value: any) => void
     setModalChartOptions: (value: systemType[]) => void
     lastCheck?: string | number
     delay?: string
@@ -60,7 +60,7 @@ const SystemCard = (props: Props) => {
     } = system || {}
 
     useEffect(() => {
-        if (!headerLoading) setHeaderLoading(true)
+        if (loading && !headerLoading) setHeaderLoading(true)
     }, [loading])
 
     useEffect(() => {
@@ -68,11 +68,10 @@ const SystemCard = (props: Props) => {
     }, [history, alerts, system])
 
     useEffect(() => {
-        if (lastDayData.length !== lastDayChartData.labels.length) generateLastDayData()
-        if (completeData.length !== completeChartData.labels.length) generateCompleteData()
-    }, [lastDayData, completeData])
+        generateLastDayData()
+    }, [lastDayData])
 
-    const generateLastDayData = () => {
+    const generateLastDayData = useCallback(() => {
         setLastDayChartData({
             labels: lastDayData.length ? lastDayData.map((el: statusType) => getDate(el.time)) : [],
             datasets: [
@@ -85,7 +84,7 @@ const SystemCard = (props: Props) => {
                 {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: reportedlyDown ? 'orange' : status ? 'green' : 'red',
+                    borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
                     label: 'Status',
@@ -97,10 +96,17 @@ const SystemCard = (props: Props) => {
                 }
             ]
         })
-    }
+    }, [
+        lastDayChartData,
+        setLastDayChartData,
+        lastDayData,
+        completeData,
+        darkMode,
+        status
+    ])
 
-    const generateCompleteData = () => {
-        setCompleteChartData({
+    const generateCompleteData = useCallback(() => {
+        setSelectedData({
             labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
                 {
@@ -112,7 +118,7 @@ const SystemCard = (props: Props) => {
                 {
                     data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: reportedlyDown ? 'orange' : status ? 'green' : 'red',
+                    borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
                     label: 'Status',
@@ -124,7 +130,14 @@ const SystemCard = (props: Props) => {
                 }
             ]
         })
-    }
+    }, [
+        completeChartData,
+        setCompleteChartData,
+        lastDayData,
+        completeData,
+        darkMode,
+        status
+    ])
 
     const parseCompleteDataTime = (time: Date) => {
         const string = time ?
@@ -164,7 +177,7 @@ const SystemCard = (props: Props) => {
         })
 
         setCompleteData(complete)
-        setTimeout(() => setLoading(false), 500)
+        setTimeout(() => setLoading(false), 1000)
     }
 
     const processHistoryByHours = (hours: number = 0) => {
@@ -182,6 +195,7 @@ const SystemCard = (props: Props) => {
             date.setSeconds(0)
 
             if (!el.status) {
+                // If a previous status exists and it has passed more than 3 minutes, then mark it as DOWN
                 if (history[index - 1]) {
                     const current = new Date(el.createdAt || new Date()).getTime()
                     const previous = new Date(history[index - 1].createdAt || new Date()).getTime()
@@ -214,7 +228,7 @@ const SystemCard = (props: Props) => {
                 if (new Date(last.time).getTime() <= new Date(newItem.time).getTime()) {
                     newItem.status = last.status
                 }
-                else if (downHours.includes(newItem.time.toLocaleString())) {
+                else if (downHours.indexOf(newItem.time.toLocaleString()) !== -1) {
                     newItem.status = 0
                 }
 
@@ -246,9 +260,9 @@ const SystemCard = (props: Props) => {
     }
 
     const selectSystem = () => {
-        setSelected(system?._id || '')
-        setSelectedData(completeChartData)
+        generateCompleteData()
         setModalChartOptions(completeChartOptions)
+        setSelected(system?._id || '')
     }
 
     const isLiveDowntime = (downtime: eventType) => {
@@ -383,12 +397,12 @@ const SystemCard = (props: Props) => {
                         borderColor: darkMode ? 'gray' : '#d3d3d361',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading ? '' : darkMode ?
-                            `linear-gradient(to bottom right, #252525, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                            `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
                             :
                             `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                     }}
                 >
-                    <div className="systemcard__header">
+                    <div className="systemcard__header" onClick={selectSystem}>
                         <h1 className="systemcard__name">{name || 'Api Name'}</h1>
                         {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
@@ -403,9 +417,14 @@ const SystemCard = (props: Props) => {
                     <div className="systemcard__footer">
                         <h2
                             className="systemcard__status"
-                            style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? 'green' : 'red' }}>
+                            style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading ? <p style={{ color: 'gray' }}>Checking status...</p> :
-                                <><span className='systemcard__status-dot'>●</span> &nbsp;&nbsp;Status: <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}</strong></>
+                                <>
+                                    <span className='systemcard__status-dot'>●</span>
+                                    &nbsp;&nbsp;Status:&nbsp;
+                                    <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}
+                                    </strong>
+                                </>
                             }
                         </h2>
                         {status ? <Button

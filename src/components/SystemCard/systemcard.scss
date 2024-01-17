@@ -70,6 +70,7 @@
         justify-content: space-between;
         // cursor: pointer;
         height: 1.6rem;
+        cursor: pointer;
     }
 
     &__name {
@@ -88,6 +89,11 @@
         font-weight: normal;
         white-space: nowrap;
         margin: 0;
+
+        &-caption {
+            margin: 0;
+            font-size: .9rem;
+        }
 
         &-dot {
             animation: fade-in-out 1.5s ease-in-out infinite;
