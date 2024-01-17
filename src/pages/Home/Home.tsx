@@ -28,7 +28,7 @@ const Home = () => {
   const [allStatus, setAllStatus] = useState<historyType[]>([])
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
   const [data, setData] = useState<alertType>({})
-  const [chartData, setChartData] = useState<any>({})
+  const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
   const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
@@ -74,25 +74,21 @@ const Home = () => {
   }, [selected, report])
 
   const getStatusAndAlerts = () => {
-    startTransition(() => {
-      const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
-        .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
-        .sort((a: eventType & alertType, b: eventType & alertType) => {
-          if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
-          return 1
-        })
-      setStatusAndAlerts(statusAndAlertsByID)
-    })
+    const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
+      .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
+      .sort((a: eventType & alertType, b: eventType & alertType) => {
+        if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
+        return 1
+      })
+    setStatusAndAlerts(statusAndAlertsByID)
   }
 
   const getTotalRegisteredHours = () => {
-    startTransition(() => {
-      const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
-      const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
-      const firstCheck = firstStatus ? firstStatus.createdAt : null
-      const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
-      setTotalHours(timeSinceFirstCheck)
-    })
+    const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
+    const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
+    const firstCheck = firstStatus ? firstStatus.createdAt : null
+    const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
+    setTotalHours(timeSinceFirstCheck)
   }
 
   const getAllDownTimes = async () => {
@@ -157,11 +153,11 @@ const Home = () => {
   }
 
   const getLastCheckMinutes = (system: systemType) => {
-    if(!allStatus || !allStatus.length) return 0
+    if (!allStatus || !allStatus.length) return 0
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
     const now = new Date().getTime()
     const historyDate = new Date(history?.createdAt || '').getTime()
-    return (now - historyDate) / 60000
+    return ((now - historyDate) / 60000).toFixed(0)
   }
 
   const getSystemData = (id: string, type: string) => {
@@ -185,7 +181,7 @@ const Home = () => {
       let nav: dataObj = {}
       for (let i in navigator) nav[i] = (navigator as any)[i]
       let geoLocation = ''
-      if(navigator.geolocation) {
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => geoLocation = JSON.stringify(pos),
           (err) => geoLocation = err.message
@@ -399,7 +395,7 @@ const Home = () => {
             setTableData={setStatusAndAlerts}
             tableHeaders={hisrotyHeaders}
             name='history'
-            loading={loading || pending}
+            loading={loading}
             max={getDowntimeString() ? 2 : 3}
             orderDataBy={hisrotyHeaders[0]}
             style={{ width: '50vw' }}
@@ -408,15 +404,18 @@ const Home = () => {
         <div className="home__modal-footer">
           <h2
             className="systemcard__status"
-            style={{ color: getCurrentStatus(getSelectedSystem()) ? 'green' : 'red' }}>
+            style={{ color: getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
             ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
           </h2>
-          <Button
-            label='Report Issue'
-            handleClick={() => setReport(selected)}
-            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
-            textColor={darkMode ? 'white' : 'black'}
-          />
+          {getLastCheckMinutes(getSelectedSystem()) ?
+            <p className="systemcard__status-caption">For {getLastCheckMinutes(getSelectedSystem())} min</p>
+            :
+            <Button
+              label='Report Issue'
+              handleClick={() => setReport(selected)}
+              bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
+              textColor={darkMode ? 'white' : 'black'}
+            />}
         </div>
       </Modal>
     )
