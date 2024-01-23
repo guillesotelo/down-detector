@@ -64,6 +64,7 @@ export default function AppLogs({ }: Props) {
         triggerSearch={triggerSearch}
         value={search}
         placeholder='Search logs...'
+        style={{ marginBottom: '1rem' }}
       />
       <div className="applogs__col">
         <DataTable

@@ -8,6 +8,7 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        -webkit-tap-highlight-color: transparent;
 
         &:hover .switch__slider--on {
             background-color: #9b9b9b;

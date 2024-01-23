@@ -1,5 +1,4 @@
 .modal {
-
     &__wrapper {
         display: flex;
         flex-direction: column;
@@ -105,7 +104,7 @@
             border: 1px solid transparent;
             padding: .2rem .4rem;
             border-radius: .5rem;
-    
+
             &:hover {
                 border: 1px solid lightgray;
             }
@@ -114,5 +113,20 @@
 
     &__content {
         margin: 1rem;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .modal {
+        &__container {
+            min-width: 90vw;
+            width: 90vw;
+            max-height: 70vh;
+
+            &--dark {
+                min-width: 90vw;
+                max-height: 70vh;
+            }
+        }
     }
 }

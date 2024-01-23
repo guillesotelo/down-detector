@@ -21,7 +21,7 @@ type Props = {
 
 export default function Dropdown(props: Props) {
     const [openDrop, setOpenDrop] = useState(false)
-    const { darkMode } = useContext(AppContext)
+    const { darkMode, isMobile } = useContext(AppContext)
 
     const {
         label,
@@ -49,7 +49,7 @@ export default function Dropdown(props: Props) {
             }
         })
         dropdownListener()
-        
+
         return window.removeEventListener('mouseup', dropdownListener)
     }, [])
 
@@ -60,7 +60,7 @@ export default function Dropdown(props: Props) {
         if (selection && dropdown) {
             const { width, height } = selection.getBoundingClientRect()
             dropdown.style.marginTop = (height - 2).toFixed(0) + 'px'
-            dropdown.style.width = (width - 2).toFixed(0) + 'px'
+            dropdown.style.width = (width + (isMobile ? 0 : -2)).toFixed(0) + 'px'
         }
     }, [openDrop])
 

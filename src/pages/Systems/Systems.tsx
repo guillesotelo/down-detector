@@ -74,8 +74,8 @@ export default function Systems({ }: Props) {
 
     if (selected !== -1) {
       const select = tableData[selected]
-  console.log('select', select)
-  setData(select)
+
+      setData(select)
       getDowntimeData(select)
       if (select.type) setSelectedType(select.type)
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))

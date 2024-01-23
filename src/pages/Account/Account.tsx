@@ -21,7 +21,7 @@ export default function Account({ }: Props) {
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
   const [allSystems, setAllSystems] = useState<systemType[]>([])
-  const { setIsLoggedIn, darkMode, setIsSuper } = useContext(AppContext) as AppContextType
+  const { setIsLoggedIn, darkMode, setIsSuper, isMobile } = useContext(AppContext) as AppContextType
   const history = useHistory()
   const user = getUser()
 
@@ -56,10 +56,7 @@ export default function Account({ }: Props) {
   }
 
   const discardChanges = () => {
-    setData({})
-    setDataIsUpdated(false)
-    setEdit(false)
-    getUserData()
+    history.go(0)
   }
 
   const checkErrors = () => {
@@ -118,7 +115,7 @@ export default function Account({ }: Props) {
         :
         <div className={`account__details${darkMode ? '--dark' : ''}`}>
           <h2 className='account__details-title'>Account Information</h2>
-          <img src={UserIcon} alt="User Profile" className={`account__details-icon${darkMode ? '--dark' : ''}`} />
+          {!isMobile ? <img src={UserIcon} alt="User Profile" className={`account__details-icon${darkMode ? '--dark' : ''}`} /> : ''}
           {edit ?
             <>
               <InputField
@@ -149,20 +146,26 @@ export default function Account({ }: Props) {
                 value={data.password2}
                 type='password'
               />
-              <div className="account__details-row">
+              <div
+                className="account__details-row"
+                style={{
+                  flexDirection: isMobile ? 'column' : 'row',
+                  gap: isMobile ? '.5rem' : ''
+                }}
+              >
                 <Button
                   label='Discard Changes'
                   handleClick={discardChanges}
                   bgColor={APP_COLORS.GRAY_ONE}
                   textColor='white'
-                  style={{ width: '45%' }}
+                  style={{ width: isMobile ? '100%' : '45%' }}
                 />
                 <Button
                   label='Save Changes'
                   handleClick={saveChanges}
                   bgColor={APP_COLORS.ORANGE_ONE}
                   textColor='white'
-                  style={{ width: '45%' }}
+                  style={{ width: isMobile ? '100%' : '45%' }}
                   disabled={!dataIsUpdated}
                 />
               </div>
@@ -177,7 +180,6 @@ export default function Account({ }: Props) {
           }
 
           {edit ?
-            <div className="account__details-row">
               <Button
                 label='Logout'
                 handleClick={logout}
@@ -186,7 +188,6 @@ export default function Account({ }: Props) {
                 textColor='white'
                 style={{ width: '100%' }}
               />
-            </div>
             :
             <div className="account__details-row">
               <Button
