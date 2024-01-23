@@ -17,3 +17,16 @@
         align-items: flex-start;
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .applogs {
+        &__container {
+            width: 90vw;
+            padding: 2rem 0;
+        }
+    
+        &__col {
+            width: 90vw;
+        }
+    }
+}

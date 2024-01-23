@@ -4,7 +4,7 @@
         background-color: #D3AFAF;
         // width: 100%;
         padding: .55rem;
-        border-radius: .3vw;
+        border-radius: .3rem;
         cursor: pointer;
         font-weight: normal;
         transition: .3s;
@@ -16,6 +16,7 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
     &__icon {
@@ -35,6 +36,7 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
     &__svg {
@@ -53,6 +55,7 @@
         border: none;
         border: 1px solid transparent;
         min-height: 1.3rem;
+        -webkit-tap-highlight-color: transparent;
 
         &:hover {
             background-color: #f0f0f0 !important;
@@ -62,6 +65,4 @@
     }
 }
 
-@media only screen and (max-width: 640px) {
-    
-}
+@media only screen and (max-width: 640px) {}

@@ -70,7 +70,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        gap: 1vw;
+        gap: 1rem;
         cursor: pointer;
         position: relative;
         transition: .3s;
@@ -94,7 +94,7 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: 1vw;
+            gap: 1rem;
             cursor: pointer;
             position: relative;
             transition: .3s;
@@ -183,13 +183,13 @@
         flex-direction: column;
         background-color: white;
         border: 1px solid #105ec6;
-        border-bottom-right-radius: 0.5vw;
-        border-bottom-left-radius: 0.5vw;
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
         border-top: none;
         margin-top: 2.3rem;
         width: calc(100% - 2px);
         z-index: 2;
-        max-height: 20vw;
+        max-height: 20rem;
         overflow-y: auto;
         transition: .3s;
 
@@ -199,13 +199,13 @@
             flex-direction: column;
             background-color: #353535;
             border: 1px solid #105ec6;
-            border-bottom-right-radius: 0.5vw;
-            border-bottom-left-radius: 0.5vw;
+            border-bottom-right-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
             border-top: none;
             margin-top: 2.3rem;
             width: calc(100% - 2px);
             z-index: 2;
-            max-height: 20vw;
+            max-height: 20rem;
             overflow-y: auto;
             transition: .3s;
         }
@@ -215,8 +215,8 @@
         font-size: .9rem;
         color: gray;
         margin: 0;
-        height: 1.5vw;
-        line-height: 1.5vw;
+        height: 1.5rem;
+        line-height: 1.5rem;
         cursor: pointer;
         padding: .4rem .7rem;
         // border-top: 1px solid #e7e7e7;
@@ -234,8 +234,8 @@
             font-size: .9rem;
             color: lightgray;
             margin: 0;
-            height: 1.5vw;
-            line-height: 1.5vw;
+            height: 1.5rem;
+            line-height: 1.5rem;
             cursor: pointer;
             padding: .4rem .7rem;
             // border-top: 1px solid #e7e7e7;
@@ -254,7 +254,6 @@
 
 @media only screen and (max-width: 640px) {
     .dropdown {
-
         &__container {
             display: flex;
             flex-direction: column;
@@ -289,7 +288,7 @@
             background-color: #fff;
             border-radius: 0.5rem;
             font-size: .9rem;
-            // padding: 0.5vw;
+            // padding: 0.5rem;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -300,7 +299,7 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            gap: 1vw;
+            gap: 1rem;
             cursor: pointer;
             width: 100%;
             position: relative;
@@ -326,14 +325,14 @@
             flex-direction: column;
             background-color: white;
             border: 1px solid #105ec6;
-            border-bottom-right-radius: 0.5vw;
-            border-bottom-left-radius: 0.5vw;
+            border-bottom-right-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
             border-top: none;
             margin-top: 2.3rem;
             width: inherit;
-            // padding: 0 .5vw;
+            // padding: 0 .5rem;
             z-index: 2;
-            max-height: 20vw;
+            max-height: 20rem;
             overflow-y: auto;
             transition: .3s;
         }

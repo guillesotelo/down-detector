@@ -46,3 +46,37 @@
         }
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .systems {
+        &__container {
+            width: 90vw;
+            padding: 2rem 0;
+        }
+    
+        &__col {
+            width: 90vw;
+        }
+
+        &__new {
+            gap: .5rem;
+    
+            &-row {
+                gap: 1rem;
+                margin-bottom: .5rem;
+                flex-wrap: wrap;
+            }
+    
+            &-downtime {
+                gap: 1rem;
+                border-radius: 1rem;
+                padding: 1rem;
+    
+                &-title {
+                    font-size: .9rem;
+                    margin: 0 0 1rem 0;
+                }
+            }
+        }
+    }
+}

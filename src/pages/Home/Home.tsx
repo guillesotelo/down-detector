@@ -33,7 +33,7 @@ const Home = () => {
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
   const [lastCheck, setLastCheck] = useState(new Date())
-  const { darkMode, setHeaderLoading } = useContext(AppContext)
+  const { darkMode, setHeaderLoading, isMobile } = useContext(AppContext)
   const [pending, startTransition] = useTransition()
 
   const chartHeight = '30vh'
@@ -391,7 +391,7 @@ const Home = () => {
             loading={loading}
             max={getDowntimeString() ? 2 : 3}
             orderDataBy={hisrotyHeaders[0]}
-            style={{ width: '50vw' }}
+            style={{ width: isMobile ? '80vw' : '50vw' }}
           />
         </div>
         <div className="home__modal-footer">

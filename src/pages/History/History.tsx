@@ -55,6 +55,7 @@ export default function History({ }: Props) {
                 triggerSearch={triggerSearch}
                 value={search}
                 placeholder='Search histories...'
+                style={{ marginBottom: '1rem' }}
             />
             <div className="history__col">
                 <DataTable
