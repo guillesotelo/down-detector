@@ -7,14 +7,14 @@ import { alertType, dataObj, downtimeModalType, eventType, historyType, onChange
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
-import { hisrotyHeaders } from '../../constants/tableHeaders'
+import { hisrotyHeaders, systemHisrotyHeaders } from '../../constants/tableHeaders'
 import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
-import { sortArray } from '../../helpers'
+import { getUser, sortArray, toHex } from '../../helpers'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -41,9 +41,9 @@ const Home = () => {
 
   const issueOptions = [
     { name: 'Unable to access' },
-    { name: `Can access but doesn't work` },
+    { name: `Not responding` },
     { name: 'Low response time' },
-    { name: 'Other (describe)' },
+    { name: 'Unstable' },
   ]
 
   const loadData = useMemo(() => {
@@ -153,8 +153,8 @@ const Home = () => {
   }
 
   const getLastCheckMinutes = (system: systemType) => {
-    if (!allStatus || !allStatus.length) return 0
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
+    if (!allStatus || !allStatus.length || history?.status) return 0
     const now = new Date().getTime()
     const historyDate = new Date(history?.createdAt || '').getTime()
     return ((now - historyDate) / 60000).toFixed(0)
@@ -169,7 +169,7 @@ const Home = () => {
   }
 
   const getDate = (date: Date | undefined) => {
-    return date ? new Date(date).toLocaleString('es',
+    return date ? new Date(date).toLocaleString('sv-SE',
       { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
       : 'No data'
   }
@@ -177,7 +177,7 @@ const Home = () => {
   const sendReport = async () => {
     try {
       setLoading(true)
-      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+      const user = getUser()
       let nav: dataObj = {}
       for (let i in navigator) nav[i] = (navigator as any)[i]
       let geoLocation = ''
@@ -191,11 +191,12 @@ const Home = () => {
       const reportData = {
         ...data,
         geoLocation,
+        navigator: JSON.stringify(nav),
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
         description: `${reportedStatus.name}${data.description ? ': ' + data.description : ''}`,
-        createdBy: user.username || `${report}${JSON.stringify(nav)}`
+        createdBy: user.username || `${report} - ${toHex(JSON.stringify(nav))}`
       }
 
       const sent = await createUserAlert(reportData)
@@ -296,6 +297,10 @@ const Home = () => {
     setReportedStatus({ name: 'Unable to access' })
   }
 
+  const getDowntimeDate = (date: Date | string) => {
+    return `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}`
+  }
+
   const renderReportModal = () => {
     return (
       <Modal
@@ -308,20 +313,8 @@ const Home = () => {
             value={getSystemData(report, 'name')}
             disabled
           />
-          <InputField
-            label='URL'
-            name='url'
-            value={getSystemData(report, 'url')}
-            disabled
-          />
-          <InputField
-            label='Status'
-            name='status'
-            value='DOWN'
-            disabled
-          />
           <Dropdown
-            label='Issue type'
+            label='Type of issue'
             options={issueOptions}
             value={reportedStatus.name}
             selected={reportedStatus}
@@ -365,7 +358,7 @@ const Home = () => {
     return (
       <Modal
         title={getSystemData(selected, 'name')}
-        subtitle={parseUrl(String(getSystemData(selected, 'url')))}
+        // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={() => setSelected('')}>
         {getDowntimeString() ?
           <div
@@ -393,7 +386,7 @@ const Home = () => {
             title='Latest system logs'
             tableData={statusAndAlerts}
             setTableData={setStatusAndAlerts}
-            tableHeaders={hisrotyHeaders}
+            tableHeaders={systemHisrotyHeaders}
             name='history'
             loading={loading}
             max={getDowntimeString() ? 2 : 3}
@@ -408,7 +401,11 @@ const Home = () => {
             ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
           </h2>
           {getLastCheckMinutes(getSelectedSystem()) ?
-            <p className="systemcard__status-caption">For {getLastCheckMinutes(getSelectedSystem())} min</p>
+            <p
+              style={{ color: darkMode ? 'lightgray' : 'gray' }}
+              className="systemcard__status-caption">
+              For {getLastCheckMinutes(getSelectedSystem())} min
+            </p>
             :
             <Button
               label='Report Issue'
@@ -431,7 +428,7 @@ const Home = () => {
           onClose={() => setShowDowntime(null)}>
           <div className="home__modal-col">
             <p className="home__modal-downtime-note">
-              The system will probably be down between <strong>{new Date(start || '').toDateString()}</strong> and <strong>{new Date(end || '').toDateString()}</strong>
+              The system will probably be down between <strong>{getDowntimeDate(start || '')}</strong> and <strong>{getDowntimeDate(end || '')}</strong>.
             </p>
             {note ? <p className="home__modal-downtime-note">The reason: <br />{note}</p> : ''}
           </div>

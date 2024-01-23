@@ -76,3 +76,13 @@ export const getLocation = () => {
         console.error("Geolocation is not supported by this browser")
     }
 }
+
+export const toHex = (str: string) => {
+    var result = ''
+    for (var i = 0; i < str.length; i++) {
+        result += str.charCodeAt(i).toString(16)
+    }
+    return result
+}
+
+export const getUser = () => localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}

@@ -87,7 +87,6 @@ const SystemCard = (props: Props) => {
                     borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
-                    label: 'Status',
                     tooltips: {
                         callbacks: {
                             label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
@@ -121,7 +120,6 @@ const SystemCard = (props: Props) => {
                     borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
-                    label: 'Status',
                     tooltips: {
                         callbacks: {
                             label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
@@ -150,6 +148,9 @@ const SystemCard = (props: Props) => {
     }
 
     const processChartData = () => {
+        /* Process datasets for cards and modals (two weeks) 
+        and calculates user alerts to add them as a top layer 
+        on the graphs (dots) */
         const reportedHours: string[] = []
 
         alerts?.forEach((el: alertType) => {
@@ -159,88 +160,106 @@ const SystemCard = (props: Props) => {
             reportedHours.push(date.toLocaleString())
         })
 
-        const lastDay = processHistoryByHours(24)
-        let complete = processHistoryByHours(336)
+        let twoWeeksSet = processHistoryByHours(336) // two weeks = 336 hours
+        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 24, 0)) // take the last 24 hours for cards
 
-        setLastDayData(lastDay.map(item => {
+        setLastDayData(lastDaySet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
                 return { ...item, reported: true }
             }
             return item
         }))
 
-        complete = complete.map(item => {
+        twoWeeksSet = twoWeeksSet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
                 return { ...item, reported: true }
             }
             return item
         })
 
-        setCompleteData(complete)
+        setCompleteData(twoWeeksSet)
         setTimeout(() => setLoading(false), 1000)
     }
 
     const processHistoryByHours = (hours: number = 0) => {
-        const downHours: string[] = []
-        const upHours: string[] = []
-        const allHours: statusType[] = []
-        const systemStatus = history?.filter((status: historyType) => status.systemId === _id)
-        const firstStatus = systemStatus?.length ? systemStatus[systemStatus.length - 1] : null
-        const firstCheck = firstStatus ? firstStatus.createdAt : null
-        const timeSinceFirstCheck = hours || Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000) + 2
+        /* This is the main functions that processes the 
+        complete system history based on the number of hours 
+        passed as parameter. It creates a map of values with 
+        the date and the status as key-value pairs for fast 
+        indexing. */
+        const allHours = new Map() // The complete system history with exact dates and status
+        const flattenHours = new Map() // The complete system history with flatten dates (0 min, 0 sec) and status
 
-        history?.forEach((el: historyType, index) => {
-            const date = new Date(el.createdAt || new Date())
-            date.setMinutes(0)
-            date.setSeconds(0)
+        // Construct hour maps iterating the history
+        let lastItem = {}
+        history?.forEach((el: historyType) => {
+            if (el.createdAt) {
+                const hour = new Date(el.createdAt)
+                const flatten = new Date(el.createdAt)
+                flatten.setMinutes(0)
+                flatten.setSeconds(0)
 
-            if (!el.status) {
-                // If a previous status exists and it has passed more than 3 minutes, then mark it as DOWN
-                if (history[index - 1]) {
-                    const current = new Date(el.createdAt || new Date()).getTime()
-                    const previous = new Date(history[index - 1].createdAt || new Date()).getTime()
-                    if (previous - current >= 180000) downHours.push(date.toLocaleString())
-                } else downHours.push(date.toLocaleString())
+                if (flattenHours.has(flatten.toLocaleString())) {
+                    // Check if there's more than 3 minutes between records to take them in account
+                    const lastItemTime = new Date(Object.keys(lastItem)[0]).getTime()
+                    const currentTime = hour.getTime()
+                    if (currentTime - lastItemTime > 180000) {
+                        allHours.set(hour.toLocaleString(), el.status ? 1 : 0)
+                        flattenHours.set(flatten.toLocaleString(), el.status ? 1 : 0)
+                        lastItem = { [hour.toLocaleString()]: el.status ? 1 : 0 }
+                    }
+                } else {
+                    allHours.set(hour.toLocaleString(), el.status ? 1 : 0)
+                    flattenHours.set(flatten.toLocaleString(), el.status ? 1 : 0)
+                    lastItem = { [hour.toLocaleString()]: el.status ? 1 : 0 }
+                }
             }
-            else upHours.push(date.toLocaleString())
-            allHours.push({ time: date, status: el.status ? 1 : 0 })
         })
 
         const getDateWithGivenHour = (hour: number) => {
+            /* Build dates with given hours passed */
             const today = new Date()
             today.setMinutes(0)
             today.setSeconds(0)
             today.setHours(today.getHours() - hour)
-            return today
+            return today.toLocaleString()
         }
 
-        let status: statusType[] = Array.from({ length: timeSinceFirstCheck }).map((_, i) => {
-            return {
-                status: 1,
-                time: getDateWithGivenHour(i)
+        // Build datasets with given hour maps and registered statuses
+        let previousStatus = 0
+        const dataset = Array.from({ length: hours + 3 }).map((_, i) => {
+            let status = 0
+            const entriesArray = Array.from(allHours.entries())
+            const firstDate = entriesArray && entriesArray.length ? entriesArray[entriesArray.length - 1][0] : ''
+            const lastDate = allHours.keys().next().value
+
+            const item = {
+                status,
+                time: getDateWithGivenHour(hours - i + 1)
             }
-        }).reverse()
 
-        const copyLastStatus = (status: statusType[], last: statusType) => {
-            return status.map((item, i) => {
-                const newItem = { ...item }
-                // Replicate last saved register to the rest of status until now
-                if (new Date(last.time).getTime() <= new Date(newItem.time).getTime()) {
-                    newItem.status = last.status
-                }
-                else if (downHours.indexOf(newItem.time.toLocaleString()) !== -1) {
-                    newItem.status = 0
-                }
-
-                return newItem
-            })
-        }
-
-        return allHours.length ? copyLastStatus(status, allHours[0]) : []
+            // Copy all status from the left to the first registered
+            if (new Date(item.time).getTime() <= new Date(firstDate).getTime()) {
+                item.status = allHours.get(firstDate)
+                previousStatus = allHours.get(firstDate)
+                // Copy all status to the right from the last registered
+            } else if (new Date(item.time).getTime() >= new Date(lastDate).getTime()) {
+                item.status = allHours.get(lastDate)
+                previousStatus = allHours.get(lastDate)
+            } else {
+                const currentDate = item.time.toLocaleString()
+                if (flattenHours.has(currentDate)) {
+                    item.status = flattenHours.get(currentDate)
+                    previousStatus = flattenHours.get(currentDate)
+                } else item.status = previousStatus
+            }
+            return item
+        })
+        return dataset
     }
 
-    const getDate = (date: Date | undefined) => {
-        return date ? new Date(date).toLocaleString('es',
+    const getDate = (date: Date | number | undefined) => {
+        return date ? new Date(date).toLocaleString('sv-SE',
             { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
             : 'No data'
     }
@@ -297,9 +316,16 @@ const SystemCard = (props: Props) => {
                         const label = ctx.dataset.label || ''
                         if (lastDayData[ctx.dataIndex] && lastDayData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
-                        return label
-                    }
-                }
+                        return lastDayData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                    },
+                    labelColor: (ctx: any) => {
+                        return {
+                            backgroundColor: lastDayData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' : lastDayData[ctx.dataIndex].status ? 'green' : 'red',
+                            borderWidth: 0,
+                            borderRadius: 5,
+                        }
+                    },
+                },
             }
         },
         scales: {
@@ -349,9 +375,16 @@ const SystemCard = (props: Props) => {
                         const label = ctx.dataset.label || ''
                         if (completeData[ctx.dataIndex] && completeData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
-                        return label
-                    }
-                }
+                        return completeData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                    },
+                    labelColor: (ctx: any) => {
+                        return {
+                            backgroundColor: completeData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' : completeData[ctx.dataIndex].status ? 'green' : 'red',
+                            borderWidth: 0,
+                            borderRadius: 5,
+                        }
+                    },
+                },
             }
         },
         scales: {
@@ -434,7 +467,7 @@ const SystemCard = (props: Props) => {
                             textColor={darkMode ? 'white' : 'black'}
                         />
                             : !loading && lastCheck ?
-                                <p className="systemcard__status-caption">For {lastCheck} min</p>
+                                <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">For {lastCheck} min</p>
                                 : ''}
                     </div>
                 </div>

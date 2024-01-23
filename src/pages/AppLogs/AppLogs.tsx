@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useTransition } from 'react'
+import React, { useContext, useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { getAllLogs, verifyToken } from '../../services'
 import { logHeaders } from '../../constants/tableHeaders'
 import { logType, onChangeEventType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useHistory } from 'react-router-dom'
+import { AppContext } from '../../AppContext'
 
 type Props = {}
 
@@ -15,6 +16,7 @@ export default function AppLogs({ }: Props) {
   const [tableData, setTableData] = useState<logType[]>([])
   const [filteredData, setFilteredData] = useState<logType[]>([])
   const [pending, startTransition] = useTransition()
+  const { isSuper } = useContext(AppContext)
   const history = useHistory()
 
   useEffect(() => {
@@ -23,8 +25,7 @@ export default function AppLogs({ }: Props) {
   }, [])
 
   const verifyUser = async () => {
-    const verified = await verifyToken()
-    if (!verified.isSuper) return history.push('/')
+    if (!isSuper) return history.push('/')
   }
 
   const getHistory = async () => {

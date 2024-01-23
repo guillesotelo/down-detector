@@ -99,8 +99,9 @@ export type logType = {
 }
 
 export type statusType = {
-    time: Date
+    time: Date | number
     status: number
+    reg?: boolean
 }
 
 export type onChangeEventType = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>

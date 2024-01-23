@@ -123,7 +123,7 @@ export default function DataTable(props: Props) {
                             className={`datatable__row-item datatable__row-${header.value}`}
                             style={{
                                 width: `${100 / tableHeaders.length}%`,
-                                color: typeof row[header.value] === 'boolean' && header.value != 'userAlert' ? row[header.value] ? 'green' : 'red' : ''
+                                color: typeof row[header.value] === 'boolean' && header.value != 'userAlert' ? row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                             }}
                         >
                             {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end') && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :

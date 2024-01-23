@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom'
 import { AppContext, AppProvider } from '../../AppContext'
 import TextData from '../../components/TextData/TextData'
 import { APP_COLORS } from '../../constants/app'
+import { getUser } from '../../helpers'
 
 type Props = {}
 
@@ -19,20 +20,15 @@ export default function Account({ }: Props) {
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
   const [allSystems, setAllSystems] = useState<systemType[]>([])
   const { setIsLoggedIn, darkMode, setIsSuper } = useContext(AppContext) as AppContextType
   const history = useHistory()
-  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+  const user = getUser()
 
   useEffect(() => {
     getUserData()
     getSystems()
   }, [])
-
-  useEffect(() => {
-    if (!ownedSystems.length) setOwnedSystems(getOwnedSystems())
-  }, [allSystems, data])
 
   const getUserData = () => {
     if (user._id) {
@@ -45,16 +41,6 @@ export default function Account({ }: Props) {
     const value = e.target.value
     setData({ ...data, [key]: value })
     setDataIsUpdated(true)
-  }
-
-  const getOwnedSystems = () => {
-    return allSystems.filter(system => {
-      let owned = false
-      system.owners?.forEach(owner => {
-        if (owner._id === user._id) owned = true
-      })
-      return owned
-    })
   }
 
   const getSystems = async () => {
@@ -119,7 +105,9 @@ export default function Account({ }: Props) {
   }
 
   const getOwnedSystemNames = () => {
-    return ownedSystems.length ? ownedSystems.map(system => system.name).join(', ')
+    const { systems } = getUser()
+    return systems && systems.length && typeof systems[0] !== 'string' ?
+      user.systems.map((system: systemType) => system.name).join(', ')
       : 'No systems owned'
   }
 

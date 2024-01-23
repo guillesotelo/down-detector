@@ -7,21 +7,22 @@ import Help from '../../assets/icons/help.svg'
 import Api from '../../assets/icons/api.svg'
 import Users from '../../assets/icons/users.svg'
 import { AppContext } from '../../AppContext'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { APP_VERSION } from '../../constants/app'
 
 type Props = {}
 
 export default function Sidebar({ }: Props) {
     const history = useHistory()
-    const { isSuper, item, setItem, darkMode } = useContext(AppContext)
+    const location = useLocation()
+    const { isSuper, item, setItem, darkMode, isMobile } = useContext(AppContext)
 
     useEffect(() => {
         setItem(window.location.pathname)
-    }, [window.location])
+    }, [window.location, location])
 
     return (
-        <div className={`sidebar__container${darkMode ? '--dark' : ''}`}>
+        <div className={`sidebar__container${darkMode ? '--dark' : ''}`} style={{ display: isMobile ? 'none' : '' }}>
             <div
                 className={`sidebar__item${darkMode ? '--dark' : ''}`}
                 onClick={() => {

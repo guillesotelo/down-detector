@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { systemType } from '../types';
+import { getUser } from '../helpers';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
-
 const getHeaders = () => {
-    return { authorization: `Bearer ${user.token}` }
+    return { authorization: `Bearer ${getUser().token}` }
 }
 
 const getConfig = () => {
-    return { headers: { authorization: `Bearer ${user.token}` } }
+    return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
 const getAllSystems = async () => {
     try {
-        const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: user._id }, headers: getHeaders() })
+        const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: getUser()._id }, headers: getHeaders() })
         return systems.data
     } catch (err) { console.log(err) }
 }
@@ -36,21 +35,21 @@ const getSystemById = async (_id: string) => {
 
 const createSystem = async (data: systemType) => {
     try {
-        const system = await axios.post(`${API_URL}/api/system/create`, { ...data, user }, getConfig())
+        const system = await axios.post(`${API_URL}/api/system/create`, { ...data, user: getUser() }, getConfig())
         return system.data
     } catch (err) { console.log(err) }
 }
 
 const updateSystem = async (data: systemType) => {
     try {
-        const system = await axios.post(`${API_URL}/api/system/update`, { ...data, user }, getConfig())
+        const system = await axios.post(`${API_URL}/api/system/update`, { ...data, user: getUser() }, getConfig())
         return system.data
     } catch (err) { console.log(err) }
 }
 
 const deleteSystem = async (data: systemType) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/system/remove`, { ...data, user }, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/system/remove`, { ...data, user: getUser() }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }

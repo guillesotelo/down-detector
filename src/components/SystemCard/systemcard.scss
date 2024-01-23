@@ -82,6 +82,9 @@
 
     &__logo {
         height: 1rem;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     &__status {
@@ -93,6 +96,10 @@
         &-caption {
             margin: 0;
             font-size: .9rem;
+            max-width: 7rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         &-dot {
@@ -118,7 +125,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 5rem;
+        height: 4rem;
         width: 15rem;
         border: 1px solid #00000017;
         border-radius: .5rem;

@@ -30,7 +30,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
-import { getTimeOption } from '../../helpers'
+import { getTimeOption, getUser } from '../../helpers'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -61,7 +61,7 @@ export default function Systems({ }: Props) {
   const [selectedOwners, setSelectedOwners] = useState<userType[]>([])
   const [showResponse, setShowResponse] = useState(false)
   const { darkMode, isSuper } = useContext(AppContext)
-  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+  const user = getUser()
 
   useEffect(() => {
     getSystems()
@@ -74,7 +74,8 @@ export default function Systems({ }: Props) {
 
     if (selected !== -1) {
       const select = tableData[selected]
-      setData(select)
+  console.log('select', select)
+  setData(select)
       getDowntimeData(select)
       if (select.type) setSelectedType(select.type)
       if (select.interval) setSelectedInterval(getTimeOption(intervalDefaultOptions, select.interval))
@@ -140,7 +141,7 @@ export default function Systems({ }: Props) {
 
   const saveChanges = async (dtArray?: systemType[]) => {
     setLoading(true)
-    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+    const user = getUser()
     try {
       const systemData = {
         ...data,
@@ -193,7 +194,7 @@ export default function Systems({ }: Props) {
       const errors = checkErrors()
       if (errors.length) return errors.map((error: string) => toast.error(error))
 
-      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+      const user = getUser()
       if (selectedDowntime !== -1) {
         const newArr = [...downtimeArray]
         newArr[selectedDowntime] = {
@@ -223,7 +224,7 @@ export default function Systems({ }: Props) {
   }
 
   const getDate = (date: Date) => {
-    return new Date(date).toLocaleString('es',
+    return new Date(date).toLocaleString('sv-SE',
       { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
   }
 
@@ -312,14 +313,15 @@ export default function Systems({ }: Props) {
                 disabled={!isSuper}
                 placeholder='Write system name...'
               />
-              <InputField
-                label='Logo URL (optional)'
-                name='logo'
-                updateData={updateData}
-                value={data.logo}
-                disabled={!isSuper}
-                placeholder='https://system-logo.png'
-              />
+              {!isSuper ? '' :
+                <InputField
+                  label='Logo URL (optional)'
+                  name='logo'
+                  updateData={updateData}
+                  value={data.logo}
+                  disabled={!isSuper}
+                  placeholder='https://system-logo.png'
+                />}
             </div>
             <InputField
               label='URL'
@@ -350,14 +352,15 @@ export default function Systems({ }: Props) {
                   disabled
                   value={user.username}
                 />}
-              <InputField
-                label='Description (optional)'
-                name='description'
-                updateData={updateData}
-                value={data.description}
-                disabled={!isSuper}
-                placeholder='Write a description...'
-              />
+              {!isSuper && !data.description ? '' :
+                <InputField
+                  label={`Description ${isSuper ? '(optional)' : ''}`}
+                  name='description'
+                  updateData={updateData}
+                  value={data.description}
+                  disabled={!isSuper}
+                  placeholder='Write a description...'
+                />}
             </div>
             {isSuper ?
               <div className="systems__new-row">
@@ -486,7 +489,7 @@ export default function Systems({ }: Props) {
                   </div>
                   <div className="systems__new-row">
                     <Button
-                      label={openStartCalendar ? 'OK' : start ? 'Start: ' + getDate(start) : 'Select Start'}
+                      label={openStartCalendar ? 'Confirm Start' : start ? 'Start: ' + getDate(start) : 'Select Start'}
                       handleClick={() => setOpenStartCalendar(!openStartCalendar)}
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
@@ -494,7 +497,7 @@ export default function Systems({ }: Props) {
                       disabled={loading}
                     />
                     <Button
-                      label={openEndCalendar ? 'OK' : end ? 'End: ' + getDate(end) : 'Select End'}
+                      label={openEndCalendar ? 'Confirm End' : end ? 'End: ' + getDate(end) : 'Select End'}
                       handleClick={() => setOpenEndCalendar(!openEndCalendar)}
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
@@ -533,7 +536,7 @@ export default function Systems({ }: Props) {
                       handleClick={saveDowntime}
                       bgColor={APP_COLORS.BLUE_TWO}
                       textColor='white'
-                      disabled={!start || !end || loading}
+                      disabled={!start || !end || !data.downtimeNote || loading}
                       style={{ width: '45%' }}
                     /> : ''}
                   {!addDowntime && selectedDowntime !== -1 ?

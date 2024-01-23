@@ -21,3 +21,11 @@
         margin: 0;
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .about {
+        &__section {
+            width: 90vw;
+        }
+    }
+}
