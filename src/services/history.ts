@@ -1,16 +1,15 @@
 import axios from 'axios';
 import { historyType } from '../types';
+import { getUser } from '../helpers';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
-
 const getHeaders = () => {
-    return { authorization: `Bearer ${user.token}` }
+    return { authorization: `Bearer ${getUser().token}` }
 }
 
 const getConfig = () => {
-    return { headers: { authorization: `Bearer ${user.token}` } }
+    return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
 const getAllHistory = async (systemId?: string) => {
@@ -36,21 +35,21 @@ const getHistoryById = async (_id: string) => {
 
 const createHistory = async (data: historyType) => {
     try {
-        const history = await axios.post(`${API_URL}/api/history/create`, { ...data, user }, getConfig())
+        const history = await axios.post(`${API_URL}/api/history/create`, { ...data, user: getUser() }, getConfig())
         return history.data
     } catch (err) { console.log(err) }
 }
 
 const updateHistory = async (data: historyType) => {
     try {
-        const history = await axios.post(`${API_URL}/api/history/update`, { ...data, user }, getConfig())
+        const history = await axios.post(`${API_URL}/api/history/update`, { ...data, user: getUser() }, getConfig())
         return history.data
     } catch (err) { console.log(err) }
 }
 
 const deleteHistory = async (data: historyType) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/history/remove`, { ...data, user }, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/history/remove`, { ...data, user: getUser() }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }

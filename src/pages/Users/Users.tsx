@@ -20,13 +20,13 @@ export default function Users({ }: Props) {
   const [data, setData] = useState<userType>({})
   const [newUser, setNewUser] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [isSuper, setIsSuper] = useState(false)
+  const [selectedIsSuper, setSelectedIsSuper] = useState(false)
   const [onDeleteUser, setOnDeleteUser] = useState(false)
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<userType[]>([])
   const [allSystems, setAllSystems] = useState<systemType[]>([])
   const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
-  const { darkMode } = useContext(AppContext)
+  const { darkMode, isSuper } = useContext(AppContext)
   const history = useHistory()
 
   useEffect(() => {
@@ -40,15 +40,14 @@ export default function Users({ }: Props) {
     if (selected !== -1) {
       const select = tableData[selected]
       setData(select)
-      setIsSuper(select.isSuper || false)
+      setSelectedIsSuper(select.isSuper || false)
 
       setOwnedSystems(getOwnedSystems(select))
     }
   }, [selected, newUser])
 
   const loadData = async () => {
-    const verified = await verifyToken()
-    if (!verified.isSuper) return history.push('/')
+    if (!isSuper) return history.push('/')
     getUsers()
     getSystems()
   }
@@ -97,7 +96,7 @@ export default function Users({ }: Props) {
     setData({})
     setNewUser(false)
     setSelected(-1)
-    setIsSuper(false)
+    setSelectedIsSuper(false)
     setOnDeleteUser(false)
     setOwnedSystems([])
   }
@@ -135,7 +134,7 @@ export default function Users({ }: Props) {
     try {
       const userData: userType = {
         ...data,
-        isSuper,
+        isSuper: selectedIsSuper,
         ownedSystems
       }
       if (data.password === '') delete data.password
@@ -230,8 +229,8 @@ export default function Users({ }: Props) {
             <div className="users__new-row">
               <Switch
                 label='Super User'
-                value={isSuper}
-                setValue={setIsSuper}
+                value={selectedIsSuper}
+                setValue={setSelectedIsSuper}
                 on='Yes'
                 off='No'
               />

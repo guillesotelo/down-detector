@@ -1,16 +1,15 @@
 import axios from 'axios';
 import { alertType } from '../types';
+import { getUser } from '../helpers';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
-
 const getHeaders = () => {
-    return { authorization: `Bearer ${user.token}` }
+    return { authorization: `Bearer ${getUser().token}` }
 }
 
 const getConfig = () => {
-    return { headers: { authorization: `Bearer ${user.token}` } }
+    return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
 const getAllAlerts = async (systemId?: string) => {
@@ -36,21 +35,21 @@ const getUserAlertById = async (_id: string) => {
 
 const createUserAlert = async (data: alertType) => {
     try {
-        const userAlert = await axios.post(`${API_URL}/api/userAlert/create`, { ...data, user }, getConfig())
+        const userAlert = await axios.post(`${API_URL}/api/userAlert/create`, { ...data, user: getUser() }, getConfig())
         return userAlert.data
     } catch (err) { console.log(err) }
 }
 
 const updateUserAlert = async (data: alertType) => {
     try {
-        const userAlert = await axios.post(`${API_URL}/api/userAlert/update`, { ...data, user }, getConfig())
+        const userAlert = await axios.post(`${API_URL}/api/userAlert/update`, { ...data, user: getUser() }, getConfig())
         return userAlert.data
     } catch (err) { console.log(err) }
 }
 
 const deleteUserAlert = async (data: alertType) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/userAlert/remove`, { ...data, user }, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/userAlert/remove`, { ...data, user: getUser() }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }

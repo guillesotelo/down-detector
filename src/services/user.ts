@@ -1,16 +1,15 @@
 import axios from 'axios';
 import { userType } from '../types';
+import { getUser } from '../helpers';
 
 const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
 
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
-
 const getHeaders = () => {
-    return { authorization: `Bearer ${user.token}` }
+    return { authorization: `Bearer ${getUser().token}` }
 }
 
 const getConfig = () => {
-    return { headers: { authorization: `Bearer ${user.token}` } }
+    return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
 const loginUser = async (user: userType) => {
@@ -28,8 +27,9 @@ const loginUser = async (user: userType) => {
 
 const verifyToken = async () => {
     try {
-        if (user.email) {
-            const verify = await axios.post(`${API_URL}/api/user/verify`, user, getConfig())
+        const loggedUser = getUser()
+        if (loggedUser.email) {
+            const verify = await axios.post(`${API_URL}/api/user/verify`, loggedUser, getConfig())
             return verify.data
         }
         return null
@@ -38,7 +38,7 @@ const verifyToken = async () => {
 
 const registerUser = async (data: userType) => {
     try {
-        const newUser = await axios.post(`${API_URL}/api/user/create`, { ...data, user }, getConfig())
+        const newUser = await axios.post(`${API_URL}/api/user/create`, { ...data, user: getUser() }, getConfig())
         return newUser.data
     } catch (err) { console.error(err) }
 }
@@ -52,7 +52,7 @@ const getAllUsers = async () => {
 
 const updateUser = async (data: userType) => {
     try {
-        const updated = await axios.post(`${API_URL}/api/user/update`, { ...data, user }, getConfig())
+        const updated = await axios.post(`${API_URL}/api/user/update`, { ...data, user: getUser() }, getConfig())
         const localUser = JSON.parse(localStorage.getItem('user') || '{}')
         if (updated.data._id === localUser._id) {
             localStorage.setItem('user', JSON.stringify({
@@ -66,7 +66,7 @@ const updateUser = async (data: userType) => {
 
 const deleteUser = async (data: userType) => {
     try {
-        const deleted = await axios.post(`${API_URL}/api/user/remove`, { ...data, user }, getConfig())
+        const deleted = await axios.post(`${API_URL}/api/user/remove`, { ...data, user: getUser() }, getConfig())
         return deleted.data
     } catch (err) { console.log(err) }
 }

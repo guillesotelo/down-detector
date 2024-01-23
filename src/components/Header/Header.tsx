@@ -6,13 +6,48 @@ import { AppContext, AppProvider } from '../../AppContext'
 import { useHistory, useLocation } from 'react-router-dom'
 import Day from '../../assets/icons/day.svg'
 import Night from '../../assets/icons/night.svg'
+import Menu from '../../assets/icons/menu.svg'
+import Dashboard from '../../assets/icons/dashboard.svg'
+import History from '../../assets/icons/history.svg'
+import AppLogs from '../../assets/icons/logs.svg'
+import Settings from '../../assets/icons/settings.svg'
+import Help from '../../assets/icons/help.svg'
+import Api from '../../assets/icons/api.svg'
+import Users from '../../assets/icons/users.svg'
 import Tooltip from '../Tooltip/Tooltip'
+import Sidebar from '../Sidebar/Sidebar'
+import { getUser } from '../../helpers'
+import { APP_VERSION } from '../../constants/app'
 
 export default function Header() {
   const [barWidth, setBarWidth] = useState('0%')
-  const { isLoggedIn, setItem, darkMode, setDarkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
+  const [openMenu, setOpenMenu] = useState(false)
+  const {
+    isLoggedIn,
+    item,
+    setItem,
+    darkMode,
+    setDarkMode,
+    headerLoading,
+    setHeaderLoading,
+    isMobile
+  } = useContext(AppContext)
   const history = useHistory()
   const location = useLocation()
+
+  useEffect(() => {
+    const menuListener = () => window.addEventListener('mouseup', (e: MouseEvent) => {
+      try {
+        const className = (e.target as HTMLElement).className
+        if (className && !className.includes('menu')) setOpenMenu(false)
+      } catch (err) {
+        console.error(err)
+      }
+    })
+    menuListener()
+
+    return window.removeEventListener('mouseup', menuListener)
+  }, [])
 
   useEffect(() => {
     if (headerLoading) renderHeaderLoader()
@@ -37,6 +72,14 @@ export default function Header() {
     history.push('/about')
   }
 
+  const goToAccount = () => {
+    const user = getUser()
+    let page = ''
+    if (user.token) page = '/account'
+    history.push(page)
+    setItem(page)
+  }
+
   const switchMode = () => {
     setDarkMode(!darkMode)
     localStorage.setItem('preferredMode', JSON.stringify(!darkMode))
@@ -44,29 +87,148 @@ export default function Header() {
     document.dispatchEvent(event)
   }
 
-  return (
-    <div className={`header__container${darkMode ? '--dark' : ''}`}>
-      <div className="header__col">
-        <Tooltip
-          tooltip={location.pathname.includes('about') ? 'Down@Volvo' : 'About Down@Volvo'}
-          inline>
+  const renderMobile = () => {
+    return (
+      <div className={`header__container${darkMode ? '--dark' : ''}`}>
+        <div className="header__col">
+          <img
+            src={UserIcon}
+            onClick={goToAccount}
+            alt='My Account'
+            className={`header__menu${darkMode ? '--dark' : ''}`}
+            style={{ padding: 0 }}
+          />
+        </div>
+        <div className="header__col">
           <img
             src={DDLogo}
             onClick={gotoAbout}
-            alt={location.pathname.includes('about') ? 'Down@Volvo' : 'About Down@Volvo'}
+            alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
             className={`header__down-icon${darkMode ? '--dark' : ''}`}
+            style={{ padding: 0 }}
           />
-        </Tooltip>
-      </div>
-      <div className="header__col">
-      </div>
-      <div className="header__col">
-        <div className="header__user-group">
-          <img onClick={switchMode} src={darkMode ? Day : Night} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
-          <img src={UserIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
+        </div>
+        <div className="header__col">
+          <img
+            src={Menu}
+            onClick={() => setOpenMenu(!openMenu)}
+            alt='Menu'
+            className={`header__menu${darkMode ? '--dark' : ''}`}
+          />
+        </div>
+        <div className="header__loading" style={{ width: barWidth }} />
+        <div className={`header__menu-container${openMenu ? '--open' : ''}${darkMode ? '--dark' : ''}`}>
+          <div
+            className="header__menu-item"
+            style={{
+              marginTop: '1.5rem',
+              backgroundColor: item === '/' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/')
+              setItem('/')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={Dashboard} alt="Dashboard" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">Dashboard</p>
+          </div>
+          <div
+            className="header__menu-item"
+            style={{
+              backgroundColor: item === '/history' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/history')
+              setItem('/history')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={History} alt="History" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">History</p>
+          </div>
+
+          <div
+            className="header__menu-item"
+            style={{
+              backgroundColor: item === '/systems' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/systems')
+              setItem('/systems')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={Api} alt="Systems" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">Systems</p>
+          </div>
+          <div
+            className="header__menu-item"
+            style={{
+              backgroundColor: item === '/users' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/users')
+              setItem('/users')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={Users} alt="Users" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">Users</p>
+          </div>
+
+          <div
+            className="header__menu-item"
+            style={{
+              backgroundColor: item === '/applogs' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/applogs')
+              setItem('/applogs')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={AppLogs} alt="App Logs" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">App Logs</p>
+          </div>
+          <div
+            className="header__menu-item"
+            onClick={() => {
+              localStorage.setItem('preferredMode', JSON.stringify(!darkMode))
+              setDarkMode(!darkMode)
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={darkMode ? Day : Night} alt="Switch Mode" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</p>
+          </div>
+          <p className="header__menu-version">{APP_VERSION}</p>
         </div>
       </div>
-      <div className="header__loading" style={{ width: barWidth }} />
-    </div>
-  )
+    )
+  }
+
+  const renderDesktop = () => {
+    return (
+      <div className={`header__container${darkMode ? '--dark' : ''}`}>
+        <div className="header__col">
+          <Tooltip
+            tooltip={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
+            inline>
+            <img
+              src={DDLogo}
+              onClick={gotoAbout}
+              alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
+              className={`header__down-icon${darkMode ? '--dark' : ''}`}
+            />
+          </Tooltip>
+        </div>
+        <div className="header__col">
+        </div>
+        <div className="header__col">
+          <div className="header__user-group">
+            <img onClick={switchMode} src={darkMode ? Day : Night} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
+            <img src={UserIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
+          </div>
+        </div>
+        <div className="header__loading" style={{ width: barWidth }} />
+      </div>
+    )
+  }
+
+  return isMobile ? renderMobile() : renderDesktop()
 }

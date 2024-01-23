@@ -83,6 +83,25 @@ export const hisrotyHeaders = [
     },
 ]
 
+export const systemHisrotyHeaders = [
+    {
+        name: 'CREATED',
+        value: 'createdAt'
+    },
+    {
+        name: 'STATUS',
+        value: 'status'
+    },
+    {
+        name: 'REPORTED BY',
+        value: 'createdBy'
+    },
+    {
+        name: 'DETAILS',
+        value: 'description'
+    },
+]
+
 export const userHeaders = [
     {
         name: 'UPDATED',

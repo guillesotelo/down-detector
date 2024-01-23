@@ -40,30 +40,35 @@ export default function Dropdown(props: Props) {
     } = props
 
     useEffect(() => {
-        window.addEventListener('mouseup', (e: MouseEvent) => {
-            const className = (e.target as HTMLElement).className
-            if (!className.includes('dropdown')) setOpenDrop(false)
+        const dropdownListener = () => window.addEventListener('mouseup', (e: MouseEvent) => {
+            try {
+                const className = (e.target as HTMLElement).className
+                if (className && !className.includes('dropdown')) setOpenDrop(false)
+            } catch (err) {
+                console.error(err)
+            }
         })
+        dropdownListener()
+        
+        return window.removeEventListener('mouseup', dropdownListener)
     }, [])
 
-    // useEffect(() => {
-    //     const dark = darkMode ? '--dark' : ''
-    //     const selection = document.querySelector(`.dropdown__select-selection${dark}`) as HTMLElement
-    //     const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
-    //     if (selection && dropdown) {
-    //         const { width, height } = selection.getBoundingClientRect()
-    //         console.log('width', width.toFixed(0))
-    //         console.log('height', height.toFixed(0))
-    //         dropdown.style.marginTop = height.toFixed(0) + 'px'
-    //         dropdown.style.width = width.toFixed(0) + 'px'
-    //     }
-    // }, [openDrop])
+    useEffect(() => {
+        const dark = darkMode ? '--dark' : ''
+        const selection = document.querySelector(`.dropdown__select-section${dark}`) as HTMLElement
+        const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
+        if (selection && dropdown) {
+            const { width, height } = selection.getBoundingClientRect()
+            dropdown.style.marginTop = (height - 2).toFixed(0) + 'px'
+            dropdown.style.width = (width - 2).toFixed(0) + 'px'
+        }
+    }, [openDrop])
 
     const getSelectValues = () => {
         if (value && Array.isArray(value) && value.length) {
             return value.map((val: dataObj | string | number) =>
-                typeof val === 'string' || typeof val === 'number' ? val :
-                    objKey && val[objKey] ? val[objKey] : 'Select')
+                !val ? '' : typeof val === 'string' || typeof val === 'number' ? val :
+                    objKey && val[objKey] ? val[objKey] : '')
         }
         return []
     }
@@ -84,7 +89,7 @@ export default function Dropdown(props: Props) {
                 border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
                 borderBottomLeftRadius: openDrop ? 0 : '',
-                filter: openDrop ? 'brightness(120%)' : ''
+                filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''
             }}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>
@@ -106,7 +111,8 @@ export default function Dropdown(props: Props) {
             style={{
                 border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
-                borderBottomLeftRadius: openDrop ? 0 : ''
+                borderBottomLeftRadius: openDrop ? 0 : '',
+                filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''
             }}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4
@@ -115,12 +121,12 @@ export default function Dropdown(props: Props) {
                     height: multiselect ? 'fit-content' : '',
                     flexWrap: multiselect ? 'wrap' : 'unset',
                 }}>
-                {getSelectValues() ? getSelectValues()?.map((val, i) =>
+                {getSelectValues().length ? getSelectValues()?.map((val, i) =>
                     <span key={i} className={`dropdown__selected-multi-item${darkMode ? '--dark' : ''}`}>
                         <p className='dropdown__selected-multi-label'>{val}</p>
                         <p className='dropdown__selected-multi-remove' onClick={() => removeItem(i)}>X</p>
                     </span>
-                ) : <p className='dropdown__selected-multi-label'>Select</p>}
+                ) : <h4 style={{ padding: 0 }} className={`dropdown__selected${darkMode ? '--dark' : ''}`}>Select</h4>}
             </h4>
             < h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>▾</h4>
         </div>
@@ -135,9 +141,6 @@ export default function Dropdown(props: Props) {
                     <h4
                         key={i}
                         className={`dropdown__option${darkMode ? '--dark' : ''}`}
-                        style={{
-                            borderTop: i === 0 ? '1px solid #105ec6' : '1px solid #e7e7e7'
-                        }}
                         onClick={() => {
                             if (multiselect) {
                                 if (objKey && selected.filter((el: dataObj) => el[objKey] && el[objKey] === option[objKey]).length) return setOpenDrop(false)
