@@ -55,7 +55,7 @@ sudo apt-get update
 sudo apt-get install apache2
 ```
 
-Since Apache runs automatically after installatino, we can now check if has been installed correctly by going to `http://127.0.0.1`. From console: `xdg-open http://127.0.0.1`
+Since Apache runs automatically after installation, we can now check if has been installed correctly by going to `http://127.0.0.1`. From console: `xdg-open http://127.0.0.1`
 This should show us the Apache2 Ubuntu Default Page.
 
 After this, check the machine IP:
@@ -64,7 +64,7 @@ After this, check the machine IP:
 ip a
 ```
 
-If you paste the IP in the browser, or open it with the previous command, you should see the same default page from Apache.
+If you paste the IP in the browser or open it with the previous command, you should see the same default page from Apache.
 We can confirm the status with:
 
 ```bash
@@ -73,7 +73,7 @@ sudo systemctl status apache2
 
 ### Connect the Node App with Apache
 
-After a successfully setup of Apache Server, we can connect our Node application.
+After a successful setup of Apache Server, we can connect our Node application.
 
 #### Creating the Apache configuration file
 
@@ -88,7 +88,7 @@ sudo nano 000-default.conf
 ```
 
 The Apache VirtualHost is defined in the 000-default.conf file and is set up to listen for requests on port 80.
-We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 3000 (or the one we previusly configured in our environment).
+We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 3000 (or the one we previously configured in our environment).
 
 We use ProxyPass to map the root URL at the specified address: `http://localhost:3000`.
 Copy the following line into the default.config file:
@@ -119,7 +119,7 @@ sudo a2enmod
 
 a2enmod is an acronym for “Apache2 enable module.” Running this command will list all modules that are available to be enabled.
 Next, we are prompted to enter the name of a module that we’d like to enable.
-We enter proxy at the prompt to enable the proxy module:
+We enter *proxy* at the prompt to enable the proxy module:
 
 ```bash
 # Which module(s) do you want to enable (wildcards ok)?
@@ -150,9 +150,9 @@ sudo systemctl start apache2
 
 #### Run Server & Client
 
-If everything went well, we can start both the backend and client servers using the command `nohup` for persistence.
+If everything goes well, we can start both the backend and client servers using the command `nohup` for persistence.
 
-Note that the backend server is using `pm2` as process administrator, so you would need to install pm2 in order to use it:
+Note that the backend server is using `pm2` as process administrator, so you would need to install pm2 to use it:
 
 ```bash
 npm i pm2 -g
@@ -161,7 +161,8 @@ npm i pm2 -g
 Standing the respective folder, run the command for each server:
 
 ```bash
-nohup npm start &
+nohup npm start & # Dev environment
+nohup node server.js & # Prod environment (update .env file with NODE_ENV=production)
 ```
 
 If we want to close the connection, standing on the respective folder, we use:
@@ -244,7 +245,7 @@ Check status:
 sudo systemctl status mongod
 ```
 
-Run app and check it connects to mongo instance:
+Run the app and check that it connects to Mongo instance:
 
 ```bash
 npm run dev
@@ -265,6 +266,6 @@ mongodb-compass
 
 ##### New Connection
 
-From the new window panel, start a new connection to MongoDB making sure the paramenters are correct. In this case we use the default PORT 27017.
+From the new window panel, start a new connection to MongoDB making sure the parameters are correct. In this case, we use the default PORT 27017.
 
-You will see the main DB with all the collections. Search for `downddetector` collection and look for the documents (tables) we've created. You can update the tables directly from this GUI.
+You will see the main DB with all the collections. Search for `downdetector` collection and look for the documents (tables) we've created. You can update the tables directly from this GUI.
