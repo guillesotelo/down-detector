@@ -24,7 +24,6 @@ import {
   getSystemsByOwnerId
 } from '../../services'
 import { toast } from 'react-toastify'
-import Calendar from 'react-calendar'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
@@ -175,6 +174,7 @@ export default function Systems({ }: Props) {
       localStorage.removeItem('localSystems')
       localStorage.removeItem('localEvents')
     } catch (err) {
+      toast.error(`Error ${newSystem ? 'creating' : 'updating'} system. Try again later`)
       console.error(err)
       setLoading(false)
     }
@@ -240,6 +240,7 @@ export default function Systems({ }: Props) {
       }
       else toast.error('Error removing downtime')
     } catch (error) {
+      toast.error('Error removing downtime')
       console.error(error)
     }
   }
@@ -266,6 +267,7 @@ export default function Systems({ }: Props) {
       else toast.error('Error deleting system. Try again later')
       setLoading(false)
     } catch (err) {
+      toast.error('Error deleting system. Try again later')
       console.error(err)
       setLoading(false)
     }
@@ -613,6 +615,7 @@ export default function Systems({ }: Props) {
           selected={selected}
           setSelected={setSelected}
           loading={loading}
+          max={18}
         />
       </div>
     </div>

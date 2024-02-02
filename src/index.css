@@ -19,3 +19,13 @@ body {
 [data-color-scheme="light"] {
   color-scheme: light;
 }
+
+/* Fix warning on Edge */
+.react-datepicker__input-time-container .react-datepicker-time__input-container .react-datepicker-time__input input[type=time] {
+  -webkit-appearance: textfield;
+  /* Safari and Chrome */
+  -moz-appearance: textfield;
+  /* Firefox */
+  appearance: textfield;
+  /* Standard */
+}

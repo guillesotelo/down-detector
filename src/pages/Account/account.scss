@@ -3,9 +3,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        // justify-content: center;
+        justify-content: center;
         width: 85vw;
+        padding: 2rem;
         padding-bottom: 5rem;
+        overflow-x: hidden;
     }
 
     &__details {
@@ -14,9 +16,10 @@
         justify-content: center;
         // align-items: center;
         gap: 1rem;
-        width: 20vw;
+        width: 20rem;
         box-shadow: .5rem 1rem 3rem rgba(0, 0, 0, 0.272);
         padding: 2rem;
+        margin-top: 2rem;
         border-radius: 1rem;
         opacity: 0;
         animation: fade-in-down .5s ease-in forwards;
@@ -34,11 +37,11 @@
         }
 
         &-icon {
-            height: 10vw;
+            height: 8rem;
             opacity: .5;
 
             &--dark {
-                height: 10vw;
+                height: 8rem;
                 filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(40%) contrast(108%);
             }
         }
@@ -49,7 +52,7 @@
             justify-content: center;
             background-color: black;
             gap: 1rem;
-            width: 20vw;
+            width: 20rem;
             box-shadow: .5rem 1rem 3rem rgba(0, 0, 0, 0.272);
             padding: 2rem;
             border-radius: 1rem;

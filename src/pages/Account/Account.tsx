@@ -83,6 +83,7 @@ export default function Account({ }: Props) {
       else toast.error('Error updating system. Try again later')
       setLoading(false)
     } catch (err) {
+      toast.error('Error updating system. Try again later')
       console.error(err)
       setLoading(false)
     }
@@ -110,7 +111,6 @@ export default function Account({ }: Props) {
 
   return (
     <div className="account__container">
-      <h1 className="page__header-title">Account</h1>
       {loading ? <MoonLoader color='#0057ad' size={50} />
         :
         <div className={`account__details${darkMode ? '--dark' : ''}`}>

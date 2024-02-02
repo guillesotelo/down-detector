@@ -101,14 +101,13 @@ export default function Users({ }: Props) {
     setOwnedSystems([])
   }
 
-  const dataOk = () => {
-    return data.email && data.email.includes('@') &&
-      data.email.includes('.') &&
-      data.email.length > 5 &&
-      ((!data.password && !data.password2)
-        || (data.password && data.password2 &&
-          data.password.length > 5 &&
-          data.password === data.password2))
+  const checkErrors = () => {
+    let errors: string[] = []
+    if (!data.username || !data.username.trim().includes(' ')) errors.push('Enter your full name')
+    if (!data.email || !data.email.includes('@') || !data.email.includes('.')) errors.push('Enter a valid email')
+    if (!data.password || data.password.length < 6) errors.push('Password must contain at least 6 characters')
+    if (!data.password2 || data.password2 !== data.password) errors.push(`Passwords don't match`)
+    return errors
   }
 
   const removeUser = async () => {
@@ -125,11 +124,12 @@ export default function Users({ }: Props) {
     } catch (err) {
       console.error(err)
       setLoading(false)
+      toast.error('Error deleting user. Try again later')
     }
   }
 
   const saveChanges = async () => {
-    if (!dataOk()) return toast.error('Check the fields')
+    if (checkErrors().length) return checkErrors().map((error: string) => toast.error(error))
     setLoading(true)
     try {
       const userData: userType = {
@@ -159,6 +159,7 @@ export default function Users({ }: Props) {
       }
       setLoading(false)
     } catch (err) {
+      toast.error('Error creating user. Try again later')
       console.error(err)
       setLoading(false)
     }

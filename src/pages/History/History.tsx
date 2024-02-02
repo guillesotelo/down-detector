@@ -65,7 +65,7 @@ export default function History({ }: Props) {
                     tableHeaders={hisrotyHeaders}
                     name='history'
                     loading={loading || pending}
-                    max={20}
+                    max={18}
                 />
             </div>
         </div>

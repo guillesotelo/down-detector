@@ -39,9 +39,10 @@ export default function Login({ }: Props) {
                     history.push('/')
                 }, 2000)
             }
-            else toast.error('An error occurred while logging in. Please try again.')
+            else toast.error('Login Error. Please try again.')
             setLoading(false)
         } catch (err) {
+            toast.error('Login Error. Please try again.')
             console.error(err)
             setLoading(false)
         }

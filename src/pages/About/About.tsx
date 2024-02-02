@@ -24,8 +24,8 @@ export default function Help({ }: Props) {
 
   return (
     <div className="about__container">
-      <h1 className="page__header-title">About</h1>
       <div className="about__section">
+        <h1 className="page__header-title">About Down@VolvoCars</h1>
         <h2 className="about__title">Process Overview</h2>
         <p className="about__text">
           Our system status monitoring process oversees the availability of some selected internal Volvo Cars systems. This comprehensive solution involves real-time checks, user reports, and planned downtime management.
