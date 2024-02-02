@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
 import { getUser, sortArray, toHex } from '../../helpers'
+import SortBar from '../../components/SortBar/SortBar'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -33,8 +34,15 @@ const Home = () => {
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
   const [lastCheck, setLastCheck] = useState(new Date())
+  const [sortBy, setSortBy] = useState('Date created')
   const { darkMode, setHeaderLoading, isMobile } = useContext(AppContext)
   const [pending, startTransition] = useTransition()
+
+  // console.log('\n\n')
+  // console.log('allSystems', allSystems)
+  // console.log('allStatus', allStatus)
+  // console.log('allAlerts', allAlerts)
+  // console.log('chartData', chartData)
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -46,15 +54,27 @@ const Home = () => {
     { name: 'Unstable' },
   ]
 
+  const sortOrder: { [key: string]: string } = {
+    'Date created': 'createdAt',
+    'Name': 'name',
+    'Status': 'lastCheckStatus',
+  }
+
   const loadData = useMemo(() => {
     return () => {
+      setLoading(true)
       getSystems()
       getAllStatus()
       getAllUserAlerts()
       getAllDownTimes()
       setLastCheck(new Date())
+      setLoading(false)
     }
   }, [])
+
+  useEffect(() => {
+    setAllSystems((prev) => sortArray(prev, sortOrder[sortBy], sortBy === 'Date created'))
+  }, [sortBy])
 
   useEffect(() => {
     setHeaderLoading(true)
@@ -93,77 +113,65 @@ const Home = () => {
 
   const getAllDownTimes = async () => {
     try {
-      setLoading(true)
       let events = await getAllEvents()
       if (events && Array.isArray(events)) {
         setAllEvents(events)
       }
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.error(error)
     }
   }
 
   const getSystems = async () => {
     try {
-      setLoading(true)
       let systems = await getAllSystems()
       if (systems && Array.isArray(systems)) {
-        setAllSystems(systems)
+        setAllSystems(sortArray(systems, sortOrder[sortBy], true))
       }
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.error(error)
     }
   }
 
   const getAllStatus = async () => {
     try {
-      setLoading(true)
       let history = await getAllHistory()
       if (history && Array.isArray(history)) {
         setAllStatus(history)
       }
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.error(error)
     }
   }
 
   const getAllUserAlerts = async () => {
     try {
-      setLoading(true)
       let alerts = await getAllAlerts()
       if (alerts && Array.isArray(alerts)) {
         setAllAlerts(alerts)
       }
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.error(error)
     }
   }
 
   const getCurrentStatus = (system: systemType) => {
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
-    return history ? history.status : false
+    return history ? history.status : null
   }
 
   const getLastCheckMinutes = (system: systemType) => {
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
     if (!allStatus || !allStatus.length || history?.status) return 0
     const now = new Date().getTime()
-    const historyDate = new Date(history?.createdAt || '').getTime()
+    const historyDate = new Date(history?.createdAt || new Date()).getTime()
     return ((now - historyDate) / 60000).toFixed(0)
   }
 
   const getSystemData = (id: string, type: string) => {
     if (allSystems.length) {
       const found = allSystems.find(system => system._id === id)
-      return found ? String(found[type as keyof systemType]) || null : null
+      return found ? found[type as keyof systemType] || null : null
     }
     return null
   }
@@ -206,10 +214,10 @@ const Home = () => {
         setReport('')
         setData({})
         loadData()
-      }
+      } else toast.success('Error sending report. Try again later.')
       setLoading(false)
     } catch (error) {
-      toast.success('Error sending report. Try again.')
+      toast.success('Error sending report. Try again later.')
       setLoading(false)
     }
   }
@@ -219,7 +227,7 @@ const Home = () => {
   }
 
   const getHistoryBySystem = (system: systemType) => {
-    return allStatus.filter((alert: alertType) => alert.systemId === system._id)
+    return allStatus.filter((history: alertType) => history.systemId === system._id)
   }
 
   const updateData = (key: string, e: onChangeEventType) => {
@@ -310,7 +318,7 @@ const Home = () => {
           <InputField
             label='Name'
             name='name'
-            value={getSystemData(report, 'name')}
+            value={String(getSystemData(report, 'name'))}
             disabled
           />
           <Dropdown
@@ -357,7 +365,7 @@ const Home = () => {
   const renderSystemDetailsModal = () => {
     return (
       <Modal
-        title={getSystemData(selected, 'name')}
+        title={String(getSystemData(selected, 'name'))}
         // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={() => setSelected('')}>
         {getDowntimeString() ?
@@ -397,8 +405,8 @@ const Home = () => {
         <div className="home__modal-footer">
           <h2
             className="systemcard__status"
-            style={{ color: getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
-            ● &nbsp;Current status: <strong>{getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
+            style={{ color: getSystemData(selected, 'reportedlyDown') ? 'orange' : getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
+            ● &nbsp;Current status: <strong>{getSystemData(selected, 'reportedlyDown') ? 'Problem' : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
           </h2>
           {getLastCheckMinutes(getSelectedSystem()) ?
             <p
@@ -450,9 +458,8 @@ const Home = () => {
     return allSystems.length ?
       allSystems.map((system: systemType, i: number) =>
         <SystemCard
-          key={i}
+          key={system._id || i}
           index={i}
-          status={getCurrentStatus(system)}
           system={system}
           reportIssue={setReport}
           history={getHistoryBySystem(system)}
@@ -479,6 +486,13 @@ const Home = () => {
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
           : selected ? renderSystemDetailsModal() : ''}
+      {allSystems.length ?
+        <SortBar
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          options={['Date created', 'Name', 'Status']}
+        />
+        : ''}
       <div
         className="home__system-list"
         style={{

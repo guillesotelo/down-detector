@@ -10,7 +10,6 @@ Chart.register(...registerables);
 
 type Props = {
     system?: systemType
-    status?: boolean
     reportIssue: (value: string) => void
     downtime?: { start?: Date, end?: Date }[]
     history?: historyType[]
@@ -31,6 +30,7 @@ const SystemCard = (props: Props) => {
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [loading, setLoading] = useState(true)
     const [showMoreDowntime, setShowMoreDowntime] = useState(false)
+    const [status, setStatus] = useState<boolean | null | undefined>(null)
     const { darkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
 
     const chartHeight = '30vw'
@@ -38,7 +38,6 @@ const SystemCard = (props: Props) => {
 
     const {
         system,
-        status,
         reportIssue,
         downtime,
         history,
@@ -60,11 +59,12 @@ const SystemCard = (props: Props) => {
     } = system || {}
 
     useEffect(() => {
-        if (loading && !headerLoading) setHeaderLoading(true)
-    }, [loading])
+        if ((loading || (status !== false && status !== true)) && !headerLoading) setHeaderLoading(true)
+    }, [loading, status])
 
     useEffect(() => {
         processChartData()
+        setStatus(getCurrentStatus(system))
     }, [history, alerts, system])
 
     useEffect(() => {
@@ -161,7 +161,7 @@ const SystemCard = (props: Props) => {
         })
 
         let twoWeeksSet = processHistoryByHours(336) // two weeks = 336 hours
-        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 24, 0)) // take the last 24 hours for cards
+        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 23, 0)) // take the last 24 hours for cards
 
         setLastDayData(lastDaySet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
@@ -178,7 +178,7 @@ const SystemCard = (props: Props) => {
         })
 
         setCompleteData(twoWeeksSet)
-        setTimeout(() => setLoading(false), 1000)
+        setLoading(false)
     }
 
     const processHistoryByHours = (hours: number = 0) => {
@@ -294,6 +294,15 @@ const SystemCard = (props: Props) => {
         return false
     }
 
+    const getCurrentStatus = (system: systemType | undefined) => {
+        console.log('\n\n')
+        console.log(system?.name)
+        console.log('History', history)
+        const lastHistory: historyType | null = history ? history.find((status: eventType) => status.systemId === system?._id) || null : null
+        console.log('lastHistory', lastHistory)
+        return lastHistory ? lastHistory.status : null
+    }
+
     const chartOptions: any = {
         maintainAspectRatio: false,
         indexAxis: 'x',
@@ -330,7 +339,7 @@ const SystemCard = (props: Props) => {
         },
         scales: {
             x: {
-                beginAtZero: true,
+                beginAtZero: false,
                 border: {
                     display: false
                 },
@@ -340,13 +349,14 @@ const SystemCard = (props: Props) => {
                     color: 'gray'
                 },
                 grid: {
-                    display: false,
+                    display: true,
                     drawBorder: false,
-                    drawChartArea: false
+                    drawChartArea: false,
+                    color: darkMode ? '#444444' : 'lightgray'
                 }
             },
             y: {
-                beginAtZero: true,
+                beginAtZero: false,
                 border: {
                     display: false
                 },
@@ -354,9 +364,10 @@ const SystemCard = (props: Props) => {
                     display: false
                 },
                 grid: {
-                    display: false,
+                    display: true,
                     drawBorder: false,
-                    drawChartArea: false
+                    drawChartArea: false,
+                    color: darkMode ? '#444444' : 'lightgray'
                 }
             }
         }
@@ -389,7 +400,7 @@ const SystemCard = (props: Props) => {
         },
         scales: {
             x: {
-                beginAtZero: true,
+                beginAtZero: false,
                 border: {
                     display: false
                 },
@@ -399,13 +410,14 @@ const SystemCard = (props: Props) => {
                     // color: 'gray'
                 },
                 grid: {
-                    display: false,
+                    display: true,
                     drawBorder: false,
-                    drawChartArea: false
+                    drawChartArea: false,
+                    color: darkMode ? '#444444' : 'lightgray'
                 }
             },
             y: {
-                // beginAtZero: true,
+                beginAtZero: false,
                 border: {
                     display: false
                 },
@@ -413,9 +425,10 @@ const SystemCard = (props: Props) => {
                     display: false
                 },
                 grid: {
-                    display: false,
+                    display: true,
                     drawBorder: false,
-                    drawChartArea: false
+                    drawChartArea: false,
+                    color: darkMode ? '#444444' : 'lightgray'
                 }
             }
         }
@@ -429,7 +442,7 @@ const SystemCard = (props: Props) => {
                     style={{
                         borderColor: darkMode ? 'gray' : '#d3d3d361',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
-                        backgroundImage: loading ? '' : darkMode ?
+                        backgroundImage: loading || (status !== false && status !== true) ? '' : darkMode ?
                             `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
                             :
                             `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
@@ -439,7 +452,7 @@ const SystemCard = (props: Props) => {
                         <h1 className="systemcard__name">{name || 'Api Name'}</h1>
                         {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
-                    {loading ?
+                    {loading || (status !== false && status !== true) ?
                         <div className='systemcard__loading'>
                             <PuffLoader color='lightgray' size={40} />
                         </div>
@@ -451,7 +464,7 @@ const SystemCard = (props: Props) => {
                         <h2
                             className="systemcard__status"
                             style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
-                            {loading ? <p style={{ color: 'gray' }}>Checking status...</p> :
+                            {loading || (status !== false && status !== true) ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
                                     <span className='systemcard__status-dot'>●</span>
                                     &nbsp;&nbsp;Status:&nbsp;
@@ -466,7 +479,7 @@ const SystemCard = (props: Props) => {
                             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
                             textColor={darkMode ? 'white' : 'black'}
                         />
-                            : !loading && lastCheck ?
+                            : !loading && (status || status === false) && lastCheck ?
                                 <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">For {lastCheck} min</p>
                                 : ''}
                     </div>
