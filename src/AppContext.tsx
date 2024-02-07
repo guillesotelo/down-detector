@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { verifyToken } from './services'
 import { AppContextType } from './types'
+import { useHistory } from 'react-router-dom'
 
 export const AppContext = createContext<AppContextType>({
     isMobile: false,

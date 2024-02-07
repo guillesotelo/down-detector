@@ -5,7 +5,7 @@
         align-items: center;
         justify-content: center;
         width: 85vw;
-        padding: .5rem 2rem 2rem 2rem;
+        padding: 2rem;
         overflow-x: hidden;
 
         &--dark {
@@ -14,7 +14,7 @@
             align-items: center;
             justify-content: center;
             width: 85vw;
-            padding: .5rem 2rem 2rem 2rem;
+            padding: 2rem;
             background-color: #202020;
             overflow-x: hidden;
         }
@@ -25,8 +25,7 @@
             // width: calc(100% - 12rem);
             display: flex;
             flex-wrap: wrap;
-            gap: 4rem;
-            row-gap: 2rem;
+            gap: 2rem;
             align-items: flex-start;
             justify-content: center;
             // margin: 2rem 0 2rem -2rem;

@@ -15,10 +15,6 @@ export const systemHeaders = [
         name: 'TYPE',
         value: 'type'
     },
-    // {
-    //     name: 'DESCRIPTION',
-    //     value: 'description'
-    // },
     {
         name: 'TIMEOUT',
         value: 'timeout'
@@ -27,10 +23,6 @@ export const systemHeaders = [
         name: 'INTERVAL',
         value: 'interval'
     },
-    // {
-    //     name: 'CREATED BY',
-    //     value: 'createdBy'
-    // },
     {
         name: 'MODIFIED BY',
         value: 'updatedBy'
@@ -39,6 +31,25 @@ export const systemHeaders = [
         name: 'IS ACTIVE',
         value: 'active'
     },
+    {
+        name: 'ORDER',
+        value: 'order'
+    },
+]
+
+export const systemHeadersMobile = [
+    {
+        name: 'UPDATED',
+        value: 'updatedAt'
+    },
+    {
+        name: 'NAME',
+        value: 'name'
+    },
+    {
+        name: 'URL',
+        value: 'url'
+    }
 ]
 
 export const downtimeHeaders = [

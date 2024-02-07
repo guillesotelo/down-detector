@@ -38,7 +38,7 @@ export default function Tooltip({ tooltip, children, inline, style }: Props) {
             <div className={inline ? 'tooltip__box-inline' : 'tooltip__box'} style={{
                 display: showTooltip ? 'block' : 'none',
                 marginLeft: inline ? childrenWidth * 1.1 : '',
-                marginBottom: !inline ? childrenHeight * 2 : '',
+                // marginBottom: !inline ? childrenHeight * 2 : '',
                 marginTop: inline ? childrenHeight / 10 : '',
             }}>
                 <p className={inline ? 'tooltip__text-inline' : 'tooltip__text'} >

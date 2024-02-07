@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useContext, useEffect, useState } from 'react'
+import React, { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react'
 import { dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
 import { BeatLoader } from 'react-spinners'
@@ -22,6 +22,9 @@ type Props = {
 export default function Dropdown(props: Props) {
     const [openDrop, setOpenDrop] = useState(false)
     const { darkMode, isMobile } = useContext(AppContext)
+    const dropRef = useRef<HTMLDivElement>(null)
+    const optionsRef = useRef<HTMLDivElement>(null)
+    const selectRef = useRef<HTMLDivElement>(null)
 
     const {
         label,
@@ -42,8 +45,12 @@ export default function Dropdown(props: Props) {
     useEffect(() => {
         const dropdownListener = () => window.addEventListener('mouseup', (e: MouseEvent) => {
             try {
-                const className = (e.target as HTMLElement).className
-                if (className && !className.includes('dropdown')) setOpenDrop(false)
+                const className = (e.target as HTMLElement).className || ''
+                if (className.includes('section') && [dropRef.current, selectRef.current].includes(e.target as HTMLDivElement)) return
+                if (!className.includes('dropdown')) setOpenDrop(false)
+                if (className.includes('dropdown')
+                    && !className.includes('option')
+                    && e.target !== dropRef.current) setOpenDrop(false)
             } catch (err) {
                 console.error(err)
             }
@@ -54,13 +61,12 @@ export default function Dropdown(props: Props) {
     }, [])
 
     useEffect(() => {
-        const dark = darkMode ? '--dark' : ''
-        const selection = document.querySelector(`.dropdown__select-section${dark}`) as HTMLElement
-        const dropdown = document.querySelector(`.dropdown__options${dark}`) as HTMLElement
-        if (selection && dropdown) {
-            const { width, height } = selection.getBoundingClientRect()
-            dropdown.style.marginTop = (height - 2).toFixed(0) + 'px'
-            dropdown.style.width = (width + (isMobile ? 0 : -2)).toFixed(0) + 'px'
+        if (dropRef.current && optionsRef.current) {
+            const bounding = dropRef.current.getBoundingClientRect()
+            if (bounding) {
+                optionsRef.current.style.marginTop = (bounding.height - 2).toFixed(0) + 'px'
+                optionsRef.current.style.width = (bounding.width + (isMobile ? 0 : -2)).toFixed(0) + 'px'
+            }
         }
     }, [openDrop])
 
@@ -91,6 +97,7 @@ export default function Dropdown(props: Props) {
                 borderBottomLeftRadius: openDrop ? 0 : '',
                 filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''
             }}
+            ref={selectRef}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>
                 {getSelectValue()}
@@ -114,6 +121,7 @@ export default function Dropdown(props: Props) {
                 borderBottomLeftRadius: openDrop ? 0 : '',
                 filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''
             }}
+            ref={selectRef}
             onClick={() => setOpenDrop(!openDrop)}>
             <h4
                 className={`dropdown__selected${darkMode ? '--dark' : ''}`}
@@ -135,7 +143,8 @@ export default function Dropdown(props: Props) {
     const renderDropDownOptions = () => {
         return <div
             className={`dropdown__options${darkMode ? '--dark' : ''}`}
-            style={{ borderTop: 'none', maxHeight: maxHeight || '' }}>
+            style={{ borderTop: 'none', maxHeight: maxHeight || '' }}
+            ref={optionsRef}>
             {options.length ?
                 options.map((option: any, i: number) =>
                     <h4
@@ -180,7 +189,7 @@ export default function Dropdown(props: Props) {
         return (
             <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
                 {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
-                <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
+                <div ref={dropRef} className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
                     {loading ? renderLoading() : renderSelectedItems()}
                     {openDrop ? renderDropDownOptions() : ''}
                 </div>
@@ -192,7 +201,7 @@ export default function Dropdown(props: Props) {
         return (
             <div className={`dropdown__container${darkMode ? '--dark' : ''}`} style={style}>
                 {label ? <h4 className={`dropdown__label${darkMode ? '--dark' : ''}`}>{label}</h4> : ''}
-                <div className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
+                <div ref={dropRef} className={`dropdown__select-section${darkMode ? '--dark' : ''}`}>
                     {loading ? renderLoading() : renderSelectedItem()}
                     {openDrop ? renderDropDownOptions() : ''}
                 </div>
