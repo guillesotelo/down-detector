@@ -21,6 +21,8 @@ type Props = {
     delay?: string
     setShowDowntime: (value: downtimeModalType) => void
     index: number
+    selected?: string
+    report: string
 }
 
 const SystemCard = (props: Props) => {
@@ -48,7 +50,9 @@ const SystemCard = (props: Props) => {
         lastCheck,
         delay,
         setShowDowntime,
-        index
+        index,
+        selected,
+        report
     } = props
 
     const {
@@ -458,7 +462,7 @@ const SystemCard = (props: Props) => {
                         </div>
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
-                            <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} />
+                            {!selected && !report ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
                         </div>}
                     <div className="systemcard__footer">
                         <h2
@@ -466,7 +470,7 @@ const SystemCard = (props: Props) => {
                             style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading || (status !== false && status !== true) ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
-                                    <span className='systemcard__status-dot'>●</span>
+                                    <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>●</span>
                                     &nbsp;&nbsp;Status:&nbsp;
                                     <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}
                                     </strong>

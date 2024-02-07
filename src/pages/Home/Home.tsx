@@ -56,7 +56,7 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    // setHeaderLoading(true)
+    setHeaderLoading(true)
     loadData()
     const intervalId = setInterval(() => loadData(), 1 * 60 * 1000)
     return () => clearInterval(intervalId)
@@ -437,6 +437,8 @@ const Home = () => {
           key={system._id || i}
           index={i}
           system={system}
+          selected={selected}
+          report={report}
           reportIssue={setReport}
           history={getHistoryBySystem(system)}
           alerts={getAlertsBySystem(system)}

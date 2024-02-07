@@ -59,7 +59,7 @@ export default function InputField(props: Props) {
                 className={className || `textarea__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
-                value={value || ''}
+                value={value || undefined}
                 cols={cols}
                 rows={rows}
                 disabled={disabled}
@@ -73,7 +73,7 @@ export default function InputField(props: Props) {
                 className={className || `inputfield__default${darkMode ? '--dark' : ''}`}
                 placeholder={placeholder || ''}
                 onChange={e => updateData ? updateData(name, e) : null}
-                value={value || ''}
+                value={value || undefined}
                 disabled={disabled}
             />
         </div>
