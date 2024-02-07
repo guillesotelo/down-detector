@@ -54,7 +54,7 @@ export default function History({ }: Props) {
                 handleChange={onChangeSearch}
                 triggerSearch={triggerSearch}
                 value={search}
-                placeholder='Search histories...'
+                placeholder='Search history...'
                 style={{ marginBottom: '1rem' }}
             />
             <div className="history__col">

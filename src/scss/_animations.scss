@@ -62,7 +62,7 @@
 
 @keyframes shake-up-down {
     0% {
-        transform: translateY(-50%);
+        transform: translateY(-35%);
     }
 
     50% {
@@ -70,6 +70,12 @@
     }
 
     100% {
-        transform: translateY(-50%);
+        transform: translateY(-35%);
+    }
+}
+
+@keyframes loading-placeholder {
+    to {
+        background-position-x: -200%;
     }
 }
