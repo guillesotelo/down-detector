@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
 import { getUser, sortArray, toHex } from '../../helpers'
+import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -55,7 +56,7 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    setHeaderLoading(true)
+    // setHeaderLoading(true)
     loadData()
     const intervalId = setInterval(() => loadData(), 1 * 60 * 1000)
     return () => clearInterval(intervalId)
@@ -291,7 +292,7 @@ const Home = () => {
         onClose={() => setReport('')}>
         <div className="home__modal-issue-col">
           <InputField
-            label='Name'
+            label='System'
             name='name'
             value={String(getSystemData(report, 'name'))}
             disabled
@@ -306,12 +307,12 @@ const Home = () => {
             objKey='name'
           />
           <InputField
-            label='Details'
+            label='Details (Optional)'
             name='description'
             value={data.description}
             updateData={updateData}
             type='textarea'
-            placeholder='Describe what happened...'
+            placeholder='Describe the issue...'
             rows={5}
           />
         </div>
@@ -447,13 +448,8 @@ const Home = () => {
           delay={String(i ? i / 10 : 0) + 's'}
           setShowDowntime={setShowDowntime}
         />)
-      : loading ?
-        <div className='home__loading'>
-          <MoonLoader color='#0057ad' size={50} />
-          <p>Loading systems...</p>
-        </div>
-        :
-        <p className="home__system-void">No systems found</p>
+      :
+      Array.from({ length: 12 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
   }
 
   return (

@@ -1,7 +1,7 @@
 export const systemHeaders = [
     {
-        name: 'UPDATED',
-        value: 'updatedAt'
+        name: 'CREATED',
+        value: 'createdAt'
     },
     {
         name: 'NAME',
@@ -39,8 +39,8 @@ export const systemHeaders = [
 
 export const systemHeadersMobile = [
     {
-        name: 'UPDATED',
-        value: 'updatedAt'
+        name: 'CREATED',
+        value: 'createdAt'
     },
     {
         name: 'NAME',

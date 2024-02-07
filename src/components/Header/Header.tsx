@@ -55,9 +55,8 @@ export default function Header() {
 
   const renderHeaderLoader = () => {
     Array.from({ length: 110 }).forEach((_, i) => {
-      setTimeout(() => setBarWidth(`${i < 109 ? i : 0}%`), 10)
+      setTimeout(() => setBarWidth(`${i < 109 ? i : 0}%`), i * 10)
     })
-    setHeaderLoading(false)
   }
 
   const userOptions = () => {
