@@ -79,6 +79,7 @@ const SystemCard = (props: Props) => {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
+                    borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
@@ -86,6 +87,7 @@ const SystemCard = (props: Props) => {
                     backgroundColor: 'transparent',
                     borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
+                    borderWidth: 4,
                     pointBorderWidth: 0,
                     tooltips: {
                         callbacks: {
@@ -112,6 +114,7 @@ const SystemCard = (props: Props) => {
                     data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
+                    borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
@@ -120,6 +123,7 @@ const SystemCard = (props: Props) => {
                     borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
                     tension: .4,
                     pointBorderWidth: 0,
+                    borderWidth: 4,
                     tooltips: {
                         callbacks: {
                             label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
@@ -295,11 +299,7 @@ const SystemCard = (props: Props) => {
     }
 
     const getCurrentStatus = (system: systemType | undefined) => {
-        console.log('\n\n')
-        console.log(system?.name)
-        console.log('History', history)
         const lastHistory: historyType | null = history ? history.find((status: eventType) => status.systemId === system?._id) || null : null
-        console.log('lastHistory', lastHistory)
         return lastHistory ? lastHistory.status : null
     }
 
@@ -480,7 +480,7 @@ const SystemCard = (props: Props) => {
                             textColor={darkMode ? 'white' : 'black'}
                         />
                             : !loading && (status || status === false) && lastCheck ?
-                                <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">For {lastCheck} min</p>
+                                <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">{lastCheck}</p>
                                 : ''}
                     </div>
                 </div>

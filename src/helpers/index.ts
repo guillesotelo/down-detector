@@ -12,8 +12,8 @@ export const sortArray = (arr: any[], key: string | number, order?: boolean) => 
     return arr.slice().sort((a: any, b: any) => {
         const aValue = a[key]
         const bValue = b[key]
-        if (!aValue) return 1
-        if (!bValue) return -1
+        if (typeof aValue !== 'number' && !aValue) return 1
+        if (typeof bValue !== 'number' && !bValue) return -1
         return order ? aValue < bValue ? 1 : -1 : aValue < bValue ? -1 : 1
     })
 }

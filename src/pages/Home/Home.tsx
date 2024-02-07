@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
@@ -15,7 +15,6 @@ import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
 import { APP_COLORS } from '../../constants/app'
 import { getUser, sortArray, toHex } from '../../helpers'
-import SortBar from '../../components/SortBar/SortBar'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -30,19 +29,9 @@ const Home = () => {
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
   const [data, setData] = useState<alertType>({})
   const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
-  const [totalHours, setTotalHours] = useState<number>(0)
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
-  const [lastCheck, setLastCheck] = useState(new Date())
-  const [sortBy, setSortBy] = useState('Date created')
   const { darkMode, setHeaderLoading, isMobile } = useContext(AppContext)
-  const [pending, startTransition] = useTransition()
-
-  // console.log('\n\n')
-  // console.log('allSystems', allSystems)
-  // console.log('allStatus', allStatus)
-  // console.log('allAlerts', allAlerts)
-  // console.log('chartData', chartData)
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -54,12 +43,6 @@ const Home = () => {
     { name: 'Unstable' },
   ]
 
-  const sortOrder: { [key: string]: string } = {
-    'Date created': 'createdAt',
-    'Name': 'name',
-    'Status': 'lastCheckStatus',
-  }
-
   const loadData = useMemo(() => {
     return () => {
       setLoading(true)
@@ -67,14 +50,9 @@ const Home = () => {
       getAllStatus()
       getAllUserAlerts()
       getAllDownTimes()
-      setLastCheck(new Date())
       setLoading(false)
     }
   }, [])
-
-  useEffect(() => {
-    setAllSystems((prev) => sortArray(prev, sortOrder[sortBy], sortBy === 'Date created'))
-  }, [sortBy])
 
   useEffect(() => {
     setHeaderLoading(true)
@@ -86,10 +64,7 @@ const Home = () => {
   useEffect(() => {
     if (selected || report) {
       document.body.style.overflow = 'hidden'
-      if (allStatus.length) {
-        getTotalRegisteredHours()
-        getStatusAndAlerts()
-      }
+      if (allStatus.length) getStatusAndAlerts()
     } else document.body.style.overflow = 'auto'
   }, [selected, report])
 
@@ -101,14 +76,6 @@ const Home = () => {
         return 1
       })
     setStatusAndAlerts(statusAndAlertsByID)
-  }
-
-  const getTotalRegisteredHours = () => {
-    const systemStatus = allStatus.filter((status: eventType) => status.systemId === selected)
-    const firstStatus: eventType = systemStatus.length ? systemStatus[systemStatus.length - 1] : {}
-    const firstCheck = firstStatus ? firstStatus.createdAt : null
-    const timeSinceFirstCheck = Math.floor((new Date().getTime() - new Date(firstCheck || new Date()).getTime()) / 3600000)
-    setTotalHours(timeSinceFirstCheck)
   }
 
   const getAllDownTimes = async () => {
@@ -126,7 +93,7 @@ const Home = () => {
     try {
       let systems = await getAllSystems()
       if (systems && Array.isArray(systems)) {
-        setAllSystems(sortArray(systems, sortOrder[sortBy], true))
+        setAllSystems(sortArray(systems, 'order'))
       }
     } catch (error) {
       console.error(error)
@@ -160,12 +127,24 @@ const Home = () => {
     return history ? history.status : null
   }
 
-  const getLastCheckMinutes = (system: systemType) => {
+  const getLastCheck = (system: systemType) => {
     const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
     if (!allStatus || !allStatus.length || history?.status) return 0
     const now = new Date().getTime()
     const historyDate = new Date(history?.createdAt || new Date()).getTime()
-    return ((now - historyDate) / 60000).toFixed(0)
+    const minutesPassed = (now - historyDate) / 60000
+    let timePassed
+    if (minutesPassed >= 60) {
+      if (minutesPassed >= 1440) {
+        const days = (minutesPassed / 60 / 24).toFixed(0)
+        timePassed = `${days} day${Number(days) > 1 ? 's' : ''}`
+      }
+      else {
+        const hours = (minutesPassed / 60).toFixed(0)
+        timePassed = `${hours} hour${Number(hours) > 1 ? 's' : ''}`
+      }
+    } else timePassed = `${minutesPassed.toFixed(0)} min${Number(minutesPassed.toFixed(0)) > 1 ? 's' : ''}`
+    return `For ${timePassed}`
   }
 
   const getSystemData = (id: string, type: string) => {
@@ -233,10 +212,6 @@ const Home = () => {
   const updateData = (key: string, e: onChangeEventType) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
-  }
-
-  const parseUrl = (url: string) => {
-    return url.replace(/^((?:[^]*){3}).*$/, '$1')
   }
 
   const isComingEvent = (event: eventType) => {
@@ -408,11 +383,11 @@ const Home = () => {
             style={{ color: getSystemData(selected, 'reportedlyDown') ? 'orange' : getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
             ● &nbsp;Current status: <strong>{getSystemData(selected, 'reportedlyDown') ? 'Problem' : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
           </h2>
-          {getLastCheckMinutes(getSelectedSystem()) ?
+          {getLastCheck(getSelectedSystem()) ?
             <p
               style={{ color: darkMode ? 'lightgray' : 'gray' }}
               className="systemcard__status-caption">
-              For {getLastCheckMinutes(getSelectedSystem())} min
+              {getLastCheck(getSelectedSystem())}
             </p>
             :
             <Button
@@ -468,7 +443,7 @@ const Home = () => {
           setSelectedData={setChartData}
           setModalChartOptions={setModalChartOptions}
           downtime={getDownTime(system)}
-          lastCheck={getLastCheckMinutes(system)}
+          lastCheck={getLastCheck(system)}
           delay={String(i ? i / 10 : 0) + 's'}
           setShowDowntime={setShowDowntime}
         />)
@@ -486,13 +461,6 @@ const Home = () => {
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
           : selected ? renderSystemDetailsModal() : ''}
-      {allSystems.length ?
-        <SortBar
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          options={['Date created', 'Name', 'Status']}
-        />
-        : ''}
       <div
         className="home__system-list"
         style={{

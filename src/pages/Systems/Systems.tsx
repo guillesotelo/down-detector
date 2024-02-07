@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Button from '../../components/Button/Button'
 import DataTable from '../../components/DataTable/DataTable'
 import { eventType, onChangeEventType, systemType, userType } from '../../types'
@@ -8,6 +8,7 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import {
   downtimeHeaders,
   systemHeaders,
+  systemHeadersMobile,
 } from '../../constants/tableHeaders'
 import {
   intervalDefaultOptions,
@@ -21,7 +22,8 @@ import {
   getAllEvents,
   deleteSystem,
   getAllUsers,
-  getSystemsByOwnerId
+  getSystemsByOwnerId,
+  updateSystemOrder
 } from '../../services'
 import { toast } from 'react-toastify'
 import DatePicker from "react-datepicker";
@@ -29,7 +31,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
-import { getTimeOption, getUser } from '../../helpers'
+import { getTimeOption, getUser, sortArray } from '../../helpers'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -59,7 +61,8 @@ export default function Systems({ }: Props) {
   const [allUsers, setAllUsers] = useState<userType[]>([])
   const [selectedOwners, setSelectedOwners] = useState<userType[]>([])
   const [showResponse, setShowResponse] = useState(false)
-  const { darkMode, isSuper } = useContext(AppContext)
+  const [showTooltip, setShowTooltip] = useState(false)
+  const { isSuper, isMobile } = useContext(AppContext)
   const user = getUser()
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export default function Systems({ }: Props) {
     try {
       setLoading(true)
       const systems = isSuper ? await getAllSystems() : await getSystemsByOwnerId(user._id)
-      if (systems && systems.length) setTableData(systems)
+      if (systems && systems.length) setTableData(sortArray(systems, 'order'))
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -270,6 +273,23 @@ export default function Systems({ }: Props) {
       toast.error('Error deleting system. Try again later')
       console.error(err)
       setLoading(false)
+    }
+  }
+
+  const saveTableDataOrder = async (items: systemType[]) => {
+    try {
+      setLoading(true)
+      const updatedSystems = await updateSystemOrder(items.map((item, i) => { return { ...item, order: i } }))
+      if (updatedSystems && updatedSystems.length) {
+        setTableData(updatedSystems)
+        toast.success('Order updated successfully')
+      }
+      else toast.error('Error updating order')
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      toast.error('Error updating order')
+      console.error(error)
     }
   }
 
@@ -598,25 +618,32 @@ export default function Systems({ }: Props) {
         </Modal>
         : ''}
       <div className="systems__col" style={{ filter: selected !== -1 || newSystem ? 'blur(10px)' : '' }}>
-        {isSuper ?
-          <Button
-            label='New System'
-            handleClick={() => setNewSystem(true)}
-            bgColor={APP_COLORS.BLUE_TWO}
-            textColor='white'
-            disabled={loading}
-          /> : ''}
-        <DataTable
-          title='Systems'
-          tableData={tableData}
-          setTableData={setTableData}
-          tableHeaders={systemHeaders}
-          name='systems'
-          selected={selected}
-          setSelected={setSelected}
-          loading={loading}
-          max={18}
-        />
+        <div className='systems__row'>
+          {isSuper ?
+            <Button
+              label='New System'
+              handleClick={() => setNewSystem(true)}
+              bgColor={APP_COLORS.BLUE_TWO}
+              textColor='white'
+              disabled={loading}
+            /> : ''}
+          {showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
+        </div>
+        <div style={{ width: 'inherit' }} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
+          <DataTable
+            title='Systems'
+            tableData={tableData}
+            setTableData={setTableData}
+            tableHeaders={isMobile ? systemHeadersMobile : systemHeaders}
+            name='systems'
+            selected={selected}
+            setSelected={setSelected}
+            loading={loading}
+            max={18}
+            draggable
+            saveTableDataOrder={saveTableDataOrder}
+          />
+        </div>
       </div>
     </div>
   )

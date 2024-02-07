@@ -18,6 +18,23 @@
         align-items: flex-start;
     }
 
+    &__row {
+        width: 95%;
+        height: 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__tooltip {
+        margin: 0 auto;
+        animation: shake-up-down 2s ease-in-out infinite;
+        padding: .5rem;
+        border: 1px solid gray;
+        border-radius: .5rem;
+    }
+
     &__new {
         display: flex;
         flex-direction: column;

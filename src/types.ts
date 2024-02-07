@@ -50,6 +50,7 @@ export type systemType = {
     downtimeNote?: string
     raw?: string
     logo?: string
+    order?: number
 }
 
 export type eventType = {
@@ -113,3 +114,16 @@ export type downtimeModalType = {
     end?: Date,
     note?: string
 } | null
+
+export type configType = {
+    _id?: string
+    name?: string
+    creator?: string
+    maintainer?: string
+    license?: string
+    server?: string
+    repo?: string
+    version?: string
+    createdAt?: Date
+    updatedAt?: Date
+}

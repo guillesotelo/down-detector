@@ -5,3 +5,17 @@
 abbr {
   text-decoration: none;
 }
+
+::-webkit-scrollbar {
+  background: rgb(169, 169, 169);
+  width: .5rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(105, 105, 105);
+  border-radius: .3rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}

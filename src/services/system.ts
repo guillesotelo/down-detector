@@ -47,6 +47,13 @@ const updateSystem = async (data: systemType) => {
     } catch (err) { console.log(err) }
 }
 
+const updateSystemOrder = async (systems: systemType[]) => {
+    try {
+        const updatedSystems = await axios.post(`${API_URL}/api/system/updateOrder`, { systems, user: getUser() }, getConfig())
+        return updatedSystems.data
+    } catch (err) { console.log(err) }
+}
+
 const deleteSystem = async (data: systemType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/system/remove`, { ...data, user: getUser() }, getConfig())
@@ -60,5 +67,6 @@ export {
     createSystem,
     getSystemById,
     updateSystem,
+    updateSystemOrder,
     deleteSystem,
 }
