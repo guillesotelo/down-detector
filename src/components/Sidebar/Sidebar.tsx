@@ -30,7 +30,7 @@ export default function Sidebar({ }: Props) {
                     setItem('/')
                 }}
                 style={{
-                    marginTop: '2rem',
+                    marginTop: '1.5rem',
                     backgroundColor: item === '/' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
                 }}>
                 <img src={Dashboard} alt="Dashboard" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />

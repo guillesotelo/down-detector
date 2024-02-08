@@ -11,26 +11,26 @@
         -webkit-tap-highlight-color: transparent;
 
         &:hover .switch__slider--on {
-            background-color: #9b9b9b;
+           filter: brightness(120%);
         }
 
         &:hover .switch__slider--off {
-            background-color: #9b9b9b;
+           filter: brightness(120%);
         }
 
     }
 
     &__row {
-        margin-top: .5rem;
-        width: 4.4vw;
-        height: 1.6rem;
+        width: 4.5rem;
+        height: 2rem;
         display: flex;
         flex-direction: row;
         align-items: center;
         position: relative;
         border-radius: 1rem;
         transition: .3s;
-        border: 2px solid gray;
+        border: 1px solid gray;
+        padding: .2rem;
     }
 
     &__label {
@@ -50,11 +50,11 @@
     }
 
     &__on {
-        width: 2.2vw;
-        height: 1.5rem;
+        width: 2.25rem;
+        height: 2rem;
         font-size: .9rem;
         text-align: center;
-        line-height: 1.5rem;
+        line-height: 2rem;
         margin: 0;
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
@@ -64,11 +64,11 @@
     }
 
     &__off {
-        width: 2.2vw;
-        height: 1.5rem;
+        width: 2.25rem;
+        height: 2rem;
         font-size: .9rem;
         text-align: center;
-        line-height: 1.5rem;
+        line-height: 2rem;
         margin: 0;
         border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
@@ -79,11 +79,11 @@
 
     &__slider {
         &--off {
-            width: 2.2vw;
+            width: 2.25rem;
             height: 2rem;
             line-height: 2rem;
-            background-color: #b2b2b2;
-            border: 2px solid #787878;
+            background-color: #53565a;
+            border: 1px solid #787878;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(-5%);
@@ -95,11 +95,11 @@
         }
 
         &--on {
-            width: 2.2vw;
+            width: 2.25rem;
             height: 2rem;
             line-height: 2rem;
-            background-color: #b2b2b2;
-            border: 2px solid #787878;
+            background-color: #53565a;
+            border: 1px solid #787878;
             border-radius: 1rem;
             position: absolute;
             transform: translateX(95%);
@@ -120,29 +120,29 @@
             flex-direction: column;
             transition: .3s;
             cursor: pointer;
-    
+
             &:hover .switch__slider--on {
                 background-color: rgb(195, 195, 195);
             }
-    
+
             &:hover .switch__slider--off {
                 background-color: rgb(195, 195, 195);
             }
-    
+
         }
-    
+
         &__row {
             width: 15vw;
-            height: 1.5rem;
+            height: 2rem;
             display: flex;
             flex-direction: row;
             align-items: center;
             position: relative;
             border-radius: 1rem;
             transition: .3s;
-            border: 2px solid gray;
+            border: 1px solid gray;
         }
-    
+
         &__label {
             margin: 0 0 .5vh 0;
             font-size: .8rem;
@@ -150,13 +150,13 @@
             width: 100%;
             color: #696869;
         }
-    
+
         &__on {
             width: 7.5vw;
-            height: 1.5rem;
+            height: 2rem;
             font-size: .9rem;
             text-align: center;
-            line-height: 1.5rem;
+            line-height: 2rem;
             margin: 0;
             border-top-left-radius: 1rem;
             border-bottom-left-radius: 1rem;
@@ -164,13 +164,13 @@
             color: #4e4e4e;
             transition: .3s;
         }
-    
+
         &__off {
-            width:7.5vw;
-            height: 1.5rem;
+            width: 7.5vw;
+            height: 2rem;
             font-size: .9rem;
             text-align: center;
-            line-height: 1.5rem;
+            line-height: 2rem;
             margin: 0;
             border-top-right-radius: 1rem;
             border-bottom-right-radius: 1rem;
@@ -178,14 +178,14 @@
             color: #4e4e4e;
             transition: .3s;
         }
-    
+
         &__slider {
             &--off {
                 width: 7.5vw;
-                height: 1.5rem;
-                line-height: 1.5rem;
+                height: 2rem;
+                line-height: 2rem;
                 background-color: lightgray;
-                border: 2px solid gray;
+                border: 1px solid gray;
                 border-radius: 1rem;
                 position: absolute;
                 transform: translateX(-5%);
@@ -195,13 +195,13 @@
                 color: gray;
                 font-size: .8rem;
             }
-    
+
             &--on {
                 width: 7.5vw;
-                height: 1.5rem;
-                line-height: 1.5rem;
+                height: 2rem;
+                line-height: 2rem;
                 background-color: lightgray;
-                border: 2px solid gray;
+                border: 1px solid gray;
                 border-radius: 1rem;
                 position: absolute;
                 transform: translateX(95%);

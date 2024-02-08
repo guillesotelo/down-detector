@@ -70,7 +70,7 @@ export default function Help({ }: Props) {
         </p>
         <h4 className="about__subtitle">Stargate Team</h4>
         94530 HP System Architecture
-        <p className="about__text"><a href="mailto:test@mail.com.com">hpdev@company.com</a></p>
+        <p className="about__text"><a href="mailto:test@mail.com.com">test@mail.com.com</a></p>
       </div>
     </div>
   )

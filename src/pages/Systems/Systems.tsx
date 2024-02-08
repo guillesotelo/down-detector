@@ -405,7 +405,7 @@ export default function Systems({ }: Props) {
                     placeholder='Write something...'
                   />
                   : ''}
-                <Dropdown
+                {/* <Dropdown
                   label='Interval'
                   options={intervalOptions}
                   value={selectedInterval.name}
@@ -415,7 +415,7 @@ export default function Systems({ }: Props) {
                   objKey='name'
                   style={{ width: '100%' }}
                   loading={loading}
-                />
+                /> */}
                 <Dropdown
                   label='Timeout'
                   options={timeoutOptions}
@@ -627,7 +627,7 @@ export default function Systems({ }: Props) {
               textColor='white'
               disabled={loading}
             /> : ''}
-          {showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
+          {!selected && showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
         </div>
         <div style={{ width: 'inherit' }} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           <DataTable
