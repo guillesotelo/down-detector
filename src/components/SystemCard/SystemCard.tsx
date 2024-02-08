@@ -235,7 +235,7 @@ const SystemCard = (props: Props) => {
 
         // Build datasets with given hour maps and registered statuses
         let previousStatus = 0
-        const dataset = Array.from({ length: hours + 3 }).map((_, i) => {
+        const dataset = Array.from({ length: hours }).map((_, i) => {
             let status = 0
             const entriesArray = Array.from(allHours.entries())
             const firstDate = entriesArray && entriesArray.length ? entriesArray[entriesArray.length - 1][0] : ''
@@ -243,7 +243,7 @@ const SystemCard = (props: Props) => {
 
             const item = {
                 status,
-                time: getDateWithGivenHour(hours - i + 1)
+                time: getDateWithGivenHour(hours - i - 1)
             }
 
             // Copy all status from the left to the first registered
@@ -356,7 +356,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#444444' : 'lightgray'
+                    color: darkMode ? '#333333' : '#dbdbdb'
                 }
             },
             y: {
@@ -371,7 +371,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#444444' : 'lightgray'
+                    color: darkMode ? '#333333' : '#dbdbdb'
                 }
             }
         }
@@ -417,7 +417,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#444444' : 'lightgray'
+                    color: darkMode ? '#333333' : '#dbdbdb'
                 }
             },
             y: {
@@ -432,7 +432,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#444444' : 'lightgray'
+                    color: darkMode ? '#333333' : '#dbdbdb'
                 }
             }
         }
