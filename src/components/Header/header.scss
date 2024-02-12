@@ -294,5 +294,9 @@
                 height: 9vh;
             }
         }
+
+        &__loading {
+            top: calc(0% + 8.7vh);
+        }
     }
 }

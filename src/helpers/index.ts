@@ -86,3 +86,10 @@ export const toHex = (str: string) => {
 }
 
 export const getUser = () => localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
+
+
+export const getDate = (date: Date | number | string | undefined) => {
+    return date ? new Date(date).toLocaleString('sv-SE',
+      { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+      : 'No date'
+  }

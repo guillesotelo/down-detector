@@ -50,7 +50,7 @@ const updateHistory = async (data: historyType) => {
 const deleteHistory = async (data: historyType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/history/remove`, { ...data, user: getUser() }, getConfig())
-        return deleted.data
+        return deleted
     } catch (err) { console.log(err) }
 }
 

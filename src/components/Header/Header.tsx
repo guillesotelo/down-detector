@@ -73,8 +73,7 @@ export default function Header() {
 
   const goToAccount = () => {
     const user = getUser()
-    let page = ''
-    if (user.token) page = '/account'
+    let page = user.token ? '/account' : '/login'
     history.push(page)
     setItem(page)
   }
@@ -108,12 +107,24 @@ export default function Header() {
           />
         </div>
         <div className="header__col">
-          <img
-            src={Menu}
-            onClick={() => setOpenMenu(!openMenu)}
-            alt='Menu'
-            className={`header__menu${darkMode ? '--dark' : ''}`}
-          />
+          {isLoggedIn ?
+            <img
+              src={Menu}
+              onClick={() => setOpenMenu(!openMenu)}
+              alt='Menu'
+              className={`header__menu${darkMode ? '--dark' : ''}`}
+            />
+            :
+            <img
+              src={darkMode ? Day : Night}
+              onClick={() => {
+                localStorage.setItem('preferredMode', JSON.stringify(!darkMode))
+                setDarkMode(!darkMode)
+              }}
+              alt="Switch Mode"
+              className={`header__menu${darkMode ? '--dark' : ''}`}
+            />
+          }
         </div>
         <div className="header__loading" style={{ width: barWidth }} />
         <div className={`header__menu-container${openMenu ? '--open' : ''}${darkMode ? '--dark' : ''}`}>

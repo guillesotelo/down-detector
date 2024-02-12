@@ -9,7 +9,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        // gap: 1rem;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
@@ -17,7 +16,6 @@
         position: relative;
         background-color: white;
         transition: .3s;
-        overflow: hidden;
 
         &:hover {
             box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
@@ -32,7 +30,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            // gap: 1rem;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
@@ -40,7 +37,6 @@
             position: relative;
             background-color: #000000;
             transition: .3s;
-            overflow: hidden;
 
             &:hover {
                 border: 1px solid lightgray !important;
@@ -49,24 +45,13 @@
     }
 
     &__wrapper {
-        // width: 15rem;
         opacity: 0;
         animation: fade-in .5s ease-in forwards;
-        //     &:hover>.systemcard__event {
-        //         transform: translateY(0%);
-        //         position: relative;
-        //     }
-
-        //     &:hover>.systemcard__event--dark {
-        //         transform: translateY(0%);
-        //         position: relative;
-        //     }
     }
 
     &__loading-block {
         display: flex;
         flex-direction: row;
-        margin: 1rem.8rem;
         padding: .3rem .5rem;
         background: #eee;
         background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
@@ -76,13 +61,12 @@
         height: 1rem;
         width: 100%;
     }
-
+    
     &__header {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
         justify-content: space-between;
-        // cursor: pointer;
         height: 1.6rem;
         cursor: pointer;
     }
@@ -120,6 +104,14 @@
             animation: fade-in-out 1.5s ease-in-out infinite;
         }
     }
+
+    &__placeholder {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
 
     &__planned {
         &-label {
