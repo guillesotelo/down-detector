@@ -44,6 +44,11 @@
         &__box {
             gap: 1rem;
             width: 60vw;
+
+            &--dark {
+                gap: 1rem;
+                width: 60vw;
+            }
         }
     }
 }

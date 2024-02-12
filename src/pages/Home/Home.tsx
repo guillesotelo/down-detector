@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents } from '../../services'
+import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -13,8 +13,8 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { MoonLoader } from 'react-spinners'
-import { APP_COLORS } from '../../constants/app'
-import { getUser, sortArray, toHex } from '../../helpers'
+import { APP_COLORS, APP_VERSION } from '../../constants/app'
+import { getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
 Chart.register(...registerables);
 
@@ -25,15 +25,21 @@ const Home = () => {
   const [showDowntime, setShowDowntime] = useState<downtimeModalType>(null)
   const [allSystems, setAllSystems] = useState<systemType[]>([])
   const [allEvents, setAllEvents] = useState<eventType[]>([])
-  const [statusAndAlerts, setStatusAndAlerts] = useState<alertType & historyType[]>([])
+  const [statusAndAlerts, setStatusAndAlerts] = useState<alertType[] & historyType[]>([])
   const [allStatus, setAllStatus] = useState<historyType[]>([])
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
   const [data, setData] = useState<alertType>({})
   const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
-  const { darkMode, setHeaderLoading, isMobile } = useContext(AppContext)
+  const [selectedLog, setSelectedLog] = useState(-1)
+  const [editLog, setEditLog] = useState(false)
+  const [editedLogStatus, setEditedLogStatus] = useState('')
+  const [editedDetails, setEditedDetails] = useState('')
+  const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
 
+  console.log(allSystems)
+  
   const chartHeight = '30vh'
   const chartWidth = '80vw'
 
@@ -68,6 +74,14 @@ const Home = () => {
       if (allStatus.length) getStatusAndAlerts()
     } else document.body.style.overflow = 'auto'
   }, [selected, report])
+
+  useEffect(() => {
+    if (selectedLog !== -1) {
+      const selectedHistory = statusAndAlerts[selectedLog]
+      setEditedLogStatus(selectedHistory.userAlert ? 'DOWN' : selectedHistory.status ? 'UP' : 'DOWN')
+      setEditedDetails(selectedHistory.raw || '')
+    }
+  }, [selectedLog])
 
   const getStatusAndAlerts = () => {
     const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
@@ -154,12 +168,6 @@ const Home = () => {
       return found ? found[type as keyof systemType] || null : null
     }
     return null
-  }
-
-  const getDate = (date: Date | undefined) => {
-    return date ? new Date(date).toLocaleString('sv-SE',
-      { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-      : 'No data'
   }
 
   const sendReport = async () => {
@@ -275,21 +283,82 @@ const Home = () => {
     return false
   }
 
-  const discardReport = () => {
+  const getDowntimeDate = (date: Date | string) => {
+    return `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}`
+  }
+
+  const removeSelectedLog = async () => {
+    try {
+      setLoading(true)
+      const selectedHistory = statusAndAlerts[selectedLog]
+      const removed = selectedHistory.userAlert ?
+        await deleteUserAlert(selectedHistory) :
+        await deleteHistory(selectedHistory)
+      if (removed) toast.success('Log removed successfully')
+      else return toast.error('Error removing Log. Please try again')
+      setSelectedLog(-1)
+      setEditLog(false)
+      setEditedLogStatus('')
+      setEditedDetails('')
+      setStatusAndAlerts(prev => {
+        let newStatus = [...prev]
+        newStatus.splice(selectedLog, 1)
+        return newStatus
+      })
+      loadData()
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      toast.error('Error removing Log. Please try again')
+      console.error(error)
+    }
+  }
+
+  const saveSelectedLog = async () => {
+    try {
+      setLoading(true)
+      const selectedHistory = statusAndAlerts[selectedLog]
+      if (editedLogStatus) selectedHistory.status = editedLogStatus === 'UP' ? true : false
+      if (editedDetails) selectedHistory.raw = editedDetails
+      const saved = selectedHistory.userAlert ?
+        await updateUserAlert(selectedHistory) :
+        await updateHistory(selectedHistory)
+      if (saved) toast.success('Log updated successfully')
+      else return toast.error('Error updating Log. Please try again')
+      setSelectedLog(-1)
+      setEditLog(false)
+      setEditedLogStatus('')
+      setEditedDetails('')
+      setStatusAndAlerts(prev => {
+        let newStatus = [...prev]
+        newStatus[selectedLog] = selectedHistory
+        return newStatus
+      })
+      loadData()
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      toast.error('Error updating Log. Please try again')
+      console.error(error)
+    }
+  }
+
+  const discardChanges = () => {
+    setSelected('')
+    setSelectedLog(-1)
+    setEditLog(false)
+    setEditedLogStatus('')
+    setEditedDetails('')
     setReport('')
     setData({})
     setReportedStatus({ name: 'Unable to access' })
-  }
-
-  const getDowntimeDate = (date: Date | string) => {
-    return `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}`
   }
 
   const renderReportModal = () => {
     return (
       <Modal
         title='Report Issue'
-        onClose={() => setReport('')}>
+        onClose={discardChanges}>
         <div className="home__modal-issue-col">
           <InputField
             label='System'
@@ -319,7 +388,7 @@ const Home = () => {
         <div className="home__modal-issue-btns">
           <Button
             label='Cancel'
-            handleClick={discardReport}
+            handleClick={discardChanges}
             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_ONE}
             textColor='white'
             disabled={loading}
@@ -343,7 +412,7 @@ const Home = () => {
       <Modal
         title={String(getSystemData(selected, 'name'))}
         // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
-        onClose={() => setSelected('')}>
+        onClose={discardChanges}>
         {getDowntimeString() ?
           <div
             className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
@@ -365,6 +434,51 @@ const Home = () => {
             <Line data={chartData} height={chartHeight} width={chartWidth} options={modalChartOptions} />
           </div>
         </div>
+        {editLog ?
+          <div className="home__modal-row" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
+            <Dropdown
+              label='New Status'
+              options={['UP', 'DOWN']}
+              value={editedLogStatus}
+              selected={editedLogStatus}
+              setSelected={setEditedLogStatus}
+              maxHeight='20vh'
+              style={{ minWidth: '7rem', width: isMobile ? '100%' : '' }}
+            />
+            <InputField
+              label='Details'
+              name='raw'
+              value={editedDetails}
+              updateData={(_, e) => setEditedDetails(e.target.value)}
+            />
+            <Button
+              label='Save Changes'
+              handleClick={saveSelectedLog}
+              bgColor={APP_COLORS.BLUE_TWO}
+              textColor='white'
+              style={{ width: isMobile ? '100%' : '45%' }}
+              disabled={loading}
+            />
+          </div>
+          :
+          selectedLog !== -1 ?
+            <div className="home__modal-row">
+              <Button
+                label='Edit Log'
+                handleClick={() => setEditLog(true)}
+                bgColor={APP_COLORS.ORANGE_ONE}
+                textColor='white'
+                style={{ width: '45%' }}
+              />
+              <Button
+                label='Remove Log'
+                handleClick={removeSelectedLog}
+                bgColor={APP_COLORS.RED_TWO}
+                textColor='white'
+                style={{ width: '45%' }}
+              />
+            </div>
+            : ''}
         <div className="home__modal-table">
           <DataTable
             title='Latest system logs'
@@ -376,6 +490,8 @@ const Home = () => {
             max={getDowntimeString() ? 2 : 3}
             orderDataBy={hisrotyHeaders[0]}
             style={{ width: isMobile ? '80vw' : '50vw' }}
+            setSelected={isSuper ? setSelectedLog : undefined}
+            selected={selectedLog}
           />
         </div>
         <div className="home__modal-footer">
@@ -412,9 +528,9 @@ const Home = () => {
           onClose={() => setShowDowntime(null)}>
           <div className="home__modal-col">
             <p className="home__modal-downtime-note">
-              The system will probably be down between <strong>{getDowntimeDate(start || '')}</strong> and <strong>{getDowntimeDate(end || '')}</strong>.
+              The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
             </p>
-            {note ? <p className="home__modal-downtime-note">The reason: <br />{note}</p> : ''}
+            {note ? <p className="home__modal-downtime-note">Reason: <br />{note}</p> : ''}
           </div>
           <Button
             label='System Details'
@@ -439,6 +555,7 @@ const Home = () => {
           system={system}
           selected={selected}
           report={report}
+          showDowntime={showDowntime}
           reportIssue={setReport}
           history={getHistoryBySystem(system)}
           alerts={getAlertsBySystem(system)}
@@ -467,6 +584,7 @@ const Home = () => {
       >
         {renderSystemList()}
       </div>
+      {!isLoggedIn ? <p className="home__app-version">{APP_VERSION}</p> : ''}
     </div>
   )
 }

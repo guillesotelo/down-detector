@@ -50,7 +50,7 @@ const updateUserAlert = async (data: alertType) => {
 const deleteUserAlert = async (data: alertType) => {
     try {
         const deleted = await axios.post(`${API_URL}/api/userAlert/remove`, { ...data, user: getUser() }, getConfig())
-        return deleted.data
+        return deleted
     } catch (err) { console.log(err) }
 }
 

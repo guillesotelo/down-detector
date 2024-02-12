@@ -6,6 +6,9 @@ import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
 import PuffLoader from "react-spinners/PuffLoader"
+import Tooltip from '../Tooltip/Tooltip'
+import { getDate } from '../../helpers'
+import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 Chart.register(...registerables);
 
 type Props = {
@@ -22,7 +25,8 @@ type Props = {
     setShowDowntime: (value: downtimeModalType) => void
     index: number
     selected?: string
-    report: string
+    report?: string
+    showDowntime?: downtimeModalType
 }
 
 const SystemCard = (props: Props) => {
@@ -33,7 +37,7 @@ const SystemCard = (props: Props) => {
     const [loading, setLoading] = useState(true)
     const [showMoreDowntime, setShowMoreDowntime] = useState(false)
     const [status, setStatus] = useState<boolean | null | undefined>(null)
-    const { darkMode, headerLoading, setHeaderLoading } = useContext(AppContext)
+    const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
 
     const chartHeight = '30vw'
     const chartWidth = '40vw'
@@ -52,14 +56,16 @@ const SystemCard = (props: Props) => {
         setShowDowntime,
         index,
         selected,
-        report
+        report,
+        showDowntime
     } = props
 
     const {
         _id,
         name,
         reportedlyDown,
-        logo
+        logo,
+        raw
     } = system || {}
 
     useEffect(() => {
@@ -266,12 +272,6 @@ const SystemCard = (props: Props) => {
         return dataset
     }
 
-    const getDate = (date: Date | number | undefined) => {
-        return date ? new Date(date).toLocaleString('sv-SE',
-            { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-            : 'No data'
-    }
-
     const getDowntime = (event: eventType) => {
         if (event && event.start && event.end) {
             return (
@@ -305,6 +305,10 @@ const SystemCard = (props: Props) => {
     const getCurrentStatus = (system: systemType | undefined) => {
         const lastHistory: historyType | null = history ? history.find((status: eventType) => status.systemId === system?._id) || null : null
         return lastHistory ? lastHistory.status : null
+    }
+
+    const hasPageMessage = () => {
+        return isSuper && raw?.includes('plugins/banner/static/banner.js')
     }
 
     const chartOptions: any = {
@@ -343,7 +347,7 @@ const SystemCard = (props: Props) => {
         },
         scales: {
             x: {
-                beginAtZero: false,
+                beginAtZero: true,
                 border: {
                     display: false
                 },
@@ -360,7 +364,7 @@ const SystemCard = (props: Props) => {
                 }
             },
             y: {
-                beginAtZero: false,
+                beginAtZero: true,
                 border: {
                     display: false
                 },
@@ -404,7 +408,7 @@ const SystemCard = (props: Props) => {
         },
         scales: {
             x: {
-                beginAtZero: false,
+                beginAtZero: true,
                 border: {
                     display: false
                 },
@@ -421,7 +425,7 @@ const SystemCard = (props: Props) => {
                 }
             },
             y: {
-                beginAtZero: false,
+                beginAtZero: true,
                 border: {
                     display: false
                 },
@@ -432,7 +436,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#333333' : '#dbdbdb'
+                    color: (ctx: any) => ctx.tick.value !== .5 ? darkMode ? '#333333' : '#dbdbdb' : 'transparent'
                 }
             }
         }
@@ -450,19 +454,16 @@ const SystemCard = (props: Props) => {
                             `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
                             :
                             `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
-                    }}
-                >
+                    }}>
                     <div className="systemcard__header" onClick={selectSystem}>
-                        <h1 className="systemcard__name">{name || 'Api Name'}</h1>
+                        <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
                         {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
                     {loading || (status !== false && status !== true) ?
-                        <div className='systemcard__loading'>
-                            <PuffLoader color='lightgray' size={40} />
-                        </div>
+                        SystemCardPlaceholderBlock(darkMode)
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
-                            {!selected && !report ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
+                            {!selected && !report && !showDowntime ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
                         </div>}
                     <div className="systemcard__footer">
                         <h2
@@ -481,8 +482,7 @@ const SystemCard = (props: Props) => {
                             label='Report Issue'
                             handleClick={() => reportIssue(_id || '')}
                             bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
-                            textColor={darkMode ? 'white' : 'black'}
-                        />
+                            textColor={darkMode ? 'white' : 'black'} />
                             : !loading && (status || status === false) && lastCheck ?
                                 <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">{lastCheck}</p>
                                 : ''}
@@ -498,8 +498,7 @@ const SystemCard = (props: Props) => {
                             border: isLiveDowntime(downtime[0]) ? '1px solid red' : '1px solid orange'
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
-                        onMouseLeave={() => setShowMoreDowntime(false)}
-                    >
+                        onMouseLeave={() => setShowMoreDowntime(false)}>
                         <p className="systemcard__event-title">Planned downtime:</p>
                         {downtime.map((time, i) =>
                             <div
@@ -515,7 +514,7 @@ const SystemCard = (props: Props) => {
                     </div>
                     : ''}
             </>
-        </div>
+        </div >
     )
 }
 

@@ -31,7 +31,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
-import { getTimeOption, getUser, sortArray } from '../../helpers'
+import { getDate, getTimeOption, getUser, sortArray } from '../../helpers'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -224,11 +224,6 @@ export default function Systems({ }: Props) {
     } catch (error) {
       console.error(error)
     }
-  }
-
-  const getDate = (date: Date) => {
-    return new Date(date).toLocaleString('sv-SE',
-      { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
   }
 
   const removeDowntime = async () => {
@@ -627,7 +622,7 @@ export default function Systems({ }: Props) {
               textColor='white'
               disabled={loading}
             /> : ''}
-          {!selected && showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
+          {!isMobile && showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
         </div>
         <div style={{ width: 'inherit' }} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           <DataTable

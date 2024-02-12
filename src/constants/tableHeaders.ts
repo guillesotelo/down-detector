@@ -109,7 +109,7 @@ export const systemHisrotyHeaders = [
     },
     {
         name: 'DETAILS',
-        value: 'description'
+        value: 'raw'
     },
 ]
 
