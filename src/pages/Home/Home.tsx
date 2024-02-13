@@ -12,7 +12,6 @@ import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
-import { MoonLoader } from 'react-spinners'
 import { APP_COLORS, APP_VERSION } from '../../constants/app'
 import { getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
@@ -37,8 +36,6 @@ const Home = () => {
   const [editedLogStatus, setEditedLogStatus] = useState('')
   const [editedDetails, setEditedDetails] = useState('')
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
-
-  console.log(allSystems)
   
   const chartHeight = '30vh'
   const chartWidth = '80vw'

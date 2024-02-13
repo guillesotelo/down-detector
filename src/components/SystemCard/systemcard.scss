@@ -61,7 +61,7 @@
         height: 1rem;
         width: 100%;
     }
-    
+
     &__header {
         display: flex;
         flex-direction: row;
@@ -229,7 +229,6 @@
         &-downtime {
             margin: 0;
             font-size: .7rem;
-            font-weight: bold;
             transition: .3s;
             text-align: center;
             animation: fade-in .5s ease-in-out forwards;

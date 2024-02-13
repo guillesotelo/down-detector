@@ -5,8 +5,6 @@ import { alertType, downtimeModalType, eventType, historyType, statusType, syste
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
-import PuffLoader from "react-spinners/PuffLoader"
-import Tooltip from '../Tooltip/Tooltip'
 import { getDate } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 Chart.register(...registerables);
@@ -494,8 +492,9 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161' : darkMode ?
-                                'black' : '#fcd9a5',
-                            border: isLiveDowntime(downtime[0]) ? '1px solid red' : '1px solid orange'
+                                'black' : '#fcd9a563',
+                            border: isLiveDowntime(downtime[0]) ? '1px solid red'
+                                : darkMode ? '1px solid orange' : '1px solid #ffa50069'
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
