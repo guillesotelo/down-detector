@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
-import { alertType, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
+import { alertType, dataObj, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
@@ -63,7 +63,8 @@ const SystemCard = (props: Props) => {
         name,
         reportedlyDown,
         logo,
-        raw
+        raw,
+        broadcastMessages
     } = system || {}
 
     useEffect(() => {
@@ -306,7 +307,11 @@ const SystemCard = (props: Props) => {
     }
 
     const hasPageMessage = () => {
-        return isSuper && raw?.includes('plugins/banner/static/banner.js')
+        const json = JSON.parse(broadcastMessages || '[]')
+        const banners = json && typeof json === 'string' ? JSON.parse(json) : []
+        const hasBanner = Array.isArray(banners) ? banners.filter((message: dataObj) =>
+            message.ends_at && new Date(message.ends_at).getTime() - new Date().getTime() > 0) : ''
+        return isSuper && (raw?.includes('plugins/banner/static/banner.js') || hasBanner.length)
     }
 
     const chartOptions: any = {
