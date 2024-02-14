@@ -52,6 +52,7 @@ export type systemType = {
     logo?: string
     order?: number
     bannerFlag?: string | Date | null
+    broadcastMessages?: string
 }
 
 export type eventType = {
