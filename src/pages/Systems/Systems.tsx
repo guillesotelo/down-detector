@@ -32,6 +32,7 @@ import Separator from '../../components/Separator/Separator'
 import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
 import { getDate, getTimeOption, getUser, sortArray } from '../../helpers'
+import Switch from '../../components/Switch/Swith'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -62,6 +63,8 @@ export default function Systems({ }: Props) {
   const [selectedOwners, setSelectedOwners] = useState<userType[]>([])
   const [showResponse, setShowResponse] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
+  const [isActive, setIsActive] = useState(true)
+  const [firstStatus, setFirstStatus] = useState(true)
   const { isSuper, isMobile } = useContext(AppContext)
   const user = getUser()
 
@@ -85,6 +88,8 @@ export default function Systems({ }: Props) {
       if (select.owners) setSelectedOwners(select.owners)
       if (select.alertThreshold) setSelectedThreshold(select.alertThreshold)
       if (select.alertsExpiration) setSelectedAlertExpiration(select.alertsExpiration)
+      setIsActive(select.active || false)
+      if (select.firstStatus) setFirstStatus(select.firstStatus)
     }
   }, [selected, newSystem])
 
@@ -139,6 +144,8 @@ export default function Systems({ }: Props) {
     setSelectedThreshold(3)
     setSelectedAlertExpiration(2)
     setShowResponse(false)
+    setIsActive(true)
+    setFirstStatus(true)
   }
 
   const saveChanges = async (dtArray?: systemType[]) => {
@@ -154,7 +161,9 @@ export default function Systems({ }: Props) {
         alertsExpiration: selectedAlertExpiration,
         selectedOwners,
         updatedBy: user.username || '',
-        downtimeArray: Array.isArray(dtArray) ? dtArray : downtimeArray
+        downtimeArray: Array.isArray(dtArray) ? dtArray : downtimeArray,
+        active: isActive,
+        firstStatus
       }
       if (newSystem) {
         const saved = await createSystem(systemData)
@@ -340,14 +349,24 @@ export default function Systems({ }: Props) {
                   placeholder='https://system-logo.png'
                 />}
             </div>
-            <InputField
-              label='URL'
-              name='url'
-              updateData={updateData}
-              value={data.url}
-              disabled={!isSuper}
-              placeholder='https://...'
-            />
+            <div className="systems__new-row">
+              <InputField
+                label='URL'
+                name='url'
+                updateData={updateData}
+                value={data.url}
+                disabled={!isSuper}
+                placeholder='https://...'
+              />
+              {isSuper ?
+                <Switch
+                  label='Active'
+                  value={isActive}
+                  setValue={setIsActive}
+                  on='Yes'
+                  off='No'
+                /> : ''}
+            </div>
             <div className="systems__new-row">
               {isSuper ?
                 <Dropdown
@@ -453,6 +472,14 @@ export default function Systems({ }: Props) {
                   style={{ width: '45%' }}
                   disabled={loading && addDowntime}
                 />
+                {user.email === 'test@mail.com.com' ?
+                  <Switch
+                    label='First Status'
+                    value={firstStatus}
+                    setValue={setFirstStatus}
+                    on='1'
+                    off='0'
+                  /> : ''}
               </div> : ''}
             <div className="systems__new-downtime">
               {showResponse ?

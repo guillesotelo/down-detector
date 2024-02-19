@@ -8,6 +8,7 @@ import {
 } from './user'
 
 import {
+    getActiveSystems,
     getAllSystems,
     getSystemById,
     getSystemsByOwnerId,
@@ -66,6 +67,7 @@ export {
     updateUser,
     deleteUser,
     getAllUsers,
+    getActiveSystems,
     getAllSystems,
     getSystemsByOwnerId,
     getSystemById,

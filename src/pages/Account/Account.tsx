@@ -3,7 +3,7 @@ import { AppContextType, onChangeEventType, systemType, userType } from '../../t
 import InputField from '../../components/InputField/InputField'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
-import { getAllSystems, getSystemsByOwnerId, updateUser } from '../../services'
+import { updateUser } from '../../services'
 import UserIcon from '../../assets/icons/user-icon.svg'
 import MoonLoader from "react-spinners/MoonLoader"
 import { useHistory } from 'react-router-dom'
@@ -20,14 +20,12 @@ export default function Account({ }: Props) {
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const [allSystems, setAllSystems] = useState<systemType[]>([])
   const { setIsLoggedIn, darkMode, setIsSuper, isMobile } = useContext(AppContext) as AppContextType
   const history = useHistory()
   const user = getUser()
 
   useEffect(() => {
     getUserData()
-    getSystems()
   }, [])
 
   const getUserData = () => {
@@ -41,18 +39,6 @@ export default function Account({ }: Props) {
     const value = e.target.value
     setData({ ...data, [key]: value })
     setDataIsUpdated(true)
-  }
-
-  const getSystems = async () => {
-    try {
-      setLoading(true)
-      const systems = await getAllSystems()
-      if (systems && systems.length) setAllSystems(systems)
-      setLoading(false)
-    } catch (error) {
-      console.error(error)
-      setLoading(false)
-    }
   }
 
   const discardChanges = () => {

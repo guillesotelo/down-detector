@@ -5,7 +5,7 @@ import { alertType, dataObj, downtimeModalType, eventType, historyType, statusTy
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
-import { getDate } from '../../helpers'
+import { getDate, getDateWithGivenHour } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 Chart.register(...registerables);
 
@@ -64,7 +64,8 @@ const SystemCard = (props: Props) => {
         reportedlyDown,
         logo,
         raw,
-        broadcastMessages
+        broadcastMessages,
+        firstStatus
     } = system || {}
 
     useEffect(() => {
@@ -167,14 +168,16 @@ const SystemCard = (props: Props) => {
         const reportedHours: string[] = []
 
         alerts?.forEach((el: alertType) => {
-            const date = new Date(el.createdAt || new Date())
-            date.setMinutes(0)
-            date.setSeconds(0)
-            reportedHours.push(date.toLocaleString())
+            if (el.createdAt) {
+                const date = new Date(el.createdAt)
+                date.setMinutes(0)
+                date.setSeconds(0)
+                reportedHours.push(date.toLocaleString())
+            }
         })
 
-        let twoWeeksSet = processHistoryByHours(336) // two weeks = 336 hours
-        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 23, 0)) // take the last 24 hours for cards
+        let twoWeeksSet = processSet(336) // Two weeks = 336 h
+        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 24, 0)) // take the last 24 hours for cards
 
         setLastDayData(lastDaySet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
@@ -183,92 +186,82 @@ const SystemCard = (props: Props) => {
             return item
         }))
 
-        twoWeeksSet = twoWeeksSet.map(item => {
+        setCompleteData(twoWeeksSet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
                 return { ...item, reported: true }
             }
             return item
-        })
+        }))
 
-        setCompleteData(twoWeeksSet)
         setLoading(false)
     }
 
-    const processHistoryByHours = (hours: number = 0) => {
-        /* This is the main functions that processes the 
-        complete system history based on the number of hours 
-        passed as parameter. It creates a map of values with 
-        the date and the status as key-value pairs for fast 
-        indexing. */
-        const allHours = new Map() // The complete system history with exact dates and status
-        const flattenHours = new Map() // The complete system history with flatten dates (0 min, 0 sec) and status
+    const processSet = (hourSet: number = 336) => {
+        if (!history || !history.length) return []
+        const firstRegister = history[history.length - 1]
+        const lastRegister = history[0]
+        const lastStatus = lastRegister.status ? 1 : 0
+        const firstTime = new Date(firstRegister.createdAt || new Date())
+        const lastTime = new Date(lastRegister.createdAt || new Date())
+        firstTime.setMinutes(0)
+        firstTime.setSeconds(0)
+        lastTime.setMinutes(0)
+        lastTime.setSeconds(0)
 
-        // Construct hour maps iterating the history
-        let lastItem = {}
-        history?.forEach((el: historyType) => {
-            if (el.createdAt) {
-                const hour = new Date(el.createdAt)
-                const flatten = new Date(el.createdAt)
-                flatten.setMinutes(0)
-                flatten.setSeconds(0)
+        const allHours = new Map()
+        history.reverse().forEach(register => {
+            const time = new Date(register.createdAt || new Date)
+            time.setMinutes(0)
+            time.setSeconds(0)
 
-                if (flattenHours.has(flatten.toLocaleString())) {
-                    // Check if there's more than 3 minutes between records to take them in account
-                    const lastItemTime = new Date(Object.keys(lastItem)[0]).getTime()
-                    const currentTime = hour.getTime()
-                    if (currentTime - lastItemTime > 180000) {
-                        allHours.set(hour.toLocaleString(), el.status ? 1 : 0)
-                        flattenHours.set(flatten.toLocaleString(), el.status ? 1 : 0)
-                        lastItem = { [hour.toLocaleString()]: el.status ? 1 : 0 }
-                    }
-                } else {
-                    allHours.set(hour.toLocaleString(), el.status ? 1 : 0)
-                    flattenHours.set(flatten.toLocaleString(), el.status ? 1 : 0)
-                    lastItem = { [hour.toLocaleString()]: el.status ? 1 : 0 }
+            if (allHours.get(time.toLocaleString())) {
+                // If the hour is already registered, we decide which one stays 
+                // based on how much time has passed (>3 mins)
+                const currentTime = new Date(register.createdAt || new Date()).getTime()
+                const prevTime = new Date(allHours.get(time.toLocaleString()).createdAt || new Date()).getTime()
+
+                // If new status is UP in short time, we overwrite. 
+                // We just overwrite with DOWN when more than 3 minutes passed.
+                if (register.status || currentTime - prevTime > 180000) {
+                    allHours.set(
+                        time.toLocaleString(),
+                        { ...register, status: register.status ? 1 : 0 }
+                    )
                 }
-            }
-        })
-
-        const getDateWithGivenHour = (hour: number) => {
-            /* Build dates with given hours passed */
-            const today = new Date()
-            today.setMinutes(0)
-            today.setSeconds(0)
-            today.setHours(today.getHours() - hour)
-            return today.toLocaleString()
-        }
-
-        // Build datasets with given hour maps and registered statuses
-        let previousStatus = 0
-        const dataset = Array.from({ length: hours }).map((_, i) => {
-            let status = 0
-            const entriesArray = Array.from(allHours.entries())
-            const firstDate = entriesArray && entriesArray.length ? entriesArray[entriesArray.length - 1][0] : ''
-            const lastDate = allHours.keys().next().value
-
-            const item = {
-                status,
-                time: getDateWithGivenHour(hours - i - 1)
-            }
-
-            // Copy all status from the left to the first registered
-            if (new Date(item.time).getTime() <= new Date(firstDate).getTime()) {
-                item.status = allHours.get(firstDate)
-                previousStatus = allHours.get(firstDate)
-                // Copy all status to the right from the last registered
-            } else if (new Date(item.time).getTime() >= new Date(lastDate).getTime()) {
-                item.status = allHours.get(lastDate)
-                previousStatus = allHours.get(lastDate)
             } else {
-                const currentDate = item.time.toLocaleString()
-                if (flattenHours.has(currentDate)) {
-                    item.status = flattenHours.get(currentDate)
-                    previousStatus = flattenHours.get(currentDate)
-                } else item.status = previousStatus
+                allHours.set(
+                    time.toLocaleString(),
+                    { ...register, status: register.status ? 1 : 0 }
+                )
             }
-            return item
         })
-        return dataset
+
+        let prevStatus = 1
+        const set = Array.from({ length: hourSet }).map((_, i) => {
+            const time = getDateWithGivenHour(hourSet - i)
+            let status = firstStatus ? 1 : 0
+
+            if (new Date(time).getTime() <= new Date(firstTime).getTime()) {
+                // Copy all status from the left to the first registered
+                if (allHours.get(firstTime)) status = allHours.get(firstTime).status
+            }
+            else if (new Date(time).getTime() >= new Date(lastTime).getTime()) {
+                status = lastStatus
+            }
+            else if (allHours.get(time)) {
+                const register = allHours.get(time)
+                status = register.status
+                prevStatus = register.status
+            }
+            // Copy status in between registered statuses
+            else status = prevStatus
+
+            return {
+                time,
+                status
+            }
+        })
+        return set
     }
 
     const getDowntime = (event: eventType) => {
