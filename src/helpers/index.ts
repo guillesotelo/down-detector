@@ -90,6 +90,15 @@ export const getUser = () => localStorage.getItem('user') ? JSON.parse(localStor
 
 export const getDate = (date: Date | number | string | undefined) => {
     return date ? new Date(date).toLocaleString('sv-SE',
-      { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-      : 'No date'
-  }
+        { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+        : 'No date'
+}
+
+export const getDateWithGivenHour = (hour: number) => {
+    /* Build dates with given hours passed */
+    const today = new Date()
+    today.setMinutes(0)
+    today.setSeconds(0)
+    today.setHours(today.getHours() - hour)
+    return today.toLocaleString()
+}

@@ -21,16 +21,16 @@
     }
 
     &__row {
-        width: 4.5rem;
+        width: 4rem;
         height: 2rem;
         display: flex;
         flex-direction: row;
         align-items: center;
         position: relative;
-        border-radius: 1rem;
+        border-radius: 2rem;
         transition: .3s;
         border: 1px solid gray;
-        padding: .2rem;
+        padding: .2rem .25rem;
     }
 
     &__label {
@@ -50,7 +50,7 @@
     }
 
     &__on {
-        width: 2.25rem;
+        width: 2rem;
         height: 2rem;
         font-size: .9rem;
         text-align: center;
@@ -64,7 +64,7 @@
     }
 
     &__off {
-        width: 2.25rem;
+        width: 2rem;
         height: 2rem;
         font-size: .9rem;
         text-align: center;
@@ -79,12 +79,12 @@
 
     &__slider {
         &--off {
-            width: 2.25rem;
+            width: 2rem;
             height: 2rem;
             line-height: 2rem;
             background-color: #53565a;
             border: 1px solid #787878;
-            border-radius: 1rem;
+            border-radius: 2rem;
             position: absolute;
             transform: translateX(-5%);
             transition: .3s;
@@ -95,12 +95,12 @@
         }
 
         &--on {
-            width: 2.25rem;
+            width: 2rem;
             height: 2rem;
             line-height: 2rem;
             background-color: #53565a;
             border: 1px solid #787878;
-            border-radius: 1rem;
+            border-radius: 2rem;
             position: absolute;
             transform: translateX(95%);
             transition: .3s;

@@ -12,9 +12,16 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
+const getActiveSystems = async () => {
+    try {
+        const systems = await axios.get(`${API_URL}/api/system/getActive`, { params: { _id: getUser()._id }, headers: getHeaders() })
+        return systems.data
+    } catch (err) { console.log(err) }
+}
+
 const getAllSystems = async () => {
     try {
-        const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: getUser()._id }, headers: getHeaders() })
+        const systems = await axios.get(`${API_URL}/api/system/getAll`, { headers: getHeaders() })
         return systems.data
     } catch (err) { console.log(err) }
 }
@@ -62,6 +69,7 @@ const deleteSystem = async (data: systemType) => {
 }
 
 export {
+    getActiveSystems,
     getAllSystems,
     getSystemsByOwnerId,
     createSystem,

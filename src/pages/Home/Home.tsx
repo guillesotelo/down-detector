@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getAllSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -103,7 +103,7 @@ const Home = () => {
 
   const getSystems = async () => {
     try {
-      let systems = await getAllSystems()
+      let systems = await getActiveSystems()
       if (systems && Array.isArray(systems)) {
         setAllSystems(sortArray(systems, 'order'))
       }
