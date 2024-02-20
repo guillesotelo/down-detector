@@ -73,7 +73,8 @@ export type historyType = {
     _id?: string
     url?: string
     systemId?: string
-    status?: boolean
+    status?: boolean | string
+    message?: string
     description?: string
     createdAt?: Date
     updatedAt?: Date

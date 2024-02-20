@@ -26,10 +26,11 @@ export default function Users({ }: Props) {
   const [tableData, setTableData] = useState<userType[]>([])
   const [allSystems, setAllSystems] = useState<systemType[]>([])
   const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
-  const { darkMode, isSuper } = useContext(AppContext)
+  const { isLoggedIn, isSuper } = useContext(AppContext)
   const history = useHistory()
 
   useEffect(() => {
+    if (!isLoggedIn) return history.push('/')
     loadData()
   }, [])
 
@@ -203,7 +204,7 @@ export default function Users({ }: Props) {
               updateData={updateData}
               value={data.username}
               placeholder='Mikael Bloom'
-              />
+            />
             <InputField
               label='Email'
               name='email'

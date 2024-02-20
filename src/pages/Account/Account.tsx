@@ -20,11 +20,12 @@ export default function Account({ }: Props) {
   const [loggedOut, setLoggedOut] = useState(false)
   const [dataIsUpdated, setDataIsUpdated] = useState(false)
   const [edit, setEdit] = useState(false)
-  const { setIsLoggedIn, darkMode, setIsSuper, isMobile } = useContext(AppContext) as AppContextType
+  const { isLoggedIn, setIsLoggedIn, darkMode, setIsSuper, isMobile } = useContext(AppContext) as AppContextType
   const history = useHistory()
   const user = getUser()
 
   useEffect(() => {
+    if (!isLoggedIn) return history.push('/')
     getUserData()
   }, [])
 
@@ -166,14 +167,14 @@ export default function Account({ }: Props) {
           }
 
           {edit ?
-              <Button
-                label='Logout'
-                handleClick={logout}
-                disabled={loggedOut}
-                bgColor={APP_COLORS.BLUE_TWO}
-                textColor='white'
-                style={{ width: '100%' }}
-              />
+            <Button
+              label='Logout'
+              handleClick={logout}
+              disabled={loggedOut}
+              bgColor={APP_COLORS.BLUE_TWO}
+              textColor='white'
+              style={{ width: '100%' }}
+            />
             :
             <div className="account__details-row">
               <Button

@@ -89,6 +89,10 @@ export const hisrotyHeaders = [
         value: 'createdBy'
     },
     {
+        name: 'MESSAGE',
+        value: 'message'
+    },
+    {
         name: 'DETAILS',
         value: 'description'
     },
@@ -109,7 +113,7 @@ export const systemHisrotyHeaders = [
     },
     {
         name: 'DETAILS',
-        value: 'raw'
+        value: 'description'
     },
 ]
 

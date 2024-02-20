@@ -91,3 +91,21 @@
         transform: translateY(-10%);
     }
 }
+
+@keyframes bg-in-out {
+    0% {
+        background-color: rgba(0, 128, 0, 0);
+    }
+
+    25% {
+        background-color: rgba(0, 128, 0, 0.261);
+    }
+
+    60% {
+        background-color: rgba(0, 128, 0, 0.261);
+    }
+
+    100% {
+        background-color: rgba(0, 128, 0, 0);
+    }
+}

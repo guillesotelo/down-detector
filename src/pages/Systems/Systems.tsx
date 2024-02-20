@@ -33,6 +33,7 @@ import { AppContext } from '../../AppContext'
 import { APP_COLORS } from '../../constants/app'
 import { getDate, getTimeOption, getUser, sortArray } from '../../helpers'
 import Switch from '../../components/Switch/Swith'
+import { useHistory } from 'react-router-dom'
 type Props = {}
 
 export default function Systems({ }: Props) {
@@ -65,13 +66,19 @@ export default function Systems({ }: Props) {
   const [showTooltip, setShowTooltip] = useState(false)
   const [isActive, setIsActive] = useState(true)
   const [firstStatus, setFirstStatus] = useState(true)
-  const { isSuper, isMobile } = useContext(AppContext)
+  const { isLoggedIn, isSuper, isMobile } = useContext(AppContext)
+  const history = useHistory()
   const user = getUser()
+
+  useEffect(() => {
+    if (!isLoggedIn) history.push('/')
+  }, [])
 
   useEffect(() => {
     getSystems()
     getUsers()
   }, [isSuper])
+
 
   useEffect(() => {
     if (selected !== -1 || newSystem) document.body.style.overflow = 'hidden'

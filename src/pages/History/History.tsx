@@ -1,9 +1,11 @@
-import { useEffect, useState, useTransition } from 'react'
+import { useContext, useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
 import { getHistoryAndAlerts } from '../../helpers'
 import { historyType, logType, onChangeEventType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import { useHistory } from 'react-router-dom'
+import { AppContext } from '../../AppContext'
 
 type Props = {}
 
@@ -13,8 +15,11 @@ export default function History({ }: Props) {
     const [tableData, setTableData] = useState<historyType[]>([])
     const [filteredData, setFilteredData] = useState<historyType[]>([])
     const [pending, startTransition] = useTransition()
+    const { isLoggedIn } = useContext(AppContext)
+    const history = useHistory()
 
     useEffect(() => {
+        if (!isLoggedIn) return history.push('/')
         getHistory()
     }, [])
 

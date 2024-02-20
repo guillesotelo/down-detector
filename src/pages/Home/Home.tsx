@@ -15,6 +15,8 @@ import { toast } from 'react-toastify'
 import { APP_COLORS, APP_VERSION } from '../../constants/app'
 import { getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import LiveIcon from '../../assets/icons/live.svg'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -35,8 +37,9 @@ const Home = () => {
   const [editLog, setEditLog] = useState(false)
   const [editedLogStatus, setEditedLogStatus] = useState('')
   const [editedDetails, setEditedDetails] = useState('')
+  const [countdownKey, setCountdownKey] = useState(0)
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
-  
+
   const chartHeight = '30vh'
   const chartWidth = '80vw'
 
@@ -52,7 +55,6 @@ const Home = () => {
       setLoading(true)
       getSystems()
       getAllStatus()
-      getAllUserAlerts()
       getAllDownTimes()
       setLoading(false)
     }
@@ -61,7 +63,11 @@ const Home = () => {
   useEffect(() => {
     setHeaderLoading(true)
     loadData()
-    const intervalId = setInterval(() => loadData(), 1 * 60 * 1000)
+    const intervalId = setInterval(() => {
+      loadData()
+      setAllSystems([])
+      getSystems()
+    }, 1 * 60 * 1000)
     return () => clearInterval(intervalId)
   }, [loadData])
 
@@ -87,6 +93,19 @@ const Home = () => {
         if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
         return 1
       })
+      .reverse()
+      .map((item, i, arr) => {
+        const currentStatus = item.status
+        const currentTime = new Date(item.createdAt || new Date()).getTime()
+        const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+        const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+        if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
+          item.status = 'BUSY'
+        }
+        return item
+      })
+      .reverse()
+
     setStatusAndAlerts(statusAndAlertsByID)
   }
 
@@ -118,13 +137,6 @@ const Home = () => {
       if (history && Array.isArray(history)) {
         setAllStatus(history)
       }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const getAllUserAlerts = async () => {
-    try {
       let alerts = await getAllAlerts()
       if (alerts && Array.isArray(alerts)) {
         setAllAlerts(alerts)
@@ -212,7 +224,7 @@ const Home = () => {
   }
 
   const getHistoryBySystem = (system: systemType) => {
-    return allStatus.filter((history: alertType) => history.systemId === system._id)
+    return allStatus.filter((history: historyType) => history.systemId === system._id)
   }
 
   const updateData = (key: string, e: onChangeEventType) => {
@@ -416,8 +428,8 @@ const Home = () => {
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
                 'transparent' : '#ffdada' : darkMode ?
-                'transparent' : '#fcd9a5',
-              border: isLiveDowntime() ? '1px solid red' : '1px solid orange'
+                'transparent' : '#fcd9a59e',
+              border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
@@ -495,7 +507,16 @@ const Home = () => {
           <h2
             className="systemcard__status"
             style={{ color: getSystemData(selected, 'reportedlyDown') ? 'orange' : getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
-            ● &nbsp;Current status: <strong>{getSystemData(selected, 'reportedlyDown') ? 'Problem' : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
+            <img
+              style={{
+                filter: getSystemData(selected, 'reportedlyDown') ? 'orange' :
+                  getCurrentStatus(getSelectedSystem()) ?
+                    'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
+                    'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
+              }}
+              src={LiveIcon}
+              alt="Live"
+              className="systemcard__status-live" />&nbsp;&nbsp;Current status:&nbsp;<strong>{getSystemData(selected, 'reportedlyDown') ? 'Problem' : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
           </h2>
           {getLastCheck(getSelectedSystem()) ?
             <p
@@ -575,14 +596,39 @@ const Home = () => {
           : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{
-          filter: showDowntime || report || selected ? 'blur(6px)' : ''
-        }}
+        style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
       >
         {renderSystemList()}
       </div>
-      {!isLoggedIn ? <p className="home__app-version">{APP_VERSION}</p> : ''}
-    </div>
+        <div
+          style={{
+            filter: showDowntime || report || selected ? 'blur(6px)' : '',
+            animation: showDowntime || report || selected ? 'none' : '',
+            right: isLoggedIn ? '1rem' : 'unset',
+            left: isLoggedIn ? 'unset' : '1rem'
+          }}
+          className="home__countdown">
+          <CountdownCircleTimer
+            key={countdownKey}
+            isPlaying
+            duration={60}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[60, 15, 5, 0]}
+            size={25}
+            strokeWidth={2}
+            onComplete={() => setCountdownKey(prev => prev + 1)}
+          >
+            {({ remainingTime }) => <p style={{ fontSize: '.8rem' }}>{remainingTime}</p>}
+          </CountdownCircleTimer>
+        </div>
+      {!isLoggedIn ?
+        <p
+          style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
+          className="home__app-version">
+          {APP_VERSION}
+        </p>
+        : ''}
+    </div >
   )
 }
 

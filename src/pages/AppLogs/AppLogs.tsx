@@ -16,10 +16,11 @@ export default function AppLogs({ }: Props) {
   const [tableData, setTableData] = useState<logType[]>([])
   const [filteredData, setFilteredData] = useState<logType[]>([])
   const [pending, startTransition] = useTransition()
-  const { isSuper } = useContext(AppContext)
+  const { isLoggedIn, isSuper } = useContext(AppContext)
   const history = useHistory()
 
   useEffect(() => {
+    if (!isLoggedIn) return history.push('/')
     verifyUser()
     getHistory()
   }, [])
