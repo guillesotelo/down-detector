@@ -164,6 +164,7 @@
 
     &__app-version {
         margin: 0;
+        font-size: .9rem;
         color: gray;
         position: absolute;
         bottom: 1rem;
@@ -171,6 +172,16 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+
+    &__countdown {
+        position: absolute;
+        bottom: 1rem;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-radius: 50%;
+        // animation: bg-in-out 3s ease-in-out infinite;
     }
 }
 

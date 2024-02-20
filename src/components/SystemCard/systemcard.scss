@@ -90,6 +90,7 @@
         font-weight: normal;
         white-space: nowrap;
         margin: 0;
+        display: flex;
 
         &-caption {
             margin: 0;
@@ -102,6 +103,12 @@
 
         &-dot {
             animation: fade-in-out 1.5s ease-in-out infinite;
+        }
+
+        &-live {
+            height: 1rem;
+            align-self: flex-end;
+            filter: invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%);
         }
     }
 

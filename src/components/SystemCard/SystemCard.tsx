@@ -5,8 +5,9 @@ import { alertType, dataObj, downtimeModalType, eventType, historyType, statusTy
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { APP_COLORS } from '../../constants/app'
-import { getDate, getDateWithGivenHour } from '../../helpers'
+import { getDate, getDateWithGivenHour, sortArray } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
+import LiveIcon from '../../assets/icons/live.svg'
 Chart.register(...registerables);
 
 type Props = {
@@ -34,7 +35,7 @@ const SystemCard = (props: Props) => {
     const [completeChartData, setCompleteChartData] = useState<any>({ datasets: [{}], labels: [''] })
     const [loading, setLoading] = useState(true)
     const [showMoreDowntime, setShowMoreDowntime] = useState(false)
-    const [status, setStatus] = useState<boolean | null | undefined>(null)
+    const [status, setStatus] = useState<boolean | null | string | undefined>(null)
     const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
 
     const chartHeight = '30vw'
@@ -95,15 +96,13 @@ const SystemCard = (props: Props) => {
                 {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
+                    segment: {
+                        borderColor: (ctx: any) => lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ?
+                            'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                    },
                     tension: .4,
                     borderWidth: 4,
                     pointBorderWidth: 0,
-                    tooltips: {
-                        callbacks: {
-                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
-                        }
-                    },
                 }
             ]
         })
@@ -130,15 +129,13 @@ const SystemCard = (props: Props) => {
                 {
                     data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
-                    borderColor: reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red',
+                    segment: {
+                        borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ?
+                            'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                    },
                     tension: .4,
                     pointBorderWidth: 0,
-                    borderWidth: 4,
-                    tooltips: {
-                        callbacks: {
-                            label: (tooltipItem: any) => tooltipItem === 1 ? 'UP' : 'DOWN'
-                        }
-                    },
+                    borderWidth: 3,
                 }
             ]
         })
@@ -177,7 +174,7 @@ const SystemCard = (props: Props) => {
         })
 
         let twoWeeksSet = processSet(336) // Two weeks = 336 h
-        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 24, 0)) // take the last 24 hours for cards
+        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 25, 0)) // take the last 24 hours for cards
 
         setLastDayData(lastDaySet.map(item => {
             if (reportedHours.includes(item.time.toLocaleString())) {
@@ -198,8 +195,9 @@ const SystemCard = (props: Props) => {
 
     const processSet = (hourSet: number = 336) => {
         if (!history || !history.length) return []
-        const firstRegister = history[history.length - 1]
         const lastRegister = history[0]
+        const firstRegister = history[history.length - 1]
+        const firstStatus = firstRegister.status ? 1 : 0
         const lastStatus = lastRegister.status ? 1 : 0
         const firstTime = new Date(firstRegister.createdAt || new Date())
         const lastTime = new Date(lastRegister.createdAt || new Date())
@@ -209,58 +207,119 @@ const SystemCard = (props: Props) => {
         lastTime.setSeconds(0)
 
         const allHours = new Map()
-        history.reverse().forEach(register => {
-            const time = new Date(register.createdAt || new Date)
-            time.setMinutes(0)
-            time.setSeconds(0)
-
-            if (allHours.get(time.toLocaleString())) {
-                // If the hour is already registered, we decide which one stays 
-                // based on how much time has passed (>3 mins)
+        // We reverse so we check from old -> new registers
+        history.reverse()
+            .map((item, i, arr) => {
+                const currentStatus = item.status
+                const currentTime = new Date(item.createdAt || new Date()).getTime()
+                const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+                const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+                if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
+                    item.status = 'BUSY'
+                }
+                return item
+            })
+            .forEach((register, i, arr) => {
+                const time = new Date(register.createdAt || new Date)
+                time.setMinutes(0)
+                time.setSeconds(0)
                 const currentTime = new Date(register.createdAt || new Date()).getTime()
-                const prevTime = new Date(allHours.get(time.toLocaleString()).createdAt || new Date()).getTime()
 
-                // If new status is UP in short time, we overwrite. 
-                // We just overwrite with DOWN when more than 3 minutes passed.
-                if (register.status || currentTime - prevTime > 180000) {
+                if (allHours.get(time.toLocaleString())) {
+                    // If the hour is already registered, we decide which one stays 
+                    // based on how much time has passed (>3 mins)
+                    const prevTime = new Date(allHours.get(time.toLocaleString()).createdAt || new Date()).getTime()
+
+                    // We check if the next hour, but not more that 3 minutes after, the status changed
+                    const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+                    if (nextTime && (nextTime - currentTime < 180000) && arr[i + 1].status !== register.status) {
+                        allHours.set(
+                            time.toLocaleString(),
+                            { ...register, status: arr[i + 1].status ? 1 : 0 }
+                        )
+                    }
+                    // If less than 3 minutes passed, we overwrite the hour status.
+                    else if (
+                        // register.status || 
+                        currentTime - prevTime < 180000) {
+                        allHours.set(
+                            time.toLocaleString(),
+                            { ...register, status: register.status ? 1 : 0 }
+                        )
+                    } else {
+                        // On the other hand, if time with next register is more than one hour, we add a new register 
+                        // as the next -unexistent- hour with the previous status to compensate the overwrite 
+                        // (otherwise it would show DOWN or UP until the next register)
+                        const nextRegisteredHour = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+                        const currentHour = new Date(register.createdAt || new Date()).getTime()
+                        if (nextRegisteredHour && nextRegisteredHour - currentHour > 3600000) {
+                            const nextHour = new Date(register.createdAt || new Date())
+                            nextHour.setHours(nextHour.getHours() + 1)
+                            nextHour.setMinutes(0)
+                            nextHour.setSeconds(0)
+                            allHours.set(
+                                nextHour.toLocaleString(),
+                                { ...register, createdAt: nextHour, status: register.status ? 1 : 0 }
+                            )
+                        }
+                    }
+                } else {
                     allHours.set(
                         time.toLocaleString(),
                         { ...register, status: register.status ? 1 : 0 }
                     )
                 }
-            } else {
-                allHours.set(
-                    time.toLocaleString(),
-                    { ...register, status: register.status ? 1 : 0 }
-                )
-            }
-        })
+            })
 
         let prevStatus = 1
-        const set = Array.from({ length: hourSet }).map((_, i) => {
+        // We add 2 hours to the set to render the full 24 hours in graph
+        const set = Array.from({ length: hourSet + 2 }).map((_, i) => {
             const time = getDateWithGivenHour(hourSet - i)
-            let status = firstStatus ? 1 : 0
+            let status = lastStatus ? 1 : 0
+            let unknown = false
 
-            if (new Date(time).getTime() <= new Date(firstTime).getTime()) {
+            if (allHours.size > 1) {
+                // now < before === true
+                // Copy all status from the right to the last registered
+                if (new Date(time).getTime() > new Date(lastTime).getTime()) {
+                    if (allHours.get(lastTime)) status = allHours.get(lastTime).status
+                }
                 // Copy all status from the left to the first registered
-                if (allHours.get(firstTime)) status = allHours.get(firstTime).status
+                else if (new Date(time).getTime() < new Date(firstTime).getTime()) {
+                    // status = firstStatus
+                    // Other idea is putting unkown status (0.5) before the first register
+                    unknown = true
+                }
+                else if (allHours.get(time)) {
+                    const register = allHours.get(time)
+                    status = register.status
+                    prevStatus = register.status
+                }
+                // Copy status in between registered statuses
+                else status = prevStatus
+            } else {
+                status = allHours.values().next().value.status
+                if (new Date(time).getTime() < new Date(firstTime).getTime()) {
+                    unknown = true
+                }
             }
-            else if (new Date(time).getTime() >= new Date(lastTime).getTime()) {
-                status = lastStatus
-            }
-            else if (allHours.get(time)) {
-                const register = allHours.get(time)
-                status = register.status
-                prevStatus = register.status
-            }
-            // Copy status in between registered statuses
-            else status = prevStatus
 
-            return {
+            const itemStatus = {
                 time,
-                status
+                status,
+                unknown
             }
+
+            return itemStatus
         })
+
+        // console.log('\n\n')
+        // console.log(name)
+        // console.log('allHours', allHours)
+        // console.log('set', set)
+        // console.log('firstRegister', firstRegister)
+        // console.log('lastRegister', lastRegister)
+
         return set
     }
 
@@ -295,7 +354,7 @@ const SystemCard = (props: Props) => {
     }
 
     const getCurrentStatus = (system: systemType | undefined) => {
-        const lastHistory: historyType | null = history ? history.find((status: eventType) => status.systemId === system?._id) || null : null
+        const lastHistory: historyType | null = history ? sortArray(history, 'createdAt', true).find((status: eventType) => status.systemId === system?._id) || null : null
         return lastHistory ? lastHistory.status : null
     }
 
@@ -329,11 +388,14 @@ const SystemCard = (props: Props) => {
                         const label = ctx.dataset.label || ''
                         if (lastDayData[ctx.dataIndex] && lastDayData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
-                        return lastDayData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                        return lastDayData[ctx.dataIndex].unknown ? 'Not registered' :
+                            lastDayData[ctx.dataIndex].status ? 'UP' : 'DOWN'
                     },
                     labelColor: (ctx: any) => {
                         return {
-                            backgroundColor: lastDayData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' : lastDayData[ctx.dataIndex].status ? 'green' : 'red',
+                            backgroundColor: lastDayData[ctx.dataIndex].unknown ? 'gray' :
+                                lastDayData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
+                                    lastDayData[ctx.dataIndex].status ? 'green' : 'red',
                             borderWidth: 0,
                             borderRadius: 5,
                         }
@@ -390,11 +452,14 @@ const SystemCard = (props: Props) => {
                         const label = ctx.dataset.label || ''
                         if (completeData[ctx.dataIndex] && completeData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
-                        return completeData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                        return completeData[ctx.dataIndex].unknown ? 'Not registered' :
+                            completeData[ctx.dataIndex].status ? 'UP' : 'DOWN'
                     },
                     labelColor: (ctx: any) => {
                         return {
-                            backgroundColor: completeData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' : completeData[ctx.dataIndex].status ? 'green' : 'red',
+                            backgroundColor: completeData[ctx.dataIndex].unknown ? 'gray' :
+                                completeData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
+                                    completeData[ctx.dataIndex].status ? 'green' : 'red',
                             borderWidth: 0,
                             borderRadius: 5,
                         }
@@ -455,7 +520,7 @@ const SystemCard = (props: Props) => {
                         <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
                         {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
-                    {loading || (status !== false && status !== true) ?
+                    {loading || (status !== false && status !== true && status !== 'BUSY') ?
                         SystemCardPlaceholderBlock(darkMode)
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
@@ -465,9 +530,18 @@ const SystemCard = (props: Props) => {
                         <h2
                             className="systemcard__status"
                             style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
-                            {loading || (status !== false && status !== true) ? <p style={{ color: 'gray' }}>Checking status...</p> :
+                            {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
-                                    <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>●</span>
+                                    <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>
+                                        <img 
+                                        style={{
+                                            filter: reportedlyDown ? 'orange' : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' : 
+                                            'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
+                                        }}
+                                        src={LiveIcon} 
+                                        alt="Live" 
+                                        className="systemcard__status-live" />
+                                    </span>
                                     &nbsp;&nbsp;Status:&nbsp;
                                     <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}
                                     </strong>
@@ -490,9 +564,9 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161' : darkMode ?
-                                'black' : '#fcd9a563',
+                                'black' : '#fcd9a59e',
                             border: isLiveDowntime(downtime[0]) ? '1px solid red'
-                                : darkMode ? '1px solid orange' : '1px solid #ffa50069'
+                                : darkMode ? '1px solid orange' : '1px solid transparent'
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
