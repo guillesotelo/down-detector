@@ -156,7 +156,7 @@ export default function DataTable(props: Props) {
                     style={{
                         backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
                             : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                        animation: `fade-in ${(i + 10 - maxItems) / 10}s ease-in forwards`
+                        animation: `fade-in ${(i + (max || 10) + 10 - maxItems) / 10}s ease-in forwards`
                     }}>
                     {tableHeaders.map((header: dataObj, j: number) =>
                         <h4
@@ -209,7 +209,7 @@ export default function DataTable(props: Props) {
                                                 style={{
                                                     backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
                                                         : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                                                    animation: `fade-in ${(i + 10 - maxItems) / 10}s ease-in forwards`
+                                                    animation: `fade-in ${(i + (max || 10) + 10 - maxItems) / 10}s ease-in forwards`
                                                 }}>
                                                 {tableHeaders.map((header: dataObj, j: number) =>
                                                     <h4

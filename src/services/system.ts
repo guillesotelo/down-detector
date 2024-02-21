@@ -21,7 +21,7 @@ const getActiveSystems = async () => {
 
 const getAllSystems = async () => {
     try {
-        const systems = await axios.get(`${API_URL}/api/system/getAll`, { headers: getHeaders() })
+        const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: getUser()._id }, headers: getHeaders() })
         return systems.data
     } catch (err) { console.log(err) }
 }
