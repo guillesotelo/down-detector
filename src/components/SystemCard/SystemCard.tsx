@@ -360,10 +360,11 @@ const SystemCard = (props: Props) => {
 
     const hasPageMessage = () => {
         const json = JSON.parse(broadcastMessages || '[]')
-        const banners = json && typeof json === 'string' ? JSON.parse(json) : []
-        const hasBanner = Array.isArray(banners) ? banners.filter((message: dataObj) =>
-            message.ends_at && new Date(message.ends_at).getTime() - new Date().getTime() > 0) : ''
-        return isSuper && (raw?.includes('plugins/banner/static/banner.js') || hasBanner.length)
+        const banners = Array.isArray(json) ? json.filter((message: dataObj) =>
+            message.active && new Date(message.ends_at).getTime() - new Date().getTime() > 0) : []
+        const gerritMessage = name?.toLocaleLowerCase().includes('gerrit') && raw?.includes('plugins/banner/static/banner.js')
+        const gitLabMessage = name?.toLocaleLowerCase().includes('gitlab') && banners.length
+        return isSuper && (gerritMessage || gitLabMessage)
     }
 
     const chartOptions: any = {
@@ -533,14 +534,14 @@ const SystemCard = (props: Props) => {
                             {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
                                     <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>
-                                        <img 
-                                        style={{
-                                            filter: reportedlyDown ? 'orange' : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' : 
-                                            'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
-                                        }}
-                                        src={LiveIcon} 
-                                        alt="Live" 
-                                        className="systemcard__status-live" />
+                                        <img
+                                            style={{
+                                                filter: reportedlyDown ? 'orange' : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
+                                                    'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
+                                            }}
+                                            src={LiveIcon}
+                                            alt="Live"
+                                            className="systemcard__status-live" />
                                     </span>
                                     &nbsp;&nbsp;Status:&nbsp;
                                     <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}

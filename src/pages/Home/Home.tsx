@@ -99,6 +99,7 @@ const Home = () => {
         const currentTime = new Date(item.createdAt || new Date()).getTime()
         const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
         const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+        // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
         if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
           item.status = 'BUSY'
         }
@@ -600,27 +601,27 @@ const Home = () => {
       >
         {renderSystemList()}
       </div>
-        <div
-          style={{
-            filter: showDowntime || report || selected ? 'blur(6px)' : '',
-            animation: showDowntime || report || selected ? 'none' : '',
-            right: isLoggedIn ? '1rem' : 'unset',
-            left: isLoggedIn ? 'unset' : '1rem'
-          }}
-          className="home__countdown">
-          <CountdownCircleTimer
-            key={countdownKey}
-            isPlaying
-            duration={60}
-            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-            colorsTime={[60, 15, 5, 0]}
-            size={25}
-            strokeWidth={2}
-            onComplete={() => setCountdownKey(prev => prev + 1)}
-          >
-            {({ remainingTime }) => <p style={{ fontSize: '.8rem' }}>{remainingTime}</p>}
-          </CountdownCircleTimer>
-        </div>
+      <div
+        style={{
+          filter: showDowntime || report || selected ? 'blur(6px)' : '',
+          animation: showDowntime || report || selected ? 'none' : '',
+          right: isLoggedIn ? '1rem' : 'unset',
+          left: isLoggedIn ? 'unset' : '1rem'
+        }}
+        className="home__countdown">
+        <CountdownCircleTimer
+          key={countdownKey}
+          isPlaying
+          duration={60}
+          colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+          colorsTime={[60, 15, 5, 0]}
+          size={25}
+          strokeWidth={2}
+          onComplete={() => setCountdownKey(prev => prev + 1)}
+        >
+          {({ remainingTime }) => <p style={{ fontSize: '.8rem' }}>{remainingTime}</p>}
+        </CountdownCircleTimer>
+      </div>
       {!isLoggedIn ?
         <p
           style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
