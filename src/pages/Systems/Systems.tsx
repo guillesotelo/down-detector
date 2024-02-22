@@ -71,8 +71,8 @@ export default function Systems({ }: Props) {
   const user = getUser()
 
   useEffect(() => {
-    if (!isLoggedIn) history.push('/')
-  }, [])
+    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+  }, [isLoggedIn])
 
   useEffect(() => {
     getSystems()

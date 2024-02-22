@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 export const AppContext = createContext<AppContextType>({
     isMobile: false,
-    isLoggedIn: false,
+    isLoggedIn: null,
     isSuper: false,
     setIsLoggedIn: () => { },
     setIsSuper: () => { },
@@ -23,7 +23,7 @@ type Props = {
 
 export const AppProvider = ({ children }: Props) => {
     const isMobile = window.screen.width <= 768
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
     const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('preferredMode') || 'false'))
@@ -51,7 +51,7 @@ export const AppProvider = ({ children }: Props) => {
         if (verified) {
             setIsLoggedIn(true)
             setIsSuper(verified.isSuper)
-        }
+        } else setIsLoggedIn(false)
     }
 
     const contextValue = React.useMemo(() => ({

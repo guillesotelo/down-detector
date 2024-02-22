@@ -28,11 +28,14 @@ export default function Users({ }: Props) {
   const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
   const { isLoggedIn, isSuper } = useContext(AppContext)
   const history = useHistory()
-
+  
   useEffect(() => {
-    if (!isLoggedIn) return history.push('/')
     loadData()
   }, [])
+
+  useEffect(() => {
+    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+  }, [isLoggedIn])
 
   useEffect(() => {
     if (selected !== -1 || newUser) document.body.style.overflow = 'hidden'

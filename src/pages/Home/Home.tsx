@@ -46,7 +46,7 @@ const Home = () => {
   const issueOptions = [
     { name: 'Unable to access' },
     { name: `Not responding` },
-    { name: 'Low response time' },
+    { name: 'Slow response time' },
     { name: 'Unstable' },
   ]
 
@@ -64,6 +64,7 @@ const Home = () => {
     setHeaderLoading(true)
     loadData()
     const intervalId = setInterval(() => {
+      setCountdownKey(prev => prev + 1)
       loadData()
       setAllSystems([])
       getSystems()

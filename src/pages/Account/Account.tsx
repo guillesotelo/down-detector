@@ -25,9 +25,12 @@ export default function Account({ }: Props) {
   const user = getUser()
 
   useEffect(() => {
-    if (!isLoggedIn) return history.push('/')
     getUserData()
   }, [])
+
+  useEffect(() => {
+    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+  }, [isLoggedIn])
 
   const getUserData = () => {
     if (user._id) {
