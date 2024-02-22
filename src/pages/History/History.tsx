@@ -19,10 +19,13 @@ export default function History({ }: Props) {
     const history = useHistory()
 
     useEffect(() => {
-        if (!isLoggedIn) return history.push('/')
         getHistory()
     }, [])
 
+    useEffect(() => {
+        if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+      }, [isLoggedIn])
+    
     const getHistory = async () => {
         try {
             setLoading(true)

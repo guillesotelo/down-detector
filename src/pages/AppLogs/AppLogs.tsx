@@ -20,10 +20,13 @@ export default function AppLogs({ }: Props) {
   const history = useHistory()
 
   useEffect(() => {
-    if (!isLoggedIn) return history.push('/')
     verifyUser()
     getHistory()
   }, [])
+
+  useEffect(() => {
+    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+  }, [isLoggedIn])
 
   const verifyUser = async () => {
     if (!isSuper) return history.push('/')
