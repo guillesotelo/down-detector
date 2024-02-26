@@ -19,16 +19,16 @@ export const systemHeaders = [
         name: 'TIMEOUT',
         value: 'timeout'
     },
-    {
-        name: 'INTERVAL',
-        value: 'interval'
-    },
+    // {
+    //     name: 'INTERVAL',
+    //     value: 'interval'
+    // },
     {
         name: 'MODIFIED BY',
         value: 'updatedBy'
     },
     {
-        name: 'IS ACTIVE',
+        name: 'ACTIVE',
         value: 'active'
     },
     {
@@ -112,8 +112,8 @@ export const systemHisrotyHeaders = [
         value: 'createdBy'
     },
     {
-        name: 'DETAILS',
-        value: 'description'
+        name: 'MESSAGE',
+        value: 'message'
     },
 ]
 

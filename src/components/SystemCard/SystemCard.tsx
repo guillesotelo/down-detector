@@ -75,7 +75,7 @@ const SystemCard = (props: Props) => {
 
     useEffect(() => {
         processChartData()
-        setStatus(getCurrentStatus(system))
+        setStatus(getCurrentStatus())
     }, [history, alerts, system])
 
     useEffect(() => {
@@ -98,7 +98,7 @@ const SystemCard = (props: Props) => {
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ?
-                            'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                            'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     borderWidth: 4,
@@ -131,7 +131,7 @@ const SystemCard = (props: Props) => {
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ?
-                            'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                            'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     pointBorderWidth: 0,
@@ -353,9 +353,23 @@ const SystemCard = (props: Props) => {
         return false
     }
 
-    const getCurrentStatus = (system: systemType | undefined) => {
-        const lastHistory: historyType | null = history ? sortArray(history, 'createdAt', true).find((status: eventType) => status.systemId === system?._id) || null : null
-        return lastHistory ? lastHistory.status : null
+    const getCurrentStatus = () => {
+        const lastHistories: historyType[] | null = history && Array.isArray(history) ?
+            sortArray(history, 'createdAt', true).slice(0, 2) : null
+        const current = lastHistories ? lastHistories[0] || null : null
+        const previous = lastHistories ? lastHistories[1] || null : null
+
+        if (current && !current.status) {
+            const currentStatus = current.status
+            const currentTime = new Date(current.createdAt || new Date()).getTime()
+            const prevTime = previous ? new Date(previous.createdAt || new Date()).getTime() : null
+            const prevStatus = previous ? previous.status : currentStatus
+            // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
+            if (prevStatus && prevStatus !== currentStatus && prevTime && prevTime - currentTime < 120000) {
+                current.status = 'BUSY'
+            }
+        }
+        return current ? current.status : null
     }
 
     const hasPageMessage = () => {
@@ -512,10 +526,12 @@ const SystemCard = (props: Props) => {
                     style={{
                         borderColor: darkMode ? 'gray' : '#d3d3d361',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
-                        backgroundImage: loading || (status !== false && status !== true) ? '' : darkMode ?
-                            `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
-                            :
-                            `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
+                        backgroundImage: loading || (status !== false && status !== true && status !== 'BUSY') ? '' :
+                            status === 'BUSY' ? darkMode ? 'linear-gradient(to right bottom, rgb(0, 0, 0), rgb(255 152 0 / 26%)'
+                                : 'linear-gradient(to right bottom, white, rgb(202 120 0 / 17%))' : darkMode ?
+                                `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
+                                :
+                                `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                     }}>
                     <div className="systemcard__header" onClick={selectSystem}>
                         <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
@@ -530,21 +546,22 @@ const SystemCard = (props: Props) => {
                     <div className="systemcard__footer">
                         <h2
                             className="systemcard__status"
-                            style={{ color: loading ? 'gray' : reportedlyDown ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
+                            style={{ color: loading ? 'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
                                     <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>
                                         <img
                                             style={{
-                                                filter: reportedlyDown ? 'orange' : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
-                                                    'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
+                                                filter: reportedlyDown || status === 'BUSY' ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
+                                                    : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
+                                                        'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
                                             }}
                                             src={LiveIcon}
                                             alt="Live"
                                             className="systemcard__status-live" />
                                     </span>
                                     &nbsp;&nbsp;Status:&nbsp;
-                                    <strong>{reportedlyDown ? 'Problem' : status ? 'UP' : 'DOWN'}
+                                    <strong>{reportedlyDown ? 'Problem' : status ? status === 'BUSY' ? status : 'UP' : 'DOWN'}
                                     </strong>
                                 </>
                             }
@@ -564,10 +581,10 @@ const SystemCard = (props: Props) => {
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
-                                'black' : '#ff6161' : darkMode ?
+                                'black' : '#ff6161a6' : darkMode ?
                                 'black' : '#fcd9a59e',
-                            border: isLiveDowntime(downtime[0]) ? '1px solid red'
-                                : darkMode ? '1px solid orange' : '1px solid transparent'
+                            border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
+                                : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent'
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>

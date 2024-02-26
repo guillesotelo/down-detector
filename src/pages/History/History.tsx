@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
-import { getHistoryAndAlerts } from '../../helpers'
-import { historyType, logType, onChangeEventType } from '../../types'
+import { getHistoryAndAlerts, getUser } from '../../helpers'
+import { alertType, eventType, historyType, logType, onChangeEventType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useHistory } from 'react-router-dom'
 import { AppContext } from '../../AppContext'
@@ -15,7 +15,7 @@ export default function History({ }: Props) {
     const [tableData, setTableData] = useState<historyType[]>([])
     const [filteredData, setFilteredData] = useState<historyType[]>([])
     const [pending, startTransition] = useTransition()
-    const { isLoggedIn } = useContext(AppContext)
+    const { isLoggedIn, isSuper } = useContext(AppContext)
     const history = useHistory()
 
     useEffect(() => {
@@ -24,14 +24,36 @@ export default function History({ }: Props) {
 
     useEffect(() => {
         if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
-      }, [isLoggedIn])
-    
+    }, [isLoggedIn])
+
     const getHistory = async () => {
         try {
             setLoading(true)
             const data = await getHistoryAndAlerts()
-            setTableData(data)
-            setFilteredData(data)
+            const { systems } = getUser()
+            const ownedSystems = systems && Array.isArray(systems) ? systems.map(system => system._id) : []
+            const completeHistory = isSuper ? data : data.filter(history => ownedSystems.includes(history.systemId))
+           
+            const statusAndAlerts = completeHistory.sort((a: eventType & alertType, b: eventType & alertType) => {
+              if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
+              return 1
+            })
+            .reverse()
+            .map((item, i, arr) => {
+              const currentStatus = item.status
+              const currentTime = new Date(item.createdAt || new Date()).getTime()
+              const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+              const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+              // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
+              if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
+                item.status = 'BUSY'
+              }
+              return item
+            })
+            .reverse()
+
+            setTableData(statusAndAlerts)
+            setFilteredData(statusAndAlerts)
             setLoading(false)
         } catch (error) {
             setLoading(false)
