@@ -184,7 +184,8 @@ export default function Systems({ }: Props) {
         const updated = await updateSystem(systemData)
         if (updated && updated._id) {
           toast.success('System updated successfully')
-          discardChanges()
+          if (Array.isArray(dtArray)) setDowntimeArray(dtArray)
+          else discardChanges()
           getSystems()
         }
         else toast.error('Error updating system. Try again later')
@@ -514,7 +515,9 @@ export default function Systems({ }: Props) {
               {addDowntime ?
                 <div>
                   <h4 className="systems__new-downtime-title">{selectedDowntime !== -1 ? 'Edit Downtime' : 'New Downtime'}</h4>
-                  <div className="systems__new-row">
+                  <div className="systems__new-row" style={{
+                    justifyContent: openStartCalendar ? 'left' : openEndCalendar ? 'right' : ''
+                  }}>
                     {openStartCalendar ?
                       <DatePicker
                         selected={start}
@@ -545,7 +548,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
-                      disabled={loading}
+                      disabled={loading || openEndCalendar}
                     />
                     <Button
                       label={openEndCalendar ? 'Confirm End' : end ? 'End: ' + getDate(end) : 'Select End'}
@@ -553,7 +556,7 @@ export default function Systems({ }: Props) {
                       bgColor={APP_COLORS.ORANGE_ONE}
                       textColor='white'
                       style={{ width: '45%' }}
-                      disabled={loading}
+                      disabled={loading || openStartCalendar}
                     />
                   </div>
                   <InputField
@@ -656,7 +659,7 @@ export default function Systems({ }: Props) {
               textColor='white'
               disabled={loading}
             /> : ''}
-          {!isMobile && showTooltip ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
+          {!isMobile && showTooltip && isSuper ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
         </div>
         <div style={{ width: 'inherit' }} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           <DataTable
@@ -669,7 +672,7 @@ export default function Systems({ }: Props) {
             setSelected={setSelected}
             loading={loading}
             max={18}
-            draggable
+            draggable={isSuper}
             saveTableDataOrder={saveTableDataOrder}
           />
         </div>

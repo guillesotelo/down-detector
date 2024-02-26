@@ -22,7 +22,6 @@ export default function Account({ }: Props) {
   const [edit, setEdit] = useState(false)
   const { isLoggedIn, setIsLoggedIn, darkMode, setIsSuper, isMobile } = useContext(AppContext) as AppContextType
   const history = useHistory()
-  const user = getUser()
 
   useEffect(() => {
     getUserData()
@@ -33,6 +32,7 @@ export default function Account({ }: Props) {
   }, [isLoggedIn])
 
   const getUserData = () => {
+    const user = getUser()
     if (user._id) {
       delete user.password
       setData(user)
@@ -95,7 +95,7 @@ export default function Account({ }: Props) {
   const getOwnedSystemNames = () => {
     const { systems } = getUser()
     return systems && systems.length && typeof systems[0] !== 'string' ?
-      user.systems.map((system: systemType) => system.name).join(', ')
+      systems.map((system: systemType) => system.name).join(', ')
       : 'No systems owned'
   }
 
@@ -164,7 +164,7 @@ export default function Account({ }: Props) {
             <>
               <TextData label='Full Name' value={data.username} />
               <TextData label='Email' value={data.email} />
-              <TextData label='Super User' value={data.isSuper ? 'Yes' : 'No'} />
+              <TextData label='User Type' value={data.isSuper ? 'Super' : 'System Owner'} />
               <TextData label='Owned Systems' value={getOwnedSystemNames()} />
             </>
           }
