@@ -7,7 +7,7 @@
         border-radius: .3rem;
         cursor: pointer;
         font-weight: normal;
-        transition: .3s;
+        transition: .2s;
         border: none;
         border: 1px solid transparent;
         min-height: 1.3rem;
@@ -27,7 +27,7 @@
         border-radius: .3vw;
         cursor: pointer;
         font-weight: normal;
-        transition: .3s;
+        transition: .2s;
         border: none;
         border: 1px solid transparent;
         min-height: 1.3rem;
@@ -51,7 +51,7 @@
         border-radius: .5vw;
         cursor: pointer;
         font-weight: normal;
-        transition: .3s;
+        transition: .2s;
         border: none;
         border: 1px solid transparent;
         min-height: 1.3rem;
@@ -59,7 +59,7 @@
 
         &:hover {
             background-color: #f0f0f0 !important;
-            transition: .4s;
+            transition: .2s;
         }
 
     }

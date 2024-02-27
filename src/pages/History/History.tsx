@@ -36,21 +36,21 @@ export default function History({ }: Props) {
             const { systems } = getUser()
             const ownedSystems = systems && Array.isArray(systems) ? systems.map(system => system._id) : []
             const completeHistory = isSuper ? data : data.filter(history => ownedSystems.includes(history.systemId))
-            
+
             const statusAndAlerts = completeHistory
-            .reverse()
-            .map((item, i, arr) => {
-                const currentStatus = item.status
-                const currentTime = new Date(item.createdAt || new Date()).getTime()
-                const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-                const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
-                // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
-                if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
-                    item.status = 'BUSY'
-                }
-                return item
-            })
-            .reverse()
+                .reverse()
+                .map((item, i, arr) => {
+                    const currentStatus = item.status
+                    const currentTime = new Date(item.createdAt || new Date()).getTime()
+                    const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+                    const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+                    // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
+                    if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
+                        item.status = 'BUSY'
+                    }
+                    return item
+                })
+                .reverse()
 
             setTableData(statusAndAlerts)
             setFilteredData(statusAndAlerts)
@@ -80,22 +80,28 @@ export default function History({ }: Props) {
 
     return (
         <div className="history__container">
-            <SearchBar
-                handleChange={onChangeSearch}
-                triggerSearch={triggerSearch}
-                value={search}
-                placeholder='Search history...'
-                style={{ marginBottom: '1rem' }}
-            />
+            <div className="history__row">
+                <div className="history__col"></div>
+                <div className="history__col">
+                    <SearchBar
+                        handleChange={onChangeSearch}
+                        triggerSearch={triggerSearch}
+                        value={search}
+                        placeholder='Search history...'
+                    />
+                </div>
+                <div className="history__col">
+                    <Switch
+                        label='Get RAW'
+                        value={getRaw}
+                        setValue={setGetRaw}
+                        on='Yes'
+                        off='No'
+                        style={{ alignSelf: 'flex-end' }}
+                    />
+                </div>
+            </div>
             <div className="history__col">
-                <Switch
-                    label='Get RAW'
-                    value={getRaw}
-                    setValue={setGetRaw}
-                    on='Yes'
-                    off='No'
-                    style={{ alignSelf: 'flex-end' }}
-                />
                 <DataTable
                     title='History'
                     tableData={filteredData}

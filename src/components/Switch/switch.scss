@@ -25,7 +25,7 @@
 
     &__row {
         width: 4rem;
-        height: 2rem;
+        height: 1.8rem;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -34,6 +34,7 @@
         transition: .3s;
         border: 1px solid gray;
         padding: .2rem .25rem;
+        margin-top: .1rem;
     }
 
     &__label {
@@ -54,10 +55,10 @@
 
     &__on {
         width: 2rem;
-        height: 2rem;
+        height: 1.8rem;
+        line-height: 1.8rem;
         font-size: .9rem;
         text-align: center;
-        line-height: 2rem;
         margin: 0;
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
@@ -68,10 +69,10 @@
 
     &__off {
         width: 2rem;
-        height: 2rem;
+        height: 1.8rem;
+        line-height: 1.8rem;
         font-size: .9rem;
         text-align: center;
-        line-height: 2rem;
         margin: 0;
         border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
@@ -83,8 +84,8 @@
     &__slider {
         &--off {
             width: 2rem;
-            height: 2rem;
-            line-height: 2rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
             background-color: #53565a;
             border: 1px solid #787878;
             border-radius: 2rem;
@@ -99,8 +100,8 @@
 
         &--on {
             width: 2rem;
-            height: 2rem;
-            line-height: 2rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
             background-color: #53565a;
             border: 1px solid #787878;
             border-radius: 2rem;
@@ -111,109 +112,6 @@
             text-align: center;
             color: gray;
             font-size: .8rem;
-        }
-    }
-}
-
-@media only screen and (max-width: 800px) {
-    .switch {
-        &__container {
-            border-radius: 1rem;
-            display: flex;
-            flex-direction: column;
-            transition: .3s;
-            cursor: pointer;
-
-            &:hover .switch__slider--on {
-                background-color: rgb(195, 195, 195);
-            }
-
-            &:hover .switch__slider--off {
-                background-color: rgb(195, 195, 195);
-            }
-
-        }
-
-        &__row {
-            width: 15vw;
-            height: 2rem;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            position: relative;
-            border-radius: 1rem;
-            transition: .3s;
-            border: 1px solid gray;
-        }
-
-        &__label {
-            margin: 0 0 .5vh 0;
-            font-size: .8rem;
-            font-weight: normal;
-            width: 100%;
-            color: #696869;
-        }
-
-        &__on {
-            width: 7.5vw;
-            height: 2rem;
-            font-size: .9rem;
-            text-align: center;
-            line-height: 2rem;
-            margin: 0;
-            border-top-left-radius: 1rem;
-            border-bottom-left-radius: 1rem;
-            // background-color: rgb(218, 130, 130);
-            color: #4e4e4e;
-            transition: .3s;
-        }
-
-        &__off {
-            width: 7.5vw;
-            height: 2rem;
-            font-size: .9rem;
-            text-align: center;
-            line-height: 2rem;
-            margin: 0;
-            border-top-right-radius: 1rem;
-            border-bottom-right-radius: 1rem;
-            // background-color: rgb(112, 191, 112);
-            color: #4e4e4e;
-            transition: .3s;
-        }
-
-        &__slider {
-            &--off {
-                width: 7.5vw;
-                height: 2rem;
-                line-height: 2rem;
-                background-color: lightgray;
-                border: 1px solid gray;
-                border-radius: 1rem;
-                position: absolute;
-                transform: translateX(-5%);
-                transition: .3s;
-                z-index: 2;
-                text-align: center;
-                color: gray;
-                font-size: .8rem;
-            }
-
-            &--on {
-                width: 7.5vw;
-                height: 2rem;
-                line-height: 2rem;
-                background-color: lightgray;
-                border: 1px solid gray;
-                border-radius: 1rem;
-                position: absolute;
-                transform: translateX(95%);
-                transition: .3s;
-                z-index: 2;
-                text-align: center;
-                color: gray;
-                font-size: .8rem;
-            }
         }
     }
 }
