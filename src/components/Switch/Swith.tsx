@@ -7,14 +7,16 @@ type Props = {
     off: string
     value: boolean
     setValue: (value: boolean) => void
+    style?: React.CSSProperties
 }
 
-export default function Switch({ label, on, off, value, setValue }: Props) {
+export default function Switch({ label, on, off, value, setValue, style }: Props) {
     const { darkMode } = useContext(AppContext)
     return (
         <div
             className="switch__container"
             onClick={() => setValue(!value)}
+            style={style}
         >
             {label ? <p className={`switch__label${darkMode ? '--dark' : ''}`}>{label}</p> : ''}
             <div

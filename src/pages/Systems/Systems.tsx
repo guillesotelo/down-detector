@@ -184,8 +184,7 @@ export default function Systems({ }: Props) {
         const updated = await updateSystem(systemData)
         if (updated && updated._id) {
           toast.success('System updated successfully')
-          if (Array.isArray(dtArray)) setDowntimeArray(dtArray)
-          else discardChanges()
+          discardChanges()
           getSystems()
         }
         else toast.error('Error updating system. Try again later')
