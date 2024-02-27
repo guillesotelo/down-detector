@@ -12,9 +12,9 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
-const getAllHistory = async (systemId?: string) => {
+const getAllHistory = async (systemId?: string, getRaw?: boolean) => {
     try {
-        const history = await axios.get(`${API_URL}/api/history/getAll`, { params: { systemId }, headers: getHeaders() })
+        const history = await axios.get(`${API_URL}/api/history/getAll`, { params: { systemId, getRaw }, headers: getHeaders() })
         return history.data
     } catch (err) { console.log(err) }
 }

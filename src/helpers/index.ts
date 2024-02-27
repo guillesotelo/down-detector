@@ -31,12 +31,12 @@ export const goToUrl = (url: string) => {
     anchor.click()
 }
 
-export const getHistoryAndAlerts = async (systemId?: string) => {
+export const getHistoryAndAlerts = async (systemId?: string, getRaw?: boolean) => {
     try {
-        const systems = await getAllHistory(systemId)
+        const history = await getAllHistory(systemId, getRaw)
         const userAlerts = await getAllAlerts(systemId)
-        if ((systems && Array.isArray(systems)) || (userAlerts && Array.isArray(userAlerts))) {
-            const allHistory = sortArray([...systems, ...userAlerts], 'createdAt', true)
+        if ((history && Array.isArray(history)) || (userAlerts && Array.isArray(userAlerts))) {
+            const allHistory = sortArray([...history, ...userAlerts], 'createdAt', true)
             return allHistory
         }
         return []

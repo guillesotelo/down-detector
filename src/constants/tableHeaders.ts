@@ -92,10 +92,10 @@ export const hisrotyHeaders = [
         name: 'MESSAGE',
         value: 'message'
     },
-    {
-        name: 'DETAILS',
-        value: 'description'
-    },
+    // {
+    //     name: 'DETAILS',
+    //     value: 'description'
+    // },
 ]
 
 export const systemHisrotyHeaders = [
