@@ -10,12 +10,22 @@
         overflow-x: hidden;
     }
 
+    &__row {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
     &__col {
-        width: 82vw;
         display: flex;
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
+        width: 100%;
     }
 }
 
@@ -25,7 +35,7 @@
             width: 90vw;
             padding: 2rem 0;
         }
-    
+
         &__col {
             width: 90vw;
         }

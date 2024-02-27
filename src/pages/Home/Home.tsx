@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -36,7 +36,7 @@ const Home = () => {
   const [selectedLog, setSelectedLog] = useState(-1)
   const [editLog, setEditLog] = useState(false)
   const [editedLogStatus, setEditedLogStatus] = useState('')
-  const [editedDetails, setEditedDetails] = useState('')
+  const [editedLogMessage, setEditedLogMessage] = useState('')
   const [countdownKey, setCountdownKey] = useState(0)
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
 
@@ -83,7 +83,10 @@ const Home = () => {
     if (selectedLog !== -1) {
       const selectedHistory = statusAndAlerts[selectedLog]
       setEditedLogStatus(selectedHistory.userAlert ? 'DOWN' : selectedHistory.status ? 'UP' : 'DOWN')
-      setEditedDetails(selectedHistory.raw || '')
+      setEditedLogMessage(selectedHistory.message || '')
+    } else {
+      setEditedLogMessage('')
+      setEditedLogStatus('DOWN')
     }
   }, [selectedLog])
 
@@ -96,13 +99,16 @@ const Home = () => {
       })
       .reverse()
       .map((item, i, arr) => {
-        const currentStatus = item.status
-        const currentTime = new Date(item.createdAt || new Date()).getTime()
-        const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-        const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
-        // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
-        if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
-          item.status = 'BUSY'
+        if (!item.status) {
+          const currentStatus = item.status
+          const currentTime = new Date(item.createdAt || new Date()).getTime()
+          const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+          const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+          const isBusy = new Date().getTime() - currentTime < 120000
+          // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
+          if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
+            item.status = 'BUSY'
+          }
         }
         return item
       })
@@ -137,6 +143,7 @@ const Home = () => {
     try {
       let history = await getAllHistory()
       if (history && Array.isArray(history)) {
+        console.log(history.filter(h => h.systemId === "65c4ed05d3022a6e78efc91e"))
         setAllStatus(history)
       }
       let alerts = await getAllAlerts()
@@ -310,7 +317,7 @@ const Home = () => {
       setSelectedLog(-1)
       setEditLog(false)
       setEditedLogStatus('')
-      setEditedDetails('')
+      setEditedLogMessage('')
       setStatusAndAlerts(prev => {
         let newStatus = [...prev]
         newStatus.splice(selectedLog, 1)
@@ -328,18 +335,19 @@ const Home = () => {
   const saveSelectedLog = async () => {
     try {
       setLoading(true)
-      const selectedHistory = statusAndAlerts[selectedLog]
+      const selectedHistory = selectedLog !== -1 ? statusAndAlerts[selectedLog] : {}
       if (editedLogStatus) selectedHistory.status = editedLogStatus === 'UP' ? true : false
-      if (editedDetails) selectedHistory.raw = editedDetails
-      const saved = selectedHistory.userAlert ?
-        await updateUserAlert(selectedHistory) :
-        await updateHistory(selectedHistory)
+      if (editedLogMessage) selectedHistory.message = editedLogMessage
+      const saved = selectedLog === -1 ? await createHistory({ ...selectedHistory, systemId: selected })
+        : selectedHistory.userAlert ?
+          await updateUserAlert(selectedHistory) :
+          await updateHistory(selectedHistory)
       if (saved) toast.success('Log updated successfully')
       else return toast.error('Error updating Log. Please try again')
       setSelectedLog(-1)
       setEditLog(false)
       setEditedLogStatus('')
-      setEditedDetails('')
+      setEditedLogMessage('')
       setStatusAndAlerts(prev => {
         let newStatus = [...prev]
         newStatus[selectedLog] = selectedHistory
@@ -359,7 +367,7 @@ const Home = () => {
     setSelectedLog(-1)
     setEditLog(false)
     setEditedLogStatus('')
-    setEditedDetails('')
+    setEditedLogMessage('')
     setReport('')
     setData({})
     setReportedStatus({ name: 'Unable to access' })
@@ -457,10 +465,10 @@ const Home = () => {
               style={{ minWidth: '7rem', width: isMobile ? '100%' : '' }}
             />
             <InputField
-              label='Details'
-              name='raw'
-              value={editedDetails}
-              updateData={(_, e) => setEditedDetails(e.target.value)}
+              label='Message'
+              name='message'
+              value={editedLogMessage}
+              updateData={(_, e) => setEditedLogMessage(e.target.value)}
             />
             <Button
               label='Save Changes'
@@ -489,7 +497,14 @@ const Home = () => {
                 style={{ width: '45%' }}
               />
             </div>
-            : ''}
+            : isSuper ?
+              <Button
+                label='New Log'
+                handleClick={() => setEditLog(true)}
+                bgColor={APP_COLORS.ORANGE_ONE}
+                textColor='white'
+                style={{ width: '45%' }}
+              /> : ''}
         <div className="home__modal-table">
           <DataTable
             title='Latest system logs'
@@ -530,8 +545,8 @@ const Home = () => {
             <Button
               label='Report Issue'
               handleClick={() => setReport(selected)}
-              bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
-              textColor={darkMode ? 'white' : 'black'}
+              bgColor={darkMode ? '#353535' : '#dcdcdc'}
+              textColor={darkMode ? 'lightgray' : '#323232'}
             />}
         </div>
       </Modal>

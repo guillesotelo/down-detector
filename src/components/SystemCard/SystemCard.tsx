@@ -8,6 +8,7 @@ import { APP_COLORS } from '../../constants/app'
 import { getDate, getDateWithGivenHour, sortArray } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 import LiveIcon from '../../assets/icons/live.svg'
+import Api from '../../assets/icons/api.svg'
 Chart.register(...registerables);
 
 type Props = {
@@ -210,12 +211,15 @@ const SystemCard = (props: Props) => {
         // We reverse so we check from old -> new registers
         history.reverse()
             .map((item, i, arr) => {
-                const currentStatus = item.status
-                const currentTime = new Date(item.createdAt || new Date()).getTime()
-                const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-                const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
-                if (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000) {
-                    item.status = 'BUSY'
+                if (!item.status) {
+                    const currentStatus = item.status
+                    const currentTime = new Date(item.createdAt || new Date()).getTime()
+                    const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
+                    const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
+                    const isBusy = new Date().getTime() - currentTime < 120000
+                    if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
+                        item.status = 'BUSY'
+                    }
                 }
                 return item
             })
@@ -364,8 +368,9 @@ const SystemCard = (props: Props) => {
             const currentTime = new Date(current.createdAt || new Date()).getTime()
             const prevTime = previous ? new Date(previous.createdAt || new Date()).getTime() : null
             const prevStatus = previous ? previous.status : currentStatus
+            const isBusy = new Date().getTime() - currentTime < 120000
             // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
-            if (prevStatus && prevStatus !== currentStatus && prevTime && prevTime - currentTime < 120000) {
+            if (isBusy || (prevStatus && prevStatus !== currentStatus && prevTime && currentTime - prevTime < 120000)) {
                 current.status = 'BUSY'
             }
         }
@@ -534,8 +539,15 @@ const SystemCard = (props: Props) => {
                                 `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
                     }}>
                     <div className="systemcard__header" onClick={selectSystem}>
+                        <img
+                            src={logo || Api}
+                            alt="System Logo"
+                            className="systemcard__logo"
+                            style={{
+                                filter: darkMode && !logo ? 'invert(100%) sepia(5%) saturate(433%) hue-rotate(6deg) brightness(120%) contrast(100%)' : ''
+                            }}
+                        />
                         <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
-                        {logo ? <img src={logo} alt="System Logo" className="systemcard__logo" /> : ''}
                     </div>
                     {loading || (status !== false && status !== true && status !== 'BUSY') ?
                         SystemCardPlaceholderBlock(darkMode)
@@ -569,8 +581,8 @@ const SystemCard = (props: Props) => {
                         {status ? <Button
                             label='Report Issue'
                             handleClick={() => reportIssue(_id || '')}
-                            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_THREE}
-                            textColor={darkMode ? 'white' : 'black'} />
+                            bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                            textColor={darkMode ? 'lightgray' : '#323232'} />
                             : !loading && (status || status === false) && lastCheck ?
                                 <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">{lastCheck}</p>
                                 : ''}

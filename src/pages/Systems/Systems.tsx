@@ -479,14 +479,14 @@ export default function Systems({ }: Props) {
                   style={{ width: '45%' }}
                   disabled={loading && addDowntime}
                 />
-                {user.email === 'gsotelo@volvocars.com' ?
+                {/* {user.email === 'gsotelo@volvocars.com' ?
                   <Switch
                     label='First Status'
                     value={firstStatus}
                     setValue={setFirstStatus}
                     on='1'
                     off='0'
-                  /> : ''}
+                  /> : ''} */}
               </div> : ''}
             <div className="systems__new-downtime">
               {showResponse ?
