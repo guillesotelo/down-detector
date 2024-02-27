@@ -66,6 +66,7 @@ export default function Systems({ }: Props) {
   const [showTooltip, setShowTooltip] = useState(false)
   const [isActive, setIsActive] = useState(true)
   const [firstStatus, setFirstStatus] = useState(true)
+  const [changeOrder, setChangeOrder] = useState(false)
   const { isLoggedIn, isSuper, isMobile } = useContext(AppContext)
   const history = useHistory()
   const user = getUser()
@@ -651,14 +652,24 @@ export default function Systems({ }: Props) {
       <div className="systems__col" style={{ filter: selected !== -1 || newSystem ? 'blur(10px)' : '' }}>
         <div className='systems__row'>
           {isSuper ?
-            <Button
-              label='New System'
-              handleClick={() => setNewSystem(true)}
-              bgColor={APP_COLORS.BLUE_TWO}
-              textColor='white'
-              disabled={loading}
-            /> : ''}
-          {!isMobile && showTooltip && isSuper ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
+            <>
+              <Button
+                label='New System'
+                handleClick={() => setNewSystem(true)}
+                bgColor={APP_COLORS.BLUE_TWO}
+                textColor='white'
+                disabled={loading}
+              />
+              <Switch
+                label='Change Order'
+                value={changeOrder}
+                setValue={setChangeOrder}
+                on='Yes'
+                off='No'
+                style={{ transform: 'scale(.8)'}}
+              />
+            </> : ''}
+          {!isMobile && changeOrder && showTooltip && isSuper ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}
         </div>
         <div style={{ width: 'inherit' }} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           <DataTable
@@ -671,7 +682,7 @@ export default function Systems({ }: Props) {
             setSelected={setSelected}
             loading={loading}
             max={18}
-            draggable={isSuper}
+            draggable={isSuper && changeOrder}
             saveTableDataOrder={saveTableDataOrder}
           />
         </div>
