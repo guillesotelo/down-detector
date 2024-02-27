@@ -35,7 +35,7 @@ const Home = () => {
   const [modalChartOptions, setModalChartOptions] = useState({})
   const [selectedLog, setSelectedLog] = useState(-1)
   const [editLog, setEditLog] = useState(false)
-  const [editedLogStatus, setEditedLogStatus] = useState('')
+  const [editedLogStatus, setEditedLogStatus] = useState('DOWN')
   const [editedLogMessage, setEditedLogMessage] = useState('')
   const [countdownKey, setCountdownKey] = useState(0)
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
@@ -93,10 +93,6 @@ const Home = () => {
   const getStatusAndAlerts = () => {
     const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
       .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
-      .sort((a: eventType & alertType, b: eventType & alertType) => {
-        if (new Date(a.createdAt || new Date()).getTime() > new Date(b.createdAt || new Date()).getTime()) return -1
-        return 1
-      })
       .reverse()
       .map((item, i, arr) => {
         if (!item.status) {
@@ -143,7 +139,6 @@ const Home = () => {
     try {
       let history = await getAllHistory()
       if (history && Array.isArray(history)) {
-        console.log(history.filter(h => h.systemId === "65c4ed05d3022a6e78efc91e"))
         setAllStatus(history)
       }
       let alerts = await getAllAlerts()
@@ -156,8 +151,17 @@ const Home = () => {
   }
 
   const getCurrentStatus = (system: systemType) => {
-    const history: historyType | null = allStatus.find((status: eventType) => status.systemId === system._id) || null
-    return history ? history.status : null
+    const lastHistories: historyType[] | null = allStatus && Array.isArray(allStatus) ?
+      sortArray(allStatus.filter(h => h.systemId === system._id), 'createdAt', true) : null
+    const current = lastHistories ? { ...lastHistories[0] } || null : null
+
+    if (current && !current.status) {
+      const currentStatus = current.status
+      const currentTime = new Date(current.createdAt || new Date()).getTime()
+      const isBusy = new Date().getTime() - currentTime < 120000
+        current.status = isBusy ? 'BUSY' : currentStatus
+    }
+    return current ? current.status : null
   }
 
   const getLastCheck = (system: systemType) => {
@@ -373,6 +377,12 @@ const Home = () => {
     setReportedStatus({ name: 'Unable to access' })
   }
 
+  const discardLogEdit = () => {
+    setEditLog(false)
+    setEditedLogStatus('')
+    setEditedLogMessage('')
+  }
+
   const renderReportModal = () => {
     return (
       <Modal
@@ -478,34 +488,42 @@ const Home = () => {
               style={{ width: isMobile ? '100%' : '45%' }}
               disabled={loading}
             />
+            <Button
+              label='Cancel'
+              handleClick={discardLogEdit}
+              bgColor={APP_COLORS.GRAY_ONE}
+              textColor='white'
+              style={{ width: isMobile ? '100%' : '45%' }}
+              disabled={loading}
+            />
           </div>
           :
           selectedLog !== -1 ?
-            <div className="home__modal-row">
+            <div className="home__modal-row" style={{ justifyContent: 'flex-start' }}>
               <Button
                 label='Edit Log'
                 handleClick={() => setEditLog(true)}
                 bgColor={APP_COLORS.ORANGE_ONE}
                 textColor='white'
-                style={{ width: '45%' }}
+              // style={{ width: '45%' }}
               />
               <Button
                 label='Remove Log'
                 handleClick={removeSelectedLog}
                 bgColor={APP_COLORS.RED_TWO}
                 textColor='white'
-                style={{ width: '45%' }}
+              // style={{ width: '45%' }}
               />
             </div>
             : isSuper ?
               <Button
                 label='New Log'
                 handleClick={() => setEditLog(true)}
-                bgColor={APP_COLORS.ORANGE_ONE}
+                bgColor={APP_COLORS.BLUE_TWO}
                 textColor='white'
-                style={{ width: '45%' }}
+                style={{ width: '2.5rem' }}
               /> : ''}
-        <div className="home__modal-table">
+        <div className="home__modal-table" style={{ marginTop: '.5rem' }}>
           <DataTable
             title='Latest system logs'
             tableData={statusAndAlerts}
@@ -523,17 +541,26 @@ const Home = () => {
         <div className="home__modal-footer">
           <h2
             className="systemcard__status"
-            style={{ color: getSystemData(selected, 'reportedlyDown') ? 'orange' : getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red' }}>
+            style={{
+              color: getSystemData(selected, 'reportedlyDown')
+                || getCurrentStatus(getSelectedSystem()) === 'BUSY' ? 'orange'
+                : getCurrentStatus(getSelectedSystem()) ? darkMode ? '#00b000' : 'green' : 'red'
+            }}>
             <img
               style={{
-                filter: getSystemData(selected, 'reportedlyDown') ? 'orange' :
-                  getCurrentStatus(getSelectedSystem()) ?
+                filter: getSystemData(selected, 'reportedlyDown') || getCurrentStatus(getSelectedSystem()) === 'BUSY' ?
+                  'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
+                  : getCurrentStatus(getSelectedSystem()) ?
                     'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
                     'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
               }}
               src={LiveIcon}
               alt="Live"
-              className="systemcard__status-live" />&nbsp;&nbsp;Current status:&nbsp;<strong>{getSystemData(selected, 'reportedlyDown') ? 'Problem' : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}</strong>
+              className="systemcard__status-live" />&nbsp;&nbsp;Current status:&nbsp;<strong>
+              {getSystemData(selected, 'reportedlyDown') ? 'Problem'
+                : getCurrentStatus(getSelectedSystem()) === 'BUSY' ? 'BUSY'
+                  : getCurrentStatus(getSelectedSystem()) ? 'UP' : 'DOWN'}
+            </strong>
           </h2>
           {getLastCheck(getSelectedSystem()) ?
             <p

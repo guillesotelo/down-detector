@@ -360,19 +360,13 @@ const SystemCard = (props: Props) => {
     const getCurrentStatus = () => {
         const lastHistories: historyType[] | null = history && Array.isArray(history) ?
             sortArray(history, 'createdAt', true).slice(0, 2) : null
-        const current = lastHistories ? lastHistories[0] || null : null
-        const previous = lastHistories ? lastHistories[1] || null : null
+        const current = lastHistories ? { ...lastHistories[0] } || null : null
 
         if (current && !current.status) {
-            const currentStatus = current.status
-            const currentTime = new Date(current.createdAt || new Date()).getTime()
-            const prevTime = previous ? new Date(previous.createdAt || new Date()).getTime() : null
-            const prevStatus = previous ? previous.status : currentStatus
-            const isBusy = new Date().getTime() - currentTime < 120000
-            // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
-            if (isBusy || (prevStatus && prevStatus !== currentStatus && prevTime && currentTime - prevTime < 120000)) {
-                current.status = 'BUSY'
-            }
+          const currentStatus = current.status
+          const currentTime = new Date(current.createdAt || new Date()).getTime()
+          const isBusy = new Date().getTime() - currentTime < 120000
+            current.status = isBusy ? 'BUSY' : currentStatus
         }
         return current ? current.status : null
     }
