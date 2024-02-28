@@ -99,6 +99,8 @@
         cursor: pointer;
         align-items: center;
         overflow: hidden;
+        opacity: 0;
+        animation: fade-in .5s forwards;
         
         &:hover {
             background-color: #f6f9ff !important;
@@ -155,6 +157,8 @@
             align-items: center;
             overflow: hidden;
             background-color: #444444;
+            opacity: 0;
+            animation: fade-in .5s forwards;
 
             &:hover {
                 background-color: #626772 !important;

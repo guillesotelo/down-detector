@@ -156,7 +156,7 @@ export default function DataTable(props: Props) {
                     style={{
                         backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
                             : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                        animation: `fade-in ${(i + (max || 10) + 10 - maxItems) / 10}s ease-in forwards`
+                        animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
                     }}>
                     {tableHeaders.map((header: dataObj, j: number) =>
                         <h4
@@ -168,11 +168,12 @@ export default function DataTable(props: Props) {
                                     typeof row[header.value] === 'boolean' && header.value != 'userAlert' ?
                                         row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                             }}>
-                            {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end') && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
+                            {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
+                                && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
                                 header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
                                     header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
                                         header.value === 'status' ? typeof row[header.value] === 'string' ? row[header.value] : row[header.value] ? 'UP' : 'DOWN' :
-                                            header.value === 'description' ? row.userAlert && row[header.value] ? row[header.value] : row['raw'] || '--' :
+                                            header.value === 'message' ? row.userAlert && row[header.value] ? row[header.value] : row['message'] || '--' :
                                                 typeof row[header.value] === 'number' ? row[header.value] :
                                                     row && row[header.value] ? String(row[header.value])
                                                         : '--'}
@@ -209,7 +210,7 @@ export default function DataTable(props: Props) {
                                                 style={{
                                                     backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
                                                         : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                                                    animation: `fade-in ${(i + (max || 10) + 10 - maxItems) / 10}s ease-in forwards`
+                                                    animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
                                                 }}>
                                                 {tableHeaders.map((header: dataObj, j: number) =>
                                                     <h4
@@ -221,11 +222,12 @@ export default function DataTable(props: Props) {
                                                                 typeof row[header.value] === 'boolean' && header.value != 'userAlert' ?
                                                                     row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                                                         }}>
-                                                        {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end') && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
+                                                        {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
+                                                            && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
                                                             header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
                                                                 header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
                                                                     header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
-                                                                        header.value === 'description' ? row[header.value] ? row[header.value] : row['raw'] || '--' :
+                                                                        header.value === 'message' ? row.userAlert && row[header.value] ? row[header.value] : row['message'] || '--' :
                                                                             typeof row[header.value] === 'number' ? row[header.value] :
                                                                                 row && row[header.value] ? String(row[header.value])
                                                                                     : '--'}

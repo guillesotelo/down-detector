@@ -33,7 +33,7 @@ export default function Sidebar({ }: Props) {
                     marginTop: '1.5rem',
                     backgroundColor: item === '/' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
                 }}>
-                <img src={Dashboard} alt="Dashboard" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                <img src={Dashboard} alt="Dashboard" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Dashboard</h4>
             </div>
             <div
@@ -45,7 +45,7 @@ export default function Sidebar({ }: Props) {
                     history.push('/history')
                     setItem('/history')
                 }}>
-                <img src={History} alt="History" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                <img src={History} alt="History" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>History</h4>
             </div>
             <div className={`sidebar__separator${darkMode ? '--dark' : ''}`}></div>
@@ -58,7 +58,7 @@ export default function Sidebar({ }: Props) {
                     history.push('/systems')
                     setItem('settings-systems')
                 }}>
-                <img src={Api} alt="Settings" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                <img src={Api} alt="Settings" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Systems</h4>
             </div>
             {isSuper ?
@@ -71,7 +71,7 @@ export default function Sidebar({ }: Props) {
                         history.push('/users')
                         setItem('settings-users')
                     }}>
-                    <img src={Users} alt="Users" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                    <img src={Users} alt="Users" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                     <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Users</h4>
                 </div>
                 : ''}
@@ -87,7 +87,7 @@ export default function Sidebar({ }: Props) {
                             history.push('/applogs')
                             setItem('/applogs')
                         }}>
-                        <img src={AppLogs} alt="App Logs" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                        <img src={AppLogs} alt="App Logs" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                         <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>App Logs</h4>
                     </div>
                 </>
@@ -101,7 +101,7 @@ export default function Sidebar({ }: Props) {
                     history.push('/help')
                     setItem('/help')
                 }}>
-                <img src={Help} alt="Help" className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
+                <img src={Help} alt="Help" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Help</h4>
             </div> */}
             <p className="sidebar__version">{APP_VERSION}</p>

@@ -32,12 +32,12 @@
 @media only screen and (max-width: 640px) {
     .history {
         &__container {
-            width: 90vw;
-            padding: 2rem 0;
+            width: 100vw;
+            padding: 1rem;
         }
 
         &__col {
-            width: 90vw;
+            // width: 90vw;
         }
     }
 }

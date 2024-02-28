@@ -87,7 +87,7 @@ export type alertType = {
     systemId?: string
     type?: string
     userAlert?: boolean
-    description?: string
+    message?: string
     createdBy?: string
     createdAt?: Date
     updatedAt?: Date

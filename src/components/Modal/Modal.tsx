@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../AppContext'
+import Api from '../../assets/icons/api.svg'
 
 type Props = {
     children?: ReactNode
@@ -7,9 +8,11 @@ type Props = {
     title?: string | null
     subtitle?: string | null
     style?: React.CSSProperties
+    logo?: string
+    showLogo?: boolean
 }
 
-export default function Modal({ children, onClose, title, subtitle, style }: Props) {
+export default function Modal({ children, onClose, title, subtitle, style, logo, showLogo }: Props) {
     const [closeAnimation, setCloseAnimation] = useState('')
     const { darkMode } = useContext(AppContext)
 
@@ -38,7 +41,22 @@ export default function Modal({ children, onClose, title, subtitle, style }: Pro
             <div className={`modal__container${darkMode ? '--dark' : ''} ${closeAnimation}`} style={style}>
                 <div className="modal__header">
                     <div className="modal__titles">
-                        <h1 className="modal__title">{title}</h1>
+                        {showLogo ?
+                            <div className='modal__logo-div'>
+                                <img
+                                    src={logo || Api}
+                                    alt="System Logo"
+                                    className="systemcard__logo"
+                                    style={{
+                                        filter: darkMode && !logo ? 'invert(100%) sepia(5%) saturate(433%) hue-rotate(6deg) brightness(120%) contrast(100%)' : ''
+                                    }}
+                                    draggable={false}
+                                />
+                                <h1 className="modal__title">{title}</h1>
+                            </div>
+                            :
+                            <h1 className="modal__title">{title}</h1>
+                        }
                         <h2 className="modal__subtitle">{subtitle}</h2>
                     </div>
                     <button className={`modal__close${darkMode ? '--dark' : ''}`} onClick={closeModal}>X</button>
