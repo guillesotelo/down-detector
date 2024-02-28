@@ -69,7 +69,7 @@ export default function History({ }: Props) {
     }
 
     const triggerSearch = (searchString?: string) => {
-        if (searchString) {
+        if (searchString && typeof searchString === 'string') {
             startTransition(() => {
                 setFilteredData(tableData
                     .filter((log: logType) =>

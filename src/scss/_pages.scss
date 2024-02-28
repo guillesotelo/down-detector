@@ -39,8 +39,9 @@
         justify-content: center;
         padding-top: 8vh;
         // margin-left: 16rem;
-        min-height: 92vh;
+        height: 92vh;
         position: relative;
+        overflow: hidden;
 
         &--dark {
             display: flex;
@@ -48,10 +49,11 @@
             justify-content: center;
             padding-top: 8vh;
             // margin-left: 16rem;
-            min-height: 92vh;
+            height: 92vh;
             position: relative;
             background-color: #202020;
-        }
+        overflow: hidden;
+    }
     }
 }
 

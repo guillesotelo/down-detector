@@ -363,9 +363,9 @@ const SystemCard = (props: Props) => {
         const current = lastHistories ? { ...lastHistories[0] } || null : null
 
         if (current && !current.status) {
-          const currentStatus = current.status
-          const currentTime = new Date(current.createdAt || new Date()).getTime()
-          const isBusy = new Date().getTime() - currentTime < 120000
+            const currentStatus = current.status
+            const currentTime = new Date(current.createdAt || new Date()).getTime()
+            const isBusy = new Date().getTime() - currentTime < 120000
             current.status = isBusy ? 'BUSY' : currentStatus
         }
         return current ? current.status : null
@@ -540,6 +540,7 @@ const SystemCard = (props: Props) => {
                             style={{
                                 filter: darkMode && !logo ? 'invert(100%) sepia(5%) saturate(433%) hue-rotate(6deg) brightness(120%) contrast(100%)' : ''
                             }}
+                            draggable={false}
                         />
                         <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
                     </div>
@@ -564,7 +565,8 @@ const SystemCard = (props: Props) => {
                                             }}
                                             src={LiveIcon}
                                             alt="Live"
-                                            className="systemcard__status-live" />
+                                            className="systemcard__status-live"
+                                            draggable={false} />
                                     </span>
                                     &nbsp;&nbsp;Status:&nbsp;
                                     <strong>{reportedlyDown ? 'Problem' : status ? status === 'BUSY' ? status : 'UP' : 'DOWN'}

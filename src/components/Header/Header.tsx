@@ -95,6 +95,7 @@ export default function Header() {
             alt='My Account'
             className={`header__menu${darkMode ? '--dark' : ''}`}
             style={{ padding: 0 }}
+            draggable={false}
           />
         </div>
         <div className="header__col">
@@ -104,6 +105,7 @@ export default function Header() {
             alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
             className={`header__down-icon${darkMode ? '--dark' : ''}`}
             style={{ padding: 0 }}
+            draggable={false}
           />
         </div>
         <div className="header__col">
@@ -113,6 +115,7 @@ export default function Header() {
               onClick={() => setOpenMenu(!openMenu)}
               alt='Menu'
               className={`header__menu${darkMode ? '--dark' : ''}`}
+              draggable={false}
             />
             :
             <img
@@ -123,6 +126,7 @@ export default function Header() {
               }}
               alt="Switch Mode"
               className={`header__menu${darkMode ? '--dark' : ''}`}
+              draggable={false}
             />
           }
         </div>
@@ -139,7 +143,7 @@ export default function Header() {
               setItem('/')
               setOpenMenu(!openMenu)
             }}>
-            <img src={Dashboard} alt="Dashboard" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={Dashboard} alt="Dashboard" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">Dashboard</p>
           </div>
           <div
@@ -152,7 +156,7 @@ export default function Header() {
               setItem('/history')
               setOpenMenu(!openMenu)
             }}>
-            <img src={History} alt="History" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={History} alt="History" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">History</p>
           </div>
 
@@ -166,7 +170,7 @@ export default function Header() {
               setItem('/systems')
               setOpenMenu(!openMenu)
             }}>
-            <img src={Api} alt="Systems" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={Api} alt="Systems" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">Systems</p>
           </div>
           <div
@@ -179,7 +183,7 @@ export default function Header() {
               setItem('/users')
               setOpenMenu(!openMenu)
             }}>
-            <img src={Users} alt="Users" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={Users} alt="Users" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">Users</p>
           </div>
 
@@ -193,7 +197,7 @@ export default function Header() {
               setItem('/applogs')
               setOpenMenu(!openMenu)
             }}>
-            <img src={AppLogs} alt="App Logs" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={AppLogs} alt="App Logs" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">App Logs</p>
           </div>
           <div
@@ -203,7 +207,7 @@ export default function Header() {
               setDarkMode(!darkMode)
               setOpenMenu(!openMenu)
             }}>
-            <img src={darkMode ? Day : Night} alt="Switch Mode" className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <img src={darkMode ? Day : Night} alt="Switch Mode" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</p>
           </div>
           <p className="header__menu-version">{APP_VERSION}</p>
@@ -224,6 +228,7 @@ export default function Header() {
               onClick={gotoAbout}
               alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
               className={`header__down-icon${darkMode ? '--dark' : ''}`}
+              draggable={false}
             />
           </Tooltip>
         </div>
@@ -231,8 +236,8 @@ export default function Header() {
         </div>
         <div className="header__col">
           <div className="header__user-group">
-            <img onClick={switchMode} src={darkMode ? Day : Night} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
-            <img src={UserIcon} alt="User Login" onClick={userOptions} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
+            <img onClick={switchMode} src={darkMode ? Day : Night} draggable={false} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
+            <img src={UserIcon} alt="User Login" onClick={userOptions} draggable={false} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
           </div>
         </div>
         <div className="header__loading" style={{ width: barWidth }} />

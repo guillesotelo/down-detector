@@ -3,19 +3,19 @@ import React from 'react'
 type Props = {
     label?: string
     value?: string | number
-    row?: boolean
+    inline?: boolean
 }
 
-export default function TextData({ label, value, row }: Props) {
+export default function TextData({ label, value, inline }: Props) {
     return (
         <div
             className="textdata__container"
             style={{
-                flexDirection: row ? 'row' : 'column',
-                gap: row ? '1rem' : ''
+                flexDirection: inline ? 'row' : 'column',
+                gap: inline ? '1rem' : ''
             }}>
             <p className="textdata__label">{label}</p>
-            <p className="textdata__value">{value}</p>
+            <p className="textdata__value" style={{ marginTop: !inline ? '.2rem' : '' }}>{value}</p>
         </div>
     )
 }

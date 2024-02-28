@@ -51,7 +51,7 @@ export default function AppLogs({ }: Props) {
   }
 
   const triggerSearch = (searchString?: string) => {
-    if (searchString) {
+    if (searchString && typeof searchString === 'string') {
       startTransition(() => {
         setFilteredData(tableData
           .filter((log: logType) =>
@@ -80,6 +80,7 @@ export default function AppLogs({ }: Props) {
           selected={selected}
           setSelected={setSelected}
           loading={loading || pending}
+          max={18}
         />
       </div>
     </div>

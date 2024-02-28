@@ -1,7 +1,11 @@
+import { useContext } from "react"
+import { AppContext } from "../../AppContext"
+
 export default function Help() {
+  const { isLoggedIn } = useContext(AppContext)
 
   return (
-    <div className="about__container">
+    <div className="about__container" style={{ width: isLoggedIn ? '85vw' : '' }}>
       <div className="about__section">
         <h1 className="page__header-title">About Down@VolvoCars</h1>
         <h2 className="about__title">Process Overview</h2>

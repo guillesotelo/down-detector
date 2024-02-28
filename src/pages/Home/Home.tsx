@@ -17,6 +17,7 @@ import { getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import LiveIcon from '../../assets/icons/live.svg'
+import TextData from '../../components/TextData/TextData'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -48,6 +49,7 @@ const Home = () => {
     { name: `Not responding` },
     { name: 'Slow response time' },
     { name: 'Unstable' },
+    { name: 'Internal issues' },
   ]
 
   const loadData = useMemo(() => {
@@ -159,7 +161,7 @@ const Home = () => {
       const currentStatus = current.status
       const currentTime = new Date(current.createdAt || new Date()).getTime()
       const isBusy = new Date().getTime() - currentTime < 120000
-        current.status = isBusy ? 'BUSY' : currentStatus
+      current.status = isBusy ? 'BUSY' : currentStatus
     }
     return current ? current.status : null
   }
@@ -213,7 +215,7 @@ const Home = () => {
         type: reportedStatus.name,
         systemId: report,
         url: getSystemData(report, 'url'),
-        description: `${reportedStatus.name}${data.description ? ': ' + data.description : ''}`,
+        message: `${reportedStatus.name}${data.message ? ': ' + data.message : ''}`,
         createdBy: user.username || `${report} - ${toHex(JSON.stringify(nav))}`
       }
 
@@ -386,15 +388,9 @@ const Home = () => {
   const renderReportModal = () => {
     return (
       <Modal
-        title='Report Issue'
+        title={`Report an issue in ${String(getSystemData(report, 'name') || 'System')}`}
         onClose={discardChanges}>
         <div className="home__modal-issue-col">
-          <InputField
-            label='System'
-            name='name'
-            value={String(getSystemData(report, 'name'))}
-            disabled
-          />
           <Dropdown
             label='Type of issue'
             options={issueOptions}
@@ -406,8 +402,8 @@ const Home = () => {
           />
           <InputField
             label='Details (Optional)'
-            name='description'
-            value={data.description}
+            name='message'
+            value={data.message}
             updateData={updateData}
             type='textarea'
             placeholder='Describe the issue...'
@@ -440,6 +436,8 @@ const Home = () => {
     return (
       <Modal
         title={String(getSystemData(selected, 'name'))}
+        logo={String(getSystemData(selected, 'logo') || '')}
+        showLogo
         // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={discardChanges}>
         {getDowntimeString() ?
@@ -466,7 +464,7 @@ const Home = () => {
         {editLog ?
           <div className="home__modal-row" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
             <Dropdown
-              label='New Status'
+              label='Status'
               options={['UP', 'DOWN']}
               value={editedLogStatus}
               selected={editedLogStatus}
@@ -517,7 +515,7 @@ const Home = () => {
             </div>
             : isSuper ?
               <Button
-                label='New Log'
+                label='Add Log'
                 handleClick={() => setEditLog(true)}
                 bgColor={APP_COLORS.BLUE_TWO}
                 textColor='white'
@@ -588,11 +586,13 @@ const Home = () => {
           title='Planned Downtime'
           subtitle={system?.name}
           onClose={() => setShowDowntime(null)}>
-          <div className="home__modal-col">
+          <div className="home__modal-col" style={{ margin: '1rem 0' }}>
             <p className="home__modal-downtime-note">
               The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
             </p>
-            {note ? <p className="home__modal-downtime-note">Reason: <br />{note}</p> : ''}
+            {note ?
+              <TextData label='Reason' value={note} />
+              : ''}
           </div>
           <Button
             label='System Details'
@@ -630,11 +630,16 @@ const Home = () => {
           setShowDowntime={setShowDowntime}
         />)
       :
-      Array.from({ length: 12 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
+      Array.from({ length: 15 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
   }
 
   return (
-    <div className={`home__container${darkMode ? '--dark' : ''}`}>
+    <div
+      className={`home__container${darkMode ? '--dark' : ''}`}
+      style={{
+        width: isLoggedIn ? '85vw' : ''
+      }}
+    >
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
           : selected ? renderSystemDetailsModal() : ''}
@@ -665,7 +670,7 @@ const Home = () => {
           {({ remainingTime }) => <p style={{ fontSize: '.8rem' }}>{remainingTime}</p>}
         </CountdownCircleTimer>
       </div>
-      {!isLoggedIn ?
+      {!isLoggedIn && !isMobile?
         <p
           style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
           className="home__app-version">

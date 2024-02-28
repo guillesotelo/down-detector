@@ -60,6 +60,13 @@
         justify-content: space-between;
     }
 
+    &__logo-div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .5rem;
+    }
+
     &__title {
         font-weight: normal;
         margin: 0;
