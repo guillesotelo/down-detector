@@ -210,6 +210,7 @@ const Home = () => {
 
       const reportData = {
         ...data,
+        name: String(getSystemData(report, 'name') || 'System'),
         geoLocation,
         navigator: JSON.stringify(nav),
         type: reportedStatus.name,
@@ -636,18 +637,15 @@ const Home = () => {
   return (
     <div
       className={`home__container${darkMode ? '--dark' : ''}`}
-      style={{
-        width: isLoggedIn ? '85vw' : ''
-      }}
-    >
+      style={{ width: isLoggedIn ? '85vw' : '' }}>
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
           : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
-      >
+        style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}>
         {renderSystemList()}
+        <div className="home__system-list-separator"></div>
       </div>
       <div
         style={{
@@ -670,7 +668,7 @@ const Home = () => {
           {({ remainingTime }) => <p style={{ fontSize: '.8rem' }}>{remainingTime}</p>}
         </CountdownCircleTimer>
       </div>
-      {!isLoggedIn && !isMobile?
+      {!isLoggedIn && !isMobile ?
         <p
           style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
           className="home__app-version">

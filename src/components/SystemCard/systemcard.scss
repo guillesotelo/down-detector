@@ -65,7 +65,7 @@
     &__header {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
         justify-content: flex-start;
         gap: .5rem;
         height: 1.6rem;
@@ -80,7 +80,8 @@
     }
 
     &__logo {
-        height: 1rem;
+        max-height: 1rem;
+        max-width: 2rem;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
