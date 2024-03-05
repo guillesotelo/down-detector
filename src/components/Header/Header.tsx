@@ -99,14 +99,16 @@ export default function Header() {
           />
         </div>
         <div className="header__col">
-          <img
-            src={DDLogo}
-            onClick={gotoAbout}
-            alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
-            className={`header__down-icon${darkMode ? '--dark' : ''}`}
-            style={{ padding: 0 }}
-            draggable={false}
-          />
+          {process.env.NODE_ENV === 'development' ? <p className='header__dev-label' >DEVELOPMENT</p> :
+            <img
+              src={DDLogo}
+              onClick={gotoAbout}
+              alt={location.pathname.includes('about') ? 'Show Systems' : 'About Down@Volvo'}
+              className={`header__down-icon${darkMode ? '--dark' : ''}`}
+              style={{ padding: 0 }}
+              draggable={false}
+            />
+          }
         </div>
         <div className="header__col">
           {isLoggedIn ?
@@ -233,6 +235,7 @@ export default function Header() {
           </Tooltip>
         </div>
         <div className="header__col">
+          {process.env.NODE_ENV === 'development' ? <p className='header__dev-label' >DEVELOPMENT</p> : ''}
         </div>
         <div className="header__col">
           <div className="header__user-group">

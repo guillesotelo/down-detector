@@ -432,7 +432,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#333333' : '#dbdbdb'
+                    color: darkMode ? '#333333a1' : '#dbdbdb9d'
                 }
             },
             y: {
@@ -447,7 +447,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#333333' : '#dbdbdb'
+                    color: darkMode ? '#333333a1' : '#dbdbdb9d'
                 }
             }
         }
@@ -496,7 +496,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: darkMode ? '#333333' : '#dbdbdb'
+                    color: darkMode ? '#333333a1' : '#dbdbdb9d'
                 }
             },
             y: {
@@ -511,7 +511,7 @@ const SystemCard = (props: Props) => {
                     display: true,
                     drawBorder: false,
                     drawChartArea: false,
-                    color: (ctx: any) => ctx.tick.value !== .5 ? darkMode ? '#333333' : '#dbdbdb' : 'transparent'
+                    color: (ctx: any) => ctx.tick.value !== .5 ? darkMode ? '#333333a1' : '#dbdbdb9d' : 'transparent'
                 }
             }
         }

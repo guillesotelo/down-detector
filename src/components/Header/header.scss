@@ -27,6 +27,17 @@
         }
     }
 
+    &__dev-label {
+        color: white;
+        font-weight: bold;
+        background-color: #ffa500ab;
+        border-radius: .5rem;
+        padding: .5rem;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
     &__col {
         margin: 1rem;
         display: flex;
