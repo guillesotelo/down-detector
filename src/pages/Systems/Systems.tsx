@@ -666,7 +666,7 @@ export default function Systems({ }: Props) {
                 setValue={setChangeOrder}
                 on='Yes'
                 off='No'
-                style={{ transform: 'scale(.8)'}}
+                style={{ transform: 'scale(.7)'}}
               />
             </> : ''}
           {!isMobile && changeOrder && showTooltip && isSuper ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}

@@ -26,7 +26,7 @@ export const AppProvider = ({ children }: Props) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
-    const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('preferredMode') || 'false'))
+    const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('preferredMode') || 'true'))
     const [headerLoading, setHeaderLoading] = useState(false)
 
     useEffect(() => {

@@ -32,9 +32,23 @@
         position: relative;
         border-radius: 2rem;
         transition: .3s;
-        border: 1px solid gray;
+        border: 1px solid lightgray;
         padding: .2rem .25rem;
         margin-top: .1rem;
+
+        &--dark {
+            width: 4rem;
+            height: 1.8rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: relative;
+            border-radius: 2rem;
+            transition: .3s;
+            border: 1px solid #424244;
+            padding: .2rem .25rem;
+            margin-top: .1rem;
+        }
     }
 
     &__label {

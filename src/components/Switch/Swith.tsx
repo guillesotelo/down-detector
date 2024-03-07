@@ -20,7 +20,7 @@ export default function Switch({ label, on, off, value, setValue, style }: Props
         >
             {label ? <p className={`switch__label${darkMode ? '--dark' : ''}`}>{label}</p> : ''}
             <div
-                className="switch__row"
+                className={`switch__row${darkMode ? '--dark' : ''}`}
                 style={{
                     backgroundColor: value ? '#a4d8a4' : '',
                 }}>

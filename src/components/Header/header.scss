@@ -4,9 +4,9 @@
         flex-direction: row;
         justify-content: space-between;
         box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
-        height: 8vh;
+        height: 6vh;
         border-bottom: 1px solid lightgray;
-        background-color: white;
+        background-color: #F9F8F8;
         position: fixed;
         width: 100vw;
         z-index: 3;
@@ -17,12 +17,12 @@
             flex-direction: row;
             justify-content: space-between;
             box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
-            height: 8vh;
-            border-bottom: 1px solid rgb(84, 84, 84);
+            height: 6vh;
+            border-bottom: 1px solid #424244;
             position: fixed;
             width: 100vw;
             z-index: 3;
-            background-color: #000000;
+            background-color: #2E2E30;
             animation: fade-in .5s ease-in forwards;
         }
     }
@@ -47,10 +47,9 @@
 
     &__down {
         &-icon {
-            height: 2.5rem;
+            height: 2rem;
             cursor: pointer;
             transition: .3s;
-            padding-left: 10px;
             opacity: .8;
             -webkit-user-select: none;
             -ms-user-select: none;
@@ -65,10 +64,9 @@
             }
 
             &--dark {
-                height: 2.5rem;
+                height: 2rem;
                 cursor: pointer;
                 transition: .3s;
-                padding-left: 10px;
                 -webkit-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
@@ -90,7 +88,6 @@
             height: 1.8rem;
             cursor: pointer;
             transition: .3s;
-            padding-right: 10px;
             opacity: .8;
             -webkit-user-select: none;
             -ms-user-select: none;
@@ -109,7 +106,6 @@
                 height: 1.8rem;
                 cursor: pointer;
                 transition: .3s;
-                padding-right: 10px;
                 -webkit-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
@@ -133,7 +129,7 @@
     }
 
     &__darkmode {
-        height: 1.5rem;
+        height: 1.4rem;
         cursor: pointer;
         transition: .3s;
         opacity: .8;
@@ -150,7 +146,7 @@
         }
 
         &--dark {
-            height: 1.5rem;
+            height: 1.4rem;
             cursor: pointer;
             transition: .3s;
             -webkit-user-select: none;
@@ -289,7 +285,7 @@
 
     &__loading {
         position: absolute;
-        top: calc(0% + 7.7vh);
+        top: calc(0% + 6vh);
         width: 0%;
         background-color: #7089AC;
         height: .3vh;
