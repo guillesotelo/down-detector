@@ -523,7 +523,7 @@ const SystemCard = (props: Props) => {
                 <div
                     className={`systemcard__container${darkMode ? '--dark' : ''}`}
                     style={{
-                        borderColor: darkMode ? 'gray' : '#d3d3d361',
+                        borderColor: darkMode ? '#424244' : '#d3d3d361',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading || (status !== false && status !== true && status !== 'BUSY') ? '' :
                             status === 'BUSY' ? darkMode ? 'linear-gradient(to right bottom, rgb(0, 0, 0), rgb(255 152 0 / 26%)'

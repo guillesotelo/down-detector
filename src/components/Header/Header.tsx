@@ -93,7 +93,7 @@ export default function Header() {
             src={UserIcon}
             onClick={goToAccount}
             alt='My Account'
-            className={`header__menu${darkMode ? '--dark' : ''}`}
+            className={`header__login-icon${darkMode ? '--dark' : ''}`}
             style={{ padding: 0 }}
             draggable={false}
           />

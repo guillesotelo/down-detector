@@ -92,7 +92,7 @@ export default function Dropdown(props: Props) {
         return <div
             className={`dropdown__select${darkMode ? '--dark' : ''}`}
             style={{
-                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
+                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid #424244' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
                 borderBottomLeftRadius: openDrop ? 0 : '',
                 filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''
@@ -116,7 +116,7 @@ export default function Dropdown(props: Props) {
         return <div
             className={`dropdown__select${darkMode ? '--dark' : ''}`}
             style={{
-                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid gray' : '1px solid lightgray',
+                border: openDrop ? '1px solid #105ec6' : darkMode ? '1px solid #424244' : '1px solid lightgray',
                 borderBottomRightRadius: openDrop ? 0 : '',
                 borderBottomLeftRadius: openDrop ? 0 : '',
                 filter: openDrop ? darkMode ? 'brightness(120%)' : 'brightness(95%)' : ''

@@ -3,18 +3,18 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: .3rem;
+        gap: .1rem;
         border-right: 1px solid lightgray;
         border-top: 1px solid lightgray;
         box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
         background-color: white;
-        width: 16rem;
-        min-height: calc(92vh - 1px);
+        width: 14rem;
+        min-height: calc(94vh - 1px);
         height: inherit;
         // position: fixed;
         // left: 0;
         // top: 0;
-        // margin-top: 8vh;
+        // margin-top: 6vh;
         z-index: 2;
         overflow-x: hidden;
         animation: fade-in-right .5s ease-in forwards;
@@ -23,18 +23,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: .3rem;
-            border-right: 1px solid rgb(84, 84, 84);
-            border-top: 1px solid rgb(84, 84, 84);
+            gap: .1rem;
+            border-right: 1px solid #424244;
+            border-top: 1px solid #424244;
             box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
-            background-color: #000000;
-            width: 16rem;
-            min-height: calc(92vh - 1px);
+            background-color: #2E2E30;
+            width: 14rem;
+            min-height: calc(94vh - 1px);
             height: inherit;
             // position: fixed;
             // left: 0;
             // top: 0;
-            // margin-top: 8vh;
+            // margin-top: 6vh;
             z-index: 2;
             overflow-x: hidden;
             animation: fade-in-right .5s ease-in forwards;
@@ -49,10 +49,9 @@
         width: 10rem;
         gap: 1rem;
         cursor: pointer;
-        transition: .2s;
         border-radius: 1rem;
         padding: .4rem 1rem;
-        transition: .3s;
+        transition: .1s;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
@@ -69,16 +68,15 @@
             width: 10rem;
             gap: 1rem;
             cursor: pointer;
-            transition: .2s;
+            transition: .1s;
             border-radius: 1rem;
             padding: .4rem 1rem;
-            transition: .3s;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
 
             &:hover {
-                background-color: rgba(53, 53, 53, 0.693);
+                background-color: rgb(60, 60, 60);
             }
         }
 
@@ -93,13 +91,13 @@
         }
 
         &-label {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: normal;
             margin: 0;
             opacity: .8;
 
             &--dark {
-                font-size: 1.2rem;
+                font-size: 1rem;
                 font-weight: normal;
                 margin: 0;
                 color: lightgray;
@@ -112,13 +110,13 @@
     }
 
     &__separator {
-        width: 16rem;
+        width: 14rem;
         border-bottom: 1px solid lightgray;
         margin: .5em 0;
 
         &--dark {
-            width: 16rem;
-            border-bottom: 1px solid rgb(84, 84, 84);
+            width: 14rem;
+            border-bottom: 1px solid #424244;
             margin: 1rem 0;
         }
     }

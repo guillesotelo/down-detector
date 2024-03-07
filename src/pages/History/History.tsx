@@ -82,7 +82,16 @@ export default function History({ }: Props) {
     return (
         <div className="history__container">
             <div className="history__row">
-                <div className="history__col"></div>
+                <div className="history__col">
+                    <Switch
+                        label='Get RAW'
+                        value={getRaw}
+                        setValue={setGetRaw}
+                        on='Yes'
+                        off='No'
+                        style={{ transform: 'scale(.7)' }}
+                    />
+                </div>
                 <div className="history__col">
                     <SearchBar
                         handleChange={onChangeSearch}
@@ -91,16 +100,7 @@ export default function History({ }: Props) {
                         placeholder='Search history...'
                     />
                 </div>
-                <div className="history__col">
-                    <Switch
-                        label='Get RAW'
-                        value={getRaw}
-                        setValue={setGetRaw}
-                        on='Yes'
-                        off='No'
-                        style={{ alignSelf: 'flex-end' }}
-                    />
-                </div>
+                <div className="history__col"></div>
             </div>
             <div className="history__col">
                 <DataTable

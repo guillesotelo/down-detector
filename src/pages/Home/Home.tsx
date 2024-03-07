@@ -637,7 +637,7 @@ const Home = () => {
   return (
     <div
       className={`home__container${darkMode ? '--dark' : ''}`}
-      style={{ width: isLoggedIn ? '85vw' : '' }}>
+      style={{ width: isLoggedIn ? '90vw' : '' }}>
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
           : selected ? renderSystemDetailsModal() : ''}

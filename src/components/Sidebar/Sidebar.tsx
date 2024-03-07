@@ -31,7 +31,7 @@ export default function Sidebar({ }: Props) {
                 }}
                 style={{
                     marginTop: '1.5rem',
-                    backgroundColor: item === '/' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                    backgroundColor: item === '/' ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                 }}>
                 <img src={Dashboard} alt="Dashboard" draggable={false} className={`sidebar__item-svg${darkMode ? '--dark' : ''}`} />
                 <h4 className={`sidebar__item-label${darkMode ? '--dark' : ''}`}>Dashboard</h4>
@@ -39,7 +39,7 @@ export default function Sidebar({ }: Props) {
             <div
                 className={`sidebar__item${darkMode ? '--dark' : ''}`}
                 style={{
-                    backgroundColor: item === '/history' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                    backgroundColor: item === '/history' ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                 }}
                 onClick={() => {
                     history.push('/history')
@@ -52,7 +52,7 @@ export default function Sidebar({ }: Props) {
             <div
                 className={`sidebar__item${darkMode ? '--dark' : ''}`}
                 style={{
-                    backgroundColor: item.includes('systems') ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                    backgroundColor: item.includes('systems') ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                 }}
                 onClick={() => {
                     history.push('/systems')
@@ -65,7 +65,7 @@ export default function Sidebar({ }: Props) {
                 <div
                     className={`sidebar__item${darkMode ? '--dark' : ''}`}
                     style={{
-                        backgroundColor: item.includes('users') ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                        backgroundColor: item.includes('users') ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                     }}
                     onClick={() => {
                         history.push('/users')
@@ -81,7 +81,7 @@ export default function Sidebar({ }: Props) {
                     <div
                         className={`sidebar__item${darkMode ? '--dark' : ''}`}
                         style={{
-                            backgroundColor: item === '/applogs' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                            backgroundColor: item === '/applogs' ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                         }}
                         onClick={() => {
                             history.push('/applogs')
@@ -95,7 +95,7 @@ export default function Sidebar({ }: Props) {
             {/* <div
                 className={`sidebar__item${darkMode ? '--dark' : ''}`}
                 style={{
-                    backgroundColor: item === '/help' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+                    backgroundColor: item === '/help' ? darkMode ? '#555555' : 'rgb(237, 237, 237)' : ''
                 }}
                 onClick={() => {
                     history.push('/help')
