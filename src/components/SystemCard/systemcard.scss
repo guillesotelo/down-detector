@@ -207,7 +207,7 @@
         overflow: hidden;
         width: calc(14rem + 1.4rem);
         padding: 1.5rem .8rem .8rem .8rem;
-        animation: fade-in-down 1s ease-in forwards;
+        animation: fade-in-down-event 1s ease-in forwards;
 
         &:hover .systemcard__event-note {
             -webkit-line-clamp: unset;
@@ -228,7 +228,7 @@
             overflow: hidden;
             width: calc(14rem + 1.4rem);
             padding: 1.5rem .8rem .8rem .8rem;
-            animation: fade-in-down 1s ease-in forwards;
+            animation: fade-in-down-event 1s ease-in forwards;
 
             &:hover .systemcard__event-note {
                 -webkit-line-clamp: unset;

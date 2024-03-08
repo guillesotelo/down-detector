@@ -217,7 +217,7 @@ const Home = () => {
         systemId: report,
         url: getSystemData(report, 'url'),
         message: `${reportedStatus.name}${data.message ? ': ' + data.message : ''}`,
-        createdBy: user.username || `${report} - ${toHex(JSON.stringify(nav))}`
+        createdBy: user.username || `${toHex(JSON.stringify(nav)).slice(0,30)}`
       }
 
       const sent = await createUserAlert(reportData)

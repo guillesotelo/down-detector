@@ -592,7 +592,8 @@ const SystemCard = (props: Props) => {
                                 'black' : '#ff6161a6' : darkMode ?
                                 'black' : '#fcd9a59e',
                             border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
-                                : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent'
+                                : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent',
+                            animationDelay: `${delay || '0'}`
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
