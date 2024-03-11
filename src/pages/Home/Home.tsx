@@ -106,6 +106,7 @@ const Home = () => {
           // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
           if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
             item.status = 'BUSY'
+            item.busy = true
           }
         }
         return item
@@ -522,7 +523,7 @@ const Home = () => {
                 textColor='white'
                 style={{ width: '2.5rem' }}
               /> : ''}
-        <div className="home__modal-table" style={{ marginTop: '.5rem' }}>
+        <div className="home__modal-table" style={{ marginTop: '1rem' }}>
           <DataTable
             title='Latest system logs'
             tableData={statusAndAlerts}
@@ -530,7 +531,7 @@ const Home = () => {
             tableHeaders={systemHisrotyHeaders}
             name='history'
             loading={loading}
-            max={getDowntimeString() ? 2 : 3}
+            max={getDowntimeString() ? 3 : 6}
             orderDataBy={hisrotyHeaders[0]}
             style={{ width: isMobile ? '80vw' : '50vw' }}
             setSelected={isSuper ? setSelectedLog : undefined}

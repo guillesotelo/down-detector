@@ -80,6 +80,7 @@ export type historyType = {
     updatedAt?: Date
     newData?: historyType
     raw?: string
+    busy?: boolean
 }
 
 export type alertType = {

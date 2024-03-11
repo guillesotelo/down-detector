@@ -107,7 +107,7 @@
             font-size: 1.2rem;
             transition: .3s;
             padding: 0;
-            color: lightgray;
+            color: gray;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
@@ -116,7 +116,7 @@
             border-radius: .5rem;
 
             &:hover {
-                border: 1px solid lightgray;
+                border: 1px solid gray;
             }
         }
     }

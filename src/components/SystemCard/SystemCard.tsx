@@ -70,6 +70,12 @@ const SystemCard = (props: Props) => {
         firstStatus
     } = system || {}
 
+    // if (name === 'CS Stats') {
+    //     console.log('\n\n')
+    //     console.log(name)
+    //     console.log(lastDayData)
+    // }
+
     useEffect(() => {
         if ((loading || (status !== false && status !== true)) && !headerLoading) setHeaderLoading(true)
     }, [loading, status])
@@ -77,7 +83,7 @@ const SystemCard = (props: Props) => {
     useEffect(() => {
         processChartData()
         setStatus(getCurrentStatus())
-    }, [history, alerts, system])
+    }, [history, alerts, system, selected])
 
     useEffect(() => {
         generateLastDayData()
@@ -98,8 +104,10 @@ const SystemCard = (props: Props) => {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
                     segment: {
-                        borderColor: (ctx: any) => lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ?
-                            'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                        borderColor: (ctx: any) =>
+                            lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ? 'gray' :
+                                lastDayData[ctx.p1DataIndex].busy || reportedlyDown || status === 'BUSY' ? 'orange' :
+                                    status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     borderWidth: 4,
@@ -131,8 +139,9 @@ const SystemCard = (props: Props) => {
                     data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
                     backgroundColor: 'transparent',
                     segment: {
-                        borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ?
-                            'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red'
+                        borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ? 'gray' :
+                            completeData[ctx.p1DataIndex].busy || reportedlyDown || status === 'BUSY' ? 'orange' :
+                                status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     pointBorderWidth: 0,
@@ -219,6 +228,7 @@ const SystemCard = (props: Props) => {
                     const isBusy = new Date().getTime() - currentTime < 120000
                     if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
                         item.status = 'BUSY'
+                        item.busy = true
                     }
                 }
                 return item
@@ -239,7 +249,11 @@ const SystemCard = (props: Props) => {
                     if (nextTime && (nextTime - currentTime < 180000) && arr[i + 1].status !== register.status) {
                         allHours.set(
                             time.toLocaleString(),
-                            { ...register, status: arr[i + 1].status ? 1 : 0 }
+                            {
+                                ...register,
+                                status: arr[i + 1].status ? 1 : 0,
+                                busy: arr[i + 1].busy || false
+                            }
                         )
                     }
                     // If less than 3 minutes passed, we overwrite the hour status.
@@ -248,7 +262,11 @@ const SystemCard = (props: Props) => {
                         currentTime - prevTime < 180000) {
                         allHours.set(
                             time.toLocaleString(),
-                            { ...register, status: register.status ? 1 : 0 }
+                            {
+                                ...register,
+                                status: register.status ? 1 : 0,
+                                busy: allHours.get(time.toLocaleString()).busy || false
+                            }
                         )
                     } else {
                         // On the other hand, if time with next register is more than one hour, we add a new register 
@@ -276,17 +294,22 @@ const SystemCard = (props: Props) => {
             })
 
         let prevStatus = 1
+        let prevBusy = false
         // We add 2 hours to the set to render the full 24 hours in graph
         const set = Array.from({ length: hourSet + 2 }).map((_, i) => {
             const time = getDateWithGivenHour(hourSet - i)
             let status = lastStatus ? 1 : 0
             let unknown = false
+            let busy = false
 
             if (allHours.size > 1) {
                 // now < before === true
                 // Copy all status from the right to the last registered
                 if (new Date(time).getTime() > new Date(lastTime).getTime()) {
-                    if (allHours.get(lastTime)) status = allHours.get(lastTime).status
+                    if (allHours.get(lastTime)) {
+                        status = allHours.get(lastTime).status
+                        busy = allHours.get(lastTime).busy || false
+                    }
                 }
                 // Copy all status from the left to the first registered
                 else if (new Date(time).getTime() < new Date(firstTime).getTime()) {
@@ -298,9 +321,14 @@ const SystemCard = (props: Props) => {
                     const register = allHours.get(time)
                     status = register.status
                     prevStatus = register.status
+                    busy = register.busy || false
+                    prevBusy = register.busy || false
                 }
                 // Copy status in between registered statuses
-                else status = prevStatus
+                else {
+                    status = prevStatus
+                    busy = prevBusy
+                }
             } else {
                 status = allHours.values().next().value.status
                 if (new Date(time).getTime() < new Date(firstTime).getTime()) {
@@ -311,7 +339,8 @@ const SystemCard = (props: Props) => {
             const itemStatus = {
                 time,
                 status,
-                unknown
+                unknown,
+                busy
             }
 
             return itemStatus
@@ -403,13 +432,15 @@ const SystemCard = (props: Props) => {
                         if (lastDayData[ctx.dataIndex] && lastDayData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
                         return lastDayData[ctx.dataIndex].unknown ? 'Not registered' :
-                            lastDayData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                            lastDayData[ctx.dataIndex].busy ? 'BUSY' :
+                                lastDayData[ctx.dataIndex].status ? 'UP' : 'DOWN'
                     },
                     labelColor: (ctx: any) => {
                         return {
                             backgroundColor: lastDayData[ctx.dataIndex].unknown ? 'gray' :
-                                lastDayData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
-                                    lastDayData[ctx.dataIndex].status ? 'green' : 'red',
+                                lastDayData[ctx.dataIndex].busy ? 'orange' :
+                                    lastDayData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
+                                        lastDayData[ctx.dataIndex].status ? 'green' : 'red',
                             borderWidth: 0,
                             borderRadius: 5,
                         }
@@ -467,13 +498,15 @@ const SystemCard = (props: Props) => {
                         if (completeData[ctx.dataIndex] && completeData[ctx.dataIndex].reported) return label
                         else if (label.includes('user')) return ''
                         return completeData[ctx.dataIndex].unknown ? 'Not registered' :
-                            completeData[ctx.dataIndex].status ? 'UP' : 'DOWN'
+                            completeData[ctx.dataIndex].busy ? 'BUSY' :
+                                completeData[ctx.dataIndex].status ? 'UP' : 'DOWN'
                     },
                     labelColor: (ctx: any) => {
                         return {
                             backgroundColor: completeData[ctx.dataIndex].unknown ? 'gray' :
-                                completeData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
-                                    completeData[ctx.dataIndex].status ? 'green' : 'red',
+                                completeData[ctx.dataIndex].busy ? 'orange' :
+                                    completeData[ctx.dataIndex].reported ? darkMode ? 'white' : 'black' :
+                                        completeData[ctx.dataIndex].status ? 'green' : 'red',
                             borderWidth: 0,
                             borderRadius: 5,
                         }
