@@ -650,7 +650,7 @@ export default function Systems({ }: Props) {
         </Modal>
         : ''}
       <div className="systems__col" style={{ filter: selected !== -1 || newSystem ? 'blur(10px)' : '' }}>
-        <div className='systems__row'>
+        <div className='systems__row' style={{ alignItems: 'flex-end' }}>
           {isSuper ?
             <>
               <Button
@@ -666,7 +666,7 @@ export default function Systems({ }: Props) {
                 setValue={setChangeOrder}
                 on='Yes'
                 off='No'
-                style={{ transform: 'scale(.7)'}}
+                style={{ marginLeft: '1rem' }}
               />
             </> : ''}
           {!isMobile && changeOrder && showTooltip && isSuper ? <p className='systems__tooltip'>👇 Drag & Drop systems to set the order in Dashboard</p> : ''}

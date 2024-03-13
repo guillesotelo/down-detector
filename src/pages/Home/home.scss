@@ -32,7 +32,7 @@
             -ms-user-select: none;
             user-select: none;
             margin-top: 2rem;
-            
+
             &-separator {
                 background-color: transparent;
                 height: 2rem;
@@ -173,12 +173,15 @@
         margin: 0;
         font-size: .9rem;
         color: gray;
-        position: absolute;
-        bottom: 1rem;
-        right: 1rem;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+
+        &-container {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     }
 
     &__countdown {

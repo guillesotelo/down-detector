@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
-import { getHistoryAndAlerts, getUser } from '../../helpers'
-import { alertType, eventType, historyType, logType, onChangeEventType } from '../../types'
+import { getHistoryAndAlerts, getUser, sortArray } from '../../helpers'
+import { alertType, eventType, historyType, logType, onChangeEventType, systemType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useHistory } from 'react-router-dom'
 import { AppContext } from '../../AppContext'
 import Switch from '../../components/Switch/Swith'
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { getActiveSystems } from '../../services'
 
 type Props = {}
 
@@ -16,18 +18,38 @@ export default function History({ }: Props) {
     const [getRaw, setGetRaw] = useState(false)
     const [tableData, setTableData] = useState<historyType[]>([])
     const [filteredData, setFilteredData] = useState<historyType[]>([])
+    const [allSystems, setAllSystems] = useState<systemType[]>([])
+    const [selectedSystem, setSelectedSystem] = useState<systemType>({ name: 'All' })
     const [pending, startTransition] = useTransition()
     const { isLoggedIn, isSuper } = useContext(AppContext)
     const history = useHistory()
 
-
     useEffect(() => {
         getHistory()
+        getSystems()
     }, [getRaw, isSuper])
 
     useEffect(() => {
         if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
     }, [isLoggedIn])
+
+    useEffect(() => {
+        if (selectedSystem._id) {
+            setFilteredData(() =>
+                tableData.filter(h => h.systemId === selectedSystem._id))
+        } else setFilteredData(tableData)
+    }, [selectedSystem])
+
+    const getSystems = async () => {
+        try {
+            let systems = await getActiveSystems()
+            if (systems && Array.isArray(systems)) {
+                setAllSystems([{ name: 'All' }].concat(systems))
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     const getHistory = async () => {
         try {
@@ -83,14 +105,26 @@ export default function History({ }: Props) {
         <div className="history__container">
             <div className="history__row">
                 <div className="history__col">
-                    <Switch
-                        label='Get RAW'
-                        value={getRaw}
-                        setValue={setGetRaw}
-                        on='Yes'
-                        off='No'
-                        style={{ transform: 'scale(.7)' }}
-                    />
+                    <div className="history__row" style={{ margin: 0, justifyContent: 'flex-start' }}>
+                        <Dropdown
+                            label='System'
+                            options={allSystems}
+                            value={selectedSystem}
+                            selected={selectedSystem}
+                            setSelected={setSelectedSystem}
+                            maxHeight='20vh'
+                            objKey='name'
+                            style={{ width: '12rem', marginRight: '1rem' }}
+                            loading={loading}
+                        />
+                        <Switch
+                            label='Get raw'
+                            value={getRaw}
+                            setValue={setGetRaw}
+                            on='Yes'
+                            off='No'
+                        />
+                    </div>
                 </div>
                 <div className="history__col">
                     <SearchBar
@@ -106,7 +140,6 @@ export default function History({ }: Props) {
                 <DataTable
                     title='History'
                     tableData={filteredData}
-                    setTableData={setFilteredData}
                     tableHeaders={hisrotyHeaders.concat(
                         getRaw ?
                             [{

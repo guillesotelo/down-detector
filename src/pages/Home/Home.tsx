@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -18,6 +18,7 @@ import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceho
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import LiveIcon from '../../assets/icons/live.svg'
 import TextData from '../../components/TextData/TextData'
+import Tooltip from '../../components/Tooltip/Tooltip'
 Chart.register(...registerables);
 
 const Home = () => {
@@ -38,6 +39,7 @@ const Home = () => {
   const [editLog, setEditLog] = useState(false)
   const [editedLogStatus, setEditedLogStatus] = useState('DOWN')
   const [editedLogMessage, setEditedLogMessage] = useState('')
+  const [versionDate, setVersionDate] = useState('')
   const [countdownKey, setCountdownKey] = useState(0)
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
 
@@ -58,6 +60,7 @@ const Home = () => {
       getSystems()
       getAllStatus()
       getAllDownTimes()
+      getTooltipVersionDate()
       setLoading(false)
     }
   }, [])
@@ -218,7 +221,7 @@ const Home = () => {
         systemId: report,
         url: getSystemData(report, 'url'),
         message: `${reportedStatus.name}${data.message ? ': ' + data.message : ''}`,
-        createdBy: user.username || `${toHex(JSON.stringify(nav)).slice(0,30)}`
+        createdBy: user.username || `${toHex(JSON.stringify(nav)).slice(0, 30)}`
       }
 
       const sent = await createUserAlert(reportData)
@@ -385,6 +388,15 @@ const Home = () => {
     setEditLog(false)
     setEditedLogStatus('')
     setEditedLogMessage('')
+  }
+
+  const getTooltipVersionDate = async () => {
+    try {
+      const vDate = await getVersionDate()
+      if (vDate) setVersionDate(vDate)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const renderReportModal = () => {
@@ -670,11 +682,11 @@ const Home = () => {
         </CountdownCircleTimer>
       </div>
       {!isLoggedIn && !isMobile ?
-        <p
-          style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}
-          className="home__app-version">
-          {APP_VERSION}
-        </p>
+        <div className="home__app-version-container" style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}>
+          <Tooltip tooltip={versionDate} boxStyle={{ marginRight: '1rem' }}>
+            <p className="home__app-version">{APP_VERSION}</p>
+          </Tooltip>
+        </div>
         : ''}
     </div >
   )

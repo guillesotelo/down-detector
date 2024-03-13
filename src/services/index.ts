@@ -46,6 +46,7 @@ import {
 import {
     getAllConfigs,
     createConfig,
+    getVersionDate,
     getConfigById,
     updateConfig,
     deleteConfig,
@@ -98,6 +99,7 @@ export {
     updateUserAlert,
     deleteUserAlert,
     getAllConfigs,
+    getVersionDate,
     createConfig,
     getConfigById,
     updateConfig,

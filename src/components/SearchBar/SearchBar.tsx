@@ -28,7 +28,7 @@ export default function SearchBar(props: Props) {
     
     return (
         <div className={`searchbar__container${darkMode ? '--dark' : ''}`} style={style}>
-            <img src={SearchIcon} className={`searchbar__icon${darkMode ? '--dark' : ''}`} onClick={triggerSearch} />
+            <img src={SearchIcon} className={`searchbar__icon${darkMode ? '--dark' : ''}`} onClick={triggerSearch} draggable={false}/>
             <input
                 className={`searchbar__input${darkMode ? '--dark' : ''}`}
                 onChange={handleChange}

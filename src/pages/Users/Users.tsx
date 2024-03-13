@@ -34,7 +34,7 @@ export default function Users({ }: Props) {
   }, [])
 
   useEffect(() => {
-    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+    if (isLoggedIn !== null && !isLoggedIn && !isSuper) return history.push('/')
   }, [isLoggedIn])
 
   useEffect(() => {
@@ -51,7 +51,6 @@ export default function Users({ }: Props) {
   }, [selected, newUser])
 
   const loadData = async () => {
-    if (!isSuper) return history.push('/')
     getUsers()
     getSystems()
   }

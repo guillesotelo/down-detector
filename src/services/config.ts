@@ -26,6 +26,13 @@ const getConfigById = async (_id: string) => {
     } catch (err) { console.log(err) }
 }
 
+const getVersionDate = async () => {
+    try {
+        const config = await axios.get(`${API_URL}/api/config/getVersionDate`, { headers: getHeaders() })
+        return config.data
+    } catch (err) { console.log(err) }
+}
+
 const createConfig = async (data: configType) => {
     try {
         const config = await axios.post(`${API_URL}/api/config/create`, { ...data, user: getUser() }, getConfig())
@@ -54,6 +61,7 @@ const deleteConfig = async (data: configType) => {
 export {
     getAllConfigs,
     createConfig,
+    getVersionDate,
     getConfigById,
     updateConfig,
     deleteConfig,

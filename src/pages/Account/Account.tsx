@@ -105,7 +105,7 @@ export default function Account({ }: Props) {
         :
         <div className={`account__details${darkMode ? '--dark' : ''}`}>
           <h2 className='account__details-title'>Account Information</h2>
-          {!isMobile ? <img src={UserIcon} alt="User Profile" className={`account__details-icon${darkMode ? '--dark' : ''}`} /> : ''}
+          {!isMobile ? <img src={UserIcon} alt="User Profile" className={`account__details-icon${darkMode ? '--dark' : ''}`} draggable={false} /> : ''}
           {edit ?
             <>
               <InputField
