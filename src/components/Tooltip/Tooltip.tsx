@@ -5,9 +5,10 @@ type Props = {
     children?: React.ReactNode
     inline?: boolean
     style?: React.CSSProperties
+    boxStyle?: React.CSSProperties
 }
 
-export default function Tooltip({ tooltip, children, inline, style }: Props) {
+export default function Tooltip({ tooltip, children, inline, style, boxStyle }: Props) {
     const [showTooltip, setShowTooltip] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
     const [childrenWidth, setChildrenWidth] = useState(0)
@@ -30,7 +31,7 @@ export default function Tooltip({ tooltip, children, inline, style }: Props) {
     return (
         <div
             className="tooltip__container"
-            style={style}
+            style={{ ...style, placeContent: inline ? '' : 'center' }}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             ref={containerRef}>
@@ -40,6 +41,7 @@ export default function Tooltip({ tooltip, children, inline, style }: Props) {
                 marginLeft: inline ? childrenWidth * 1.1 : '',
                 top: !inline ? childrenHeight * -2.5 : '',
                 marginTop: inline ? childrenHeight / 10 : '',
+                ...boxStyle
             }}>
                 <p className={inline ? 'tooltip__text-inline' : 'tooltip__text'} >
                     {tooltip}

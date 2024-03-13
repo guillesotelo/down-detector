@@ -2,13 +2,11 @@
     &__container {
         position: relative;
         display: flex;
-        // place-content: center;
     }
 
     &__box {
         display: none;
         position: absolute;
-        top: 0;
         z-index: 10;
         background: #535353;
         font-size: .9rem;
@@ -42,8 +40,8 @@
         &:before {
             content: "";
             position: absolute;
-            top: 100%;
             left: 50%;
+            bottom: -50%;
             border: 8px solid transparent;
             border-top: 8px solid #535353;
         }

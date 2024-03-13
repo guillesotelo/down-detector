@@ -1,4 +1,5 @@
 import { getAllAlerts, getAllHistory } from "../services"
+import * as fs from 'fs';
 
 export const chunkArray = (arr: any[], chunkSize: number) => {
     const result = []

@@ -6,6 +6,7 @@ import { logType, onChangeEventType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useHistory } from 'react-router-dom'
 import { AppContext } from '../../AppContext'
+import Dropdown from '../../components/Dropdown/Dropdown'
 
 type Props = {}
 
@@ -15,29 +16,33 @@ export default function AppLogs({ }: Props) {
   const [selected, setSelected] = useState(-1)
   const [tableData, setTableData] = useState<logType[]>([])
   const [filteredData, setFilteredData] = useState<logType[]>([])
+  const [allModules, setAllModules] = useState<string[]>([])
+  const [selectedModule, setSelectedModule] = useState('All')
   const [pending, startTransition] = useTransition()
   const { isLoggedIn, isSuper } = useContext(AppContext)
   const history = useHistory()
 
   useEffect(() => {
-    verifyUser()
-    getHistory()
+    getLogs()
   }, [])
 
   useEffect(() => {
-    if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
+    if (isLoggedIn !== null && !isLoggedIn && !isSuper) return history.push('/')
   }, [isLoggedIn])
 
-  const verifyUser = async () => {
-    if (!isSuper) return history.push('/')
-  }
+  useEffect(() => {
+    if (selectedModule !== 'All') setFilteredData(tableData.filter((log: logType) => log.module === selectedModule))
+    else setFilteredData(tableData)
+  }, [selectedModule])
 
-  const getHistory = async () => {
+  const getLogs = async () => {
     try {
       const logs = await getAllLogs()
       if (logs && logs.length) {
         setTableData(logs)
         setFilteredData(logs)
+        let modules = logs.map((log: logType) => log.module)
+        setAllModules(['All'].concat([...new Set(modules) as any]))
       }
     } catch (error) {
       console.error(error)
@@ -63,22 +68,36 @@ export default function AppLogs({ }: Props) {
 
   return (
     <div className="applogs__container">
-      <SearchBar
-        handleChange={onChangeSearch}
-        triggerSearch={triggerSearch}
-        value={search}
-        placeholder='Search logs...'
-        style={{ marginBottom: '1rem' }}
-      />
+      <div className="applogs__row">
+        <div className="applogs__col">
+          <Dropdown
+            label='Module'
+            options={allModules}
+            value={selectedModule}
+            selected={selectedModule}
+            setSelected={setSelectedModule}
+            maxHeight='20vh'
+            style={{ width: '12rem', marginRight: '1rem' }}
+            loading={loading}
+          />
+        </div>
+        <div className="applogs__col">
+          <SearchBar
+            handleChange={onChangeSearch}
+            triggerSearch={triggerSearch}
+            value={search}
+            placeholder='Search logs...'
+          />
+        </div>
+        <div className="applogs__col">
+        </div>
+      </div>
       <div className="applogs__col">
         <DataTable
           title='App Logs'
           tableData={filteredData}
-          setTableData={setFilteredData}
           tableHeaders={logHeaders}
           name='logs'
-          selected={selected}
-          setSelected={setSelected}
           loading={loading || pending}
           max={18}
         />

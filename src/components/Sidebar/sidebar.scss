@@ -125,10 +125,14 @@
         position: absolute;
         bottom: 0;
         margin-bottom: 2rem;
-        color: gray;
-        font-size: .9rem;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+
+        &-text {
+            color: gray;
+            font-size: .9rem;
+            margin: 0;
+        }
     }
 }
