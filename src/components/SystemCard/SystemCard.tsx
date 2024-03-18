@@ -4,8 +4,7 @@ import { Line } from 'react-chartjs-2'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
-import { APP_COLORS } from '../../constants/app'
-import { getDate, getDateWithGivenHour, sortArray } from '../../helpers'
+import { getDate, getDateWithGivenHour, parseDateTime, sortArray } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 import LiveIcon from '../../assets/icons/live.svg'
 import Api from '../../assets/icons/api.svg'
@@ -67,13 +66,12 @@ const SystemCard = (props: Props) => {
         logo,
         raw,
         broadcastMessages,
-        firstStatus
     } = system || {}
 
-    // if (name === 'CS Stats') {
+    // if (name === 'Gerrit') {
     //     console.log('\n\n')
     //     console.log(name)
-    //     console.log(lastDayData)
+    //     console.log(history)
     // }
 
     useEffect(() => {
@@ -91,7 +89,7 @@ const SystemCard = (props: Props) => {
 
     const generateLastDayData = useCallback(() => {
         setLastDayChartData({
-            labels: lastDayData.length ? lastDayData.map((el: statusType) => getDate(el.time)) : [],
+            labels: lastDayData.length ? lastDayData.map(el => parseDateTime(el.time)) : [],
             datasets: [
                 {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
@@ -106,7 +104,9 @@ const SystemCard = (props: Props) => {
                     segment: {
                         borderColor: (ctx: any) =>
                             lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ? 'gray' :
-                                lastDayData[ctx.p1DataIndex].busy || reportedlyDown || status === 'BUSY' ? 'orange' :
+                                // Commenting this to remove the orange colors from the graphs   
+                                // lastDayData[ctx.p1DataIndex].busy || 
+                                reportedlyDown || status === 'BUSY' ? 'orange' :
                                     status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
@@ -140,7 +140,9 @@ const SystemCard = (props: Props) => {
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ? 'gray' :
-                            completeData[ctx.p1DataIndex].busy || reportedlyDown || status === 'BUSY' ? 'orange' :
+                            // Commenting this to remove the orange colors from the graphs   
+                            // completeData[ctx.p1DataIndex].busy ||
+                            reportedlyDown || status === 'BUSY' ? 'orange' :
                                 status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
@@ -160,12 +162,9 @@ const SystemCard = (props: Props) => {
 
     const parseCompleteDataTime = (time: Date) => {
         const string = time ?
-            new Date(time).toLocaleDateString('sv-SE')
-            + ' - '
-            + new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+            getDate(time)
             : 'No data'
-        const parsed = string.split(' - ')
-        return parsed[1] + ' - ' + parsed[0]
+        return string ? string.split(' ').reverse().join(' - ') : ''
     }
 
     const processChartData = () => {
@@ -234,7 +233,7 @@ const SystemCard = (props: Props) => {
                 return item
             })
             .forEach((register, i, arr) => {
-                const time = new Date(register.createdAt || new Date)
+                const time = new Date(register.createdAt || new Date())
                 time.setMinutes(0)
                 time.setSeconds(0)
                 const currentTime = new Date(register.createdAt || new Date()).getTime()
@@ -346,12 +345,14 @@ const SystemCard = (props: Props) => {
             return itemStatus
         })
 
-        // console.log('\n\n')
-        // console.log(name)
-        // console.log('allHours', allHours)
-        // console.log('set', set)
-        // console.log('firstRegister', firstRegister)
-        // console.log('lastRegister', lastRegister)
+        // if(name === 'Gerrit'){
+        //     console.log('\n\n')
+        //     console.log(name)
+        //     console.log('allHours', allHours)
+        //     console.log('set', set)
+        //     console.log('firstRegister', firstRegister)
+        //     console.log('lastRegister', lastRegister)
+        // }
 
         return set
     }

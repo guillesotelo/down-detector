@@ -89,10 +89,19 @@ export const toHex = (str: string) => {
 export const getUser = () => localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
 
-export const getDate = (date: Date | number | string | undefined) => {
-    return date ? new Date(date).toLocaleString('sv-SE',
-        { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-        : 'No date'
+export const getDate = (dateString: Date | number | string | undefined) => {
+    if (dateString) {
+        const date = new Date(dateString)
+        if (date.getHours() === 24) date.setHours(0)
+        return date.toLocaleDateString('sv-SE', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+    }
+}
+
+export const parseDateTime = (time: Date) => {
+    const string = time ?
+        getDate(time)
+        : 'No data'
+    return string ? string.split(' ').join(' - ') : ''
 }
 
 export const getDateWithGivenHour = (hour: number) => {
