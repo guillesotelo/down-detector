@@ -4,6 +4,7 @@ import { dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import Tooltip from '../Tooltip/Tooltip';
+import { getDate } from '../../helpers';
 
 type Props = {
     tableData: dataObj[]
@@ -169,7 +170,7 @@ export default function DataTable(props: Props) {
                                         row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                             }}>
                             {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
-                                && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
+                                && row[header.value] ? `${getDate(row[header.value])}` :
                                 header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
                                     header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
                                         header.value === 'status' ? typeof row[header.value] === 'string' ? row[header.value] : row[header.value] ? 'UP' : 'DOWN' :
@@ -223,7 +224,7 @@ export default function DataTable(props: Props) {
                                                                     row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                                                         }}>
                                                         {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
-                                                            && row[header.value] ? `${new Date(row[header.value]).toLocaleDateString('sv-SE')} ${new Date(row[header.value]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` :
+                                                            && row[header.value] ? `${getDate(row[header.value])}` :
                                                             header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
                                                                 header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
                                                                     header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
