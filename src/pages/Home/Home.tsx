@@ -537,11 +537,11 @@ const Home = () => {
               /> : ''}
         <div className="home__modal-table" style={{ marginTop: '1rem' }}>
           <DataTable
-            title='Latest system logs'
+            title={`Latest system logs (${statusAndAlerts.length})`}
             tableData={statusAndAlerts}
             setTableData={setStatusAndAlerts}
             tableHeaders={systemHisrotyHeaders}
-            name='history'
+            name='logs'
             loading={loading}
             max={getDowntimeString() ? 3 : 6}
             orderDataBy={hisrotyHeaders[0]}
