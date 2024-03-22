@@ -106,8 +106,9 @@ const Home = () => {
           const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
           const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
           const isBusy = new Date().getTime() - currentTime < 120000
+          const isAlert = (item as alertType).userAlert
           // We check if less than 2 minutes passed between peaks to spot BUSY states (unlike DOWN states)
-          if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
+          if (!isAlert && (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000))) {
             item.status = 'BUSY'
             item.busy = true
           }
