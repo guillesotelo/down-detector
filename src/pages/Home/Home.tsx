@@ -196,7 +196,7 @@ const Home = () => {
       const found = allSystems.find(system => system._id === id)
       return found ? found[type as keyof systemType] || null : null
     }
-    return null
+    return ''
   }
 
   const sendReport = async () => {
