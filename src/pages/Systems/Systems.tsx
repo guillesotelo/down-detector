@@ -127,7 +127,7 @@ export default function Systems({ }: Props) {
 
   const getDowntimeData = async (system: systemType) => {
     const allDowntimes = await getAllEvents()
-    if (allDowntimes && allDowntimes.length) {
+    if (allDowntimes && Array.isArray(allDowntimes) && allDowntimes.length) {
       setDowntimeArray(allDowntimes.filter((downtime: eventType) => downtime.systemId === system._id))
     }
   }
