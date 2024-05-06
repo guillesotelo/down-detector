@@ -1,22 +1,27 @@
 # Introduction
 
-In this server we setup all the frontend logic. To achieve this, we use React served as a Node app connected to Apache.
+Here you will find the repos representing front (client) and backend (server) parts of the application.
+
+Read how to setup locally and on a virtual machine, and deploy to production following the instructions below:
 
 ## Prerequisites
 
-To run this server locally, you need to have installed Node ^18.x. Follow this command to get it on Ubuntu machines:
+To run the servers locally, you need to have installed Node ^18.x.
+
+> Note: It is recommended to use the native console from Ubuntu to connect to the server via ssh using the syntax: `ssh user@ip.address`
+
+Follow this command to get it on Ubuntu machines:
 
 ```bash
 cd ~
-curl -sL https://deb.nodesource.com/setup_20.8 -o nodesource_setup.sh
-sudo bash nodesource_setup.sh
+curl -s https://deb.nodesource.com/setup_19.x | sudo -E bash -
 sudo apt install nodejs
 node -v
 ```
 
 > Read more: [Node & Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
 
-If we are setting up the server on a Virtual Machine, follow the [Apache Connection](#configure-apache-for-node) for further steps.
+If we are setting up the servers on a Virtual Machine, follow the [Apache Connection](#configure-apache-for-node) for further steps.
 
 ## Local Run
 
@@ -88,24 +93,57 @@ sudo nano 000-default.conf
 ```
 
 The Apache VirtualHost is defined in the 000-default.conf file and is set up to listen for requests on port 80.
-We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 3000 (or the one we previously configured in our environment).
+We’ll configure the 000-default.conf file so that all requests coming in via port 80 will be proxied, or forwarded, to the Node application running on port 5000 (or the one we previously configured in our environment).
 
-We use ProxyPass to map the root URL at the specified address: `http://localhost:3000`.
-Copy the following line into the default.config file:
+We use ProxyPass to map the root URL at the specified addresses: `http://localhost:3000` and `http://localhost:5000`.
+Copy the following lines into the default.config file:
 
 ```bash
 ProxyPass / http://localhost:3000/
+ProxyPass / http://localhost:5000/
 ```
-
 So you would have something like this:
 
 ```bash
 <VirtualHost *:80>
-        # ...other configs...
+    ServerName down.servername.com
 
-        ProxyPass / http://localhost:3000/
+    # Proxy requests to the React app
+    ProxyPass / http://localhost:3000/
+    ProxyPassReverse / http://localhost:3000/
+
+    ErrorLog ${APACHE_LOG_DIR}/frontend-error.log
+    CustomLog ${APACHE_LOG_DIR}/frontend-access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName down-api.servername.com
+
+    # Proxy requests to the Node.js backend
+    ProxyPass / http://localhost:5000/
+    ProxyPassReverse / http://localhost:5000/
+
+    ErrorLog ${APACHE_LOG_DIR}/backend-error.log
+    CustomLog ${APACHE_LOG_DIR}/backend-access.log combined
 </VirtualHost>
 ```
+
+> Note: We use the port 3000 just for development purposes. We don't actually use it for production. So you can basically skip it if no development will be done on the server.
+
+After this, we need to map our ServerName's placeholders in our host file:
+
+```bash
+sudo nano /etc/hosts
+```
+
+Paste the following lines:
+
+```bash
+127.0.0.1 down.servername.com
+127.0.0.1 down-api.servername.com
+```
+
+Keep in mind that when deploying into a different production server, we will need to update these names.
 
 Next, use the Control+X command to save and exit.
 
@@ -119,7 +157,7 @@ sudo a2enmod
 
 a2enmod is an acronym for “Apache2 enable module.” Running this command will list all modules that are available to be enabled.
 Next, we are prompted to enter the name of a module that we’d like to enable.
-We enter *proxy* at the prompt to enable the proxy module:
+We enter the proxy at the prompt to enable the proxy module:
 
 ```bash
 # Which module(s) do you want to enable (wildcards ok)?
@@ -148,6 +186,12 @@ sudo systemctl stop apache2
 sudo systemctl start apache2
 ```
 
+#### Testing the configuration
+
+Finally, we can test everything's correct by going to `http://localhost:80`. We should see what we're serving in our Node app.
+
+> Source: [Apache & Node](https://blog.logrocket.com/configuring-apache-node-js/)
+
 #### Run Server & Client
 
 If everything goes well, we can start both the backend and client servers using the command `nohup` for persistence.
@@ -161,8 +205,13 @@ npm i pm2 -g
 Standing the respective folder, run the command for each server:
 
 ```bash
-nohup npm start & # Dev environment
 nohup node server.js & # Prod environment (update .env file with NODE_ENV=production)
+```
+
+Only run this for development purposes:
+
+```bash
+nohup npm start & # Dev environment
 ```
 
 If we want to close the connection, standing on the respective folder, we use:
@@ -181,17 +230,11 @@ lsof -i tcp:3000
 kill -9 PID
 ```
 
-#### Testing the configuration
-
-Finally, we can test everything's correct by going to `http://localhost`. We should see what we're serving in our Node app and the corresponding API request to the backend should be working.
-
-> Source: [Apache & Node](https://blog.logrocket.com/configuring-apache-node-js/)
-
 ### MongoDB
 
 #### Installation
 
-First, install `gnupg` and `curl` if they are not already available:
+First, install `gnupg` and curl if they are not already available:
 
 ```bash
 sudo apt-get install gnupg curl
@@ -245,7 +288,7 @@ Check status:
 sudo systemctl status mongod
 ```
 
-Run the app and check that it connects to Mongo instance:
+Run the app and check it connects to Mongo instance:
 
 ```bash
 npm run dev
@@ -269,3 +312,19 @@ mongodb-compass
 From the new window panel, start a new connection to MongoDB making sure the parameters are correct. In this case, we use the default PORT 27017.
 
 You will see the main DB with all the collections. Search for `downdetector` collection and look for the documents (tables) we've created. You can update the tables directly from this GUI.
+
+## Deploy New Updates
+
+After applying changes to the codebase of the respective repos, we can easily deploy to production by doing the following:
+
+### Client
+
+Make sure to update the version number within src/constants/app.ts file.
+Run `npm run build` standing on the root folder and wait for a successful build.
+
+### Server
+
+You always need to update the server process after updates on repos, even if they were only on the frontend.
+Run `pm2 restart all` to restart all the processes included in pm2. If there are more processes configured within pm2 than Down, then you can use `pm2 restart <process_name>`.
+
+Check the server accessibility from the web endpoint and run the necessary manual tests. 
