@@ -136,6 +136,7 @@
             border: 2px solid #ffce73;
             border-radius: .5rem;
             margin: .5rem 0;
+            max-width: 50vw;
 
             &-text {
                 margin: .4rem;
@@ -147,6 +148,7 @@
                 border: 2px solid #c5751a;
                 border-radius: .5rem;
                 margin: 1rem 0;
+                max-width: 50vw;
             }
 
             &-row {
@@ -264,6 +266,7 @@
                 border: 2px solid #ffce73;
                 border-radius: .5rem;
                 margin: .5rem 0;
+                max-width: inherit;
 
                 &-text {
                     margin: .4rem;
@@ -275,6 +278,7 @@
                     border: 2px solid #c5751a;
                     border-radius: .5rem;
                     margin: 1rem 0;
+                    max-width: inherit;
                 }
 
                 &-row {
