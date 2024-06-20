@@ -248,6 +248,7 @@
             text-align: center;
             animation: fade-in .5s ease-in-out forwards;
             cursor: pointer;
+            width: inherit;
 
             &:hover {
                 filter: brightness(150%);
