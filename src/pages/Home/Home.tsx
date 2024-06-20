@@ -606,7 +606,10 @@ const Home = () => {
               The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
             </p>
             {note ?
-              <TextData label='Reason' value={note} />
+              <>
+                <strong>Reason</strong>
+                <div className='home__modal-downtime-note' dangerouslySetInnerHTML={{ __html: note || '' }} />
+              </>
               : ''}
           </div>
           <Button
