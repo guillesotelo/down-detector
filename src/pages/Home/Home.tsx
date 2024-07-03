@@ -546,7 +546,7 @@ const Home = () => {
             loading={loading}
             max={getDowntimeString() ? 3 : 6}
             orderDataBy={hisrotyHeaders[0]}
-            style={{ width: isMobile ? '80vw' : '50vw' }}
+            style={{ width: isMobile ? '80vw' : '100%' }}
             setSelected={isSuper ? setSelectedLog : undefined}
             selected={selectedLog}
           />
