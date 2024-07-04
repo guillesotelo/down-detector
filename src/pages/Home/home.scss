@@ -49,7 +49,7 @@
 
     &__modal {
         &-graph {
-            width: 50vw;
+            width: 100%;
             height: 3vw;
             margin: 0 auto;
 
@@ -59,7 +59,7 @@
                 direction: rtl;
                 justify-content: center;
                 align-items: center;
-                width: 50vw;
+                width: 100%;
                 height: 4vw;
                 overflow: auto;
                 -webkit-font-smoothing: antialiased;

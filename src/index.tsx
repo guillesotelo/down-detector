@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const darkMode = JSON.parse(localStorage.getItem('preferredMode') || 'false')
+const darkMode = JSON.parse(localStorage.getItem('preferredMode') || 'true')
 
 root.render(
   <BrowserRouter>

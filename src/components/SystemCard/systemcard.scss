@@ -2,7 +2,7 @@
     &__container {
         width: 15rem;
         height: 10rem;
-        box-shadow: .2rem .3rem 1rem rgba(0, 0, 0, 0.172);
+        // box-shadow: .2rem .3rem 1rem rgba(0, 0, 0, 0.172);
         border: 1px solid rgba(0, 0, 0, 0.074);
         border-radius: 1rem;
         padding: 1rem;
@@ -15,10 +15,11 @@
         z-index: 2;
         position: relative;
         background-color: white;
-        transition: .2s;
+        transition: .1s;
 
         &:hover {
-            box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
+            // box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
+            border: 1px solid #0000007d !important;
         }
 
         &--dark {
@@ -36,7 +37,7 @@
             z-index: 2;
             position: relative;
             background-color: #000000;
-            transition: .2s;
+            transition: .1s;
 
             &:hover {
                 border: 1px solid rgb(148, 148, 148) !important;

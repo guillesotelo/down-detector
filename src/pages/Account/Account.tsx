@@ -87,7 +87,7 @@ export default function Account({ }: Props) {
       setIsSuper(false)
       const mode = localStorage.getItem('preferredMode')
       localStorage.clear()
-      localStorage.setItem('preferredMode', mode || 'false')
+      localStorage.setItem('preferredMode', mode || 'true')
       history.push('/')
     }, 1500)
   }
