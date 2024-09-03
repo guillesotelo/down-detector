@@ -22,7 +22,7 @@ type Props = {
 }
 
 export const AppProvider = ({ children }: Props) => {
-    const isMobile = window.screen.width <= 768
+    const [isMobile, setIsMobile] = useState<boolean>(false)
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
@@ -31,6 +31,11 @@ export const AppProvider = ({ children }: Props) => {
 
     useEffect(() => {
         verifyUser()
+
+        const checkWidth = () => setIsMobile(window.innerWidth <= 768)
+
+        window.addEventListener("resize", checkWidth)
+        return () => window.removeEventListener("resize", checkWidth)
     }, [])
 
     useEffect(() => {

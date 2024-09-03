@@ -454,7 +454,8 @@ const Home = () => {
         logo={String(getSystemData(selected, 'logo') || '')}
         showLogo
         // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
-        onClose={discardChanges}>
+        onClose={discardChanges}
+        style={{ width: isMobile ? '' : '50vw' }}>
         {getDowntimeString() ?
           <div
             className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
