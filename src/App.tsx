@@ -13,6 +13,7 @@ import Systems from './pages/Systems/Systems';
 import Users from './pages/Users/Users';
 import Help from './pages/About/About';
 import Account from './pages/Account/Account';
+import Unsubscribe from './pages/Unsubscribe/Unsubscribe';
 
 function App() {
   const location = useLocation()
@@ -95,6 +96,15 @@ function App() {
             <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
               {isLoggedIn ? <Sidebar /> : ''}
               <Account />
+            </div>
+          </div>
+        </Route>
+        <Route exact path="/unsubscribe">
+          <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
+            <Header />
+            <div className={`page__row${darkMode ? '--dark' : ''}`} style={{ marginLeft: isLoggedIn ? '' : 0 }}>
+              {isLoggedIn ? <Sidebar /> : ''}
+              <Unsubscribe />
             </div>
           </div>
         </Route>

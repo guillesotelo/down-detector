@@ -20,6 +20,7 @@
         &:hover {
             // box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
             border: 1px solid #0000007d !important;
+            z-index: 3;
         }
 
         &--dark {
@@ -41,7 +42,8 @@
 
             &:hover {
                 border: 1px solid rgb(148, 148, 148) !important;
-            }
+            z-index: 3;
+        }
         }
     }
 
@@ -86,6 +88,13 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        align-items: flex-end;
     }
 
     &__status {

@@ -23,7 +23,7 @@
         font-size: .9rem;
         background-color: #D3AFAF;
         // width: 100%;
-        padding: .55rem;
+        padding: 0 .2rem;
         border-radius: .3vw;
         cursor: pointer;
         font-weight: normal;
@@ -40,7 +40,7 @@
     }
 
     &__svg {
-        height: 1.5vw;
+        height: 1rem;
     }
 
     &__bright {

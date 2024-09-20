@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate } from '../../services'
-import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, systemType } from '../../types'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription } from '../../services'
+import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, SubscriptionType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
@@ -24,6 +24,7 @@ Chart.register(...registerables);
 const Home = () => {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState('')
+  const [subscription, setSubscription] = useState('')
   const [selected, setSelected] = useState('')
   const [showDowntime, setShowDowntime] = useState<downtimeModalType>(null)
   const [allSystems, setAllSystems] = useState<systemType[]>([])
@@ -31,7 +32,7 @@ const Home = () => {
   const [statusAndAlerts, setStatusAndAlerts] = useState<alertType[] & historyType[]>([])
   const [allStatus, setAllStatus] = useState<historyType[]>([])
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
-  const [data, setData] = useState<alertType>({})
+  const [data, setData] = useState<alertType & SubscriptionType>({})
   const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
   const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
   const [modalChartOptions, setModalChartOptions] = useState({})
@@ -78,11 +79,11 @@ const Home = () => {
   }, [loadData])
 
   useEffect(() => {
-    if (selected || report) {
+    if (selected || report || subscription) {
       document.body.style.overflow = 'hidden'
       if (allStatus.length) getStatusAndAlerts()
     } else document.body.style.overflow = 'auto'
-  }, [selected, report])
+  }, [selected, report, subscription])
 
   useEffect(() => {
     if (selectedLog !== -1) {
@@ -230,12 +231,60 @@ const Home = () => {
         toast.success('Report sent successfully')
         setSelected('')
         setReport('')
+        setSubscription('')
         setData({})
         loadData()
       } else toast.success('Error sending report. Try again later.')
       setLoading(false)
     } catch (error) {
       toast.success('Error sending report. Try again later.')
+      setLoading(false)
+    }
+  }
+
+  const checkSubscription = () => {
+    const email = data.subscriberEmail
+    if (!email) return false
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    return emailPattern.test(email)
+  }
+
+  const subscribeForUpdates = async () => {
+    try {
+      if (!checkSubscription()) return toast.error('Enter a valid email')
+      setLoading(true)
+      let nav: dataObj = {}
+      for (let i in navigator) nav[i] = (navigator as any)[i]
+      let geoLocation = ''
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => geoLocation = JSON.stringify(pos),
+          (err) => geoLocation = err.message
+        )
+      }
+
+      const subscriptionData = {
+        ...data,
+        name: String(getSystemData(subscription, 'name') || 'System'),
+        geoLocation,
+        navigator: JSON.stringify(nav),
+        systemId: subscription,
+        email: data.subscriberEmail,
+        username: (data.subscriberEmail?.split('@')[0]) || ''
+      }
+
+      const subscribed = await createSubscription(subscriptionData)
+      if (subscribed && subscribed._id) {
+        toast.success('Subscribed successfully')
+        setSelected('')
+        setReport('')
+        setSubscription('')
+        setData({})
+        loadData()
+      } else toast.error('Subscription error. Please Try again.')
+      setLoading(false)
+    } catch (error) {
+      toast.error('Subscription error. Please Try again.')
       setLoading(false)
     }
   }
@@ -381,6 +430,7 @@ const Home = () => {
     setEditedLogStatus('')
     setEditedLogMessage('')
     setReport('')
+    setSubscription('')
     setData({})
     setReportedStatus({ name: 'Unable to access' })
   }
@@ -437,6 +487,43 @@ const Home = () => {
           <Button
             label='Send Report'
             handleClick={sendReport}
+            disabled={loading}
+            bgColor={APP_COLORS.BLUE_TWO}
+            textColor='white'
+            style={{ width: '45%' }}
+          />
+        </div>
+      </Modal>
+    )
+  }
+
+
+  const renderSubscribeModal = () => {
+    return (
+      <Modal
+        title={`Subscribe for updates in ${String(getSystemData(subscription, 'name') || 'this system')}`}
+        onClose={discardChanges}>
+        <div className="home__modal-issue-col">
+          <InputField
+            name='subscriberEmail'
+            value={data.subscriberEmail}
+            updateData={updateData}
+            type='email'
+            placeholder='your@email.com'
+          />
+        </div>
+        <div className="home__modal-issue-btns">
+          <Button
+            label='Cancel'
+            handleClick={discardChanges}
+            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_ONE}
+            textColor='white'
+            disabled={loading}
+            style={{ width: '45%' }}
+          />
+          <Button
+            label='Subscribe'
+            handleClick={subscribeForUpdates}
             disabled={loading}
             bgColor={APP_COLORS.BLUE_TWO}
             textColor='white'
@@ -638,6 +725,7 @@ const Home = () => {
           report={report}
           showDowntime={showDowntime}
           reportIssue={setReport}
+          subscribe={setSubscription}
           history={getHistoryBySystem(system)}
           alerts={getAlertsBySystem(system)}
           setSelected={setSelected}
@@ -658,17 +746,18 @@ const Home = () => {
       style={{ width: isLoggedIn ? '90vw' : '' }}>
       {showDowntime ? renderDowntimeModal()
         : report ? renderReportModal()
-          : selected ? renderSystemDetailsModal() : ''}
+          : subscription ? renderSubscribeModal()
+            : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}>
+        style={{ filter: subscription || showDowntime || report || selected ? 'blur(6px)' : '' }}>
         {renderSystemList()}
         <div className="home__system-list-separator"></div>
       </div>
       <div
         style={{
-          filter: showDowntime || report || selected ? 'blur(6px)' : '',
-          animation: showDowntime || report || selected ? 'none' : '',
+          filter: subscription || showDowntime || report || selected ? 'blur(6px)' : '',
+          animation: subscription || showDowntime || report || selected ? 'none' : '',
           right: isLoggedIn ? '1rem' : 'unset',
           left: isLoggedIn ? 'unset' : '1rem'
         }}
@@ -687,7 +776,7 @@ const Home = () => {
         </CountdownCircleTimer>
       </div>
       {!isLoggedIn && !isMobile ?
-        <div className="home__app-version-container" style={{ filter: showDowntime || report || selected ? 'blur(6px)' : '' }}>
+        <div className="home__app-version-container" style={{ filter: subscription || showDowntime || report || selected ? 'blur(6px)' : '' }}>
           <Tooltip tooltip={versionDate} boxStyle={{ marginRight: '1rem' }}>
             <p className="home__app-version">{APP_VERSION}</p>
           </Tooltip>
