@@ -17,7 +17,8 @@ import { getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import LiveIcon from '../../assets/icons/live.svg'
-import TextData from '../../components/TextData/TextData'
+import Report from '../../assets/icons/report.svg'
+import Subscribe from '../../assets/icons/subscribe.svg'
 import Tooltip from '../../components/Tooltip/Tooltip'
 Chart.register(...registerables);
 
@@ -670,12 +671,23 @@ const Home = () => {
               {getLastCheck(getSelectedSystem())}
             </p>
             :
-            <Button
-              label='Report Issue'
-              handleClick={() => setReport(selected)}
-              bgColor={darkMode ? '#353535' : '#dcdcdc'}
-              textColor={darkMode ? 'lightgray' : '#323232'}
-            />}
+            <div className='systemcard__buttons'>
+              <Button
+                handleClick={() => setSubscription(selected || '')}
+                bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                textColor={darkMode ? 'lightgray' : '#323232'}
+                svg={Subscribe}
+                label={isMobile ? '' : 'Subscribe for updates'}
+              />
+              <Button
+                handleClick={() => setReport(selected || '')}
+                bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                textColor={darkMode ? 'lightgray' : '#323232'}
+                svg={Report}
+                label={isMobile ? '' : 'Report Issue'}
+              />
+            </div>
+          }
         </div>
       </Modal>
     )
@@ -723,6 +735,7 @@ const Home = () => {
           system={system}
           selected={selected}
           report={report}
+          subscription={subscription}
           showDowntime={showDowntime}
           reportIssue={setReport}
           subscribe={setSubscription}
