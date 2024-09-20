@@ -28,7 +28,8 @@ type Props = {
     index: number
     selected?: string
     report?: string
-    showDowntime?: downtimeModalType
+    showDowntime?: downtimeModalType,
+    subscription?: string
 }
 
 const SystemCard = (props: Props) => {
@@ -60,7 +61,8 @@ const SystemCard = (props: Props) => {
         selected,
         report,
         showDowntime,
-        subscribe
+        subscribe,
+        subscription
     } = props
 
     const {
@@ -571,7 +573,7 @@ const SystemCard = (props: Props) => {
                         SystemCardPlaceholderBlock(darkMode)
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
-                            {!selected && !report && !showDowntime ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
+                            {!selected && !report && !showDowntime && !subscription ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
                         </div>}
                     <div className="systemcard__footer">
                         <h2
@@ -579,7 +581,7 @@ const SystemCard = (props: Props) => {
                             style={{ color: loading ? 'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
-                                    <span style={{ animation: selected || report ? 'none' : '' }} className='systemcard__status-dot'>
+                                    <span style={{ animation: selected || report || subscription ? 'none' : '' }} className='systemcard__status-dot'>
                                         <img
                                             style={{
                                                 filter: reportedlyDown || status === 'BUSY' ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
