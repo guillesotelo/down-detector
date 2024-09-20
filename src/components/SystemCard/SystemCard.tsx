@@ -8,11 +8,14 @@ import { getDate, getDateWithGivenHour, parseDateTime, sortArray } from '../../h
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 import LiveIcon from '../../assets/icons/live.svg'
 import Api from '../../assets/icons/api.svg'
+import Report from '../../assets/icons/report.svg'
+import Subscribe from '../../assets/icons/subscribe.svg'
 Chart.register(...registerables);
 
 type Props = {
     system?: systemType
     reportIssue: (value: string) => void
+    subscribe: (value: string) => void
     downtime?: { start?: Date, end?: Date }[]
     history?: historyType[]
     alerts?: alertType[]
@@ -56,7 +59,8 @@ const SystemCard = (props: Props) => {
         index,
         selected,
         report,
-        showDowntime
+        showDowntime,
+        subscribe
     } = props
 
     const {
@@ -67,12 +71,6 @@ const SystemCard = (props: Props) => {
         raw,
         broadcastMessages,
     } = system || {}
-
-    // if (name === 'Gerrit') {
-    //     console.log('\n\n')
-    //     console.log(name)
-    //     console.log(history)
-    // }
 
     useEffect(() => {
         if ((loading || (status !== false && status !== true)) && !headerLoading) setHeaderLoading(true)
@@ -345,15 +343,6 @@ const SystemCard = (props: Props) => {
             return itemStatus
         })
 
-        // if(name === 'Gerrit'){
-        //     console.log('\n\n')
-        //     console.log(name)
-        //     console.log('allHours', allHours)
-        //     console.log('set', set)
-        //     console.log('firstRegister', firstRegister)
-        //     console.log('lastRegister', lastRegister)
-        // }
-
         return set
     }
 
@@ -608,14 +597,27 @@ const SystemCard = (props: Props) => {
                                 </>
                             }
                         </h2>
-                        {status ? <Button
-                            label='Report Issue'
-                            handleClick={() => reportIssue(_id || '')}
-                            bgColor={darkMode ? '#353535' : '#dcdcdc'}
-                            textColor={darkMode ? 'lightgray' : '#323232'} />
+                        {status ?
+                            <div className='systemcard__buttons'>
+                                <Button
+                                    handleClick={() => subscribe(_id || '')}
+                                    bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                                    textColor={darkMode ? 'lightgray' : '#323232'}
+                                    svg={Subscribe}
+                                    tooltip='Subscribe for updates'
+                                />
+                                <Button
+                                    handleClick={() => reportIssue(_id || '')}
+                                    bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                                    textColor={darkMode ? 'lightgray' : '#323232'}
+                                    svg={Report}
+                                    tooltip='Report Issue'
+                                />
+                            </div>
                             : !loading && (status || status === false) && lastCheck ?
                                 <p style={{ color: darkMode ? 'lightgray' : 'gray' }} className="systemcard__status-caption">{lastCheck}</p>
                                 : ''}
+
                     </div>
                 </div>
                 {downtime && downtime.length ?

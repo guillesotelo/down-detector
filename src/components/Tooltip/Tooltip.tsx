@@ -4,12 +4,13 @@ type Props = {
     tooltip?: string
     children?: React.ReactNode
     inline?: boolean
+    show?: boolean | null
     style?: React.CSSProperties
     boxStyle?: React.CSSProperties
 }
 
-export default function Tooltip({ tooltip, children, inline, style, boxStyle }: Props) {
-    const [showTooltip, setShowTooltip] = useState(false)
+export default function Tooltip({ tooltip, children, inline, style, boxStyle, show }: Props) {
+    const [showTooltip, setShowTooltip] = useState(show)
     const containerRef = useRef<HTMLDivElement>(null)
     const [childrenWidth, setChildrenWidth] = useState(0)
     const [childrenHeight, setChildrenHeight] = useState(0)
@@ -28,17 +29,21 @@ export default function Tooltip({ tooltip, children, inline, style, boxStyle }: 
         }
     }, [children])
 
+    useEffect(() => {
+        if (show === false || show === null) setShowTooltip(false)
+    }, [show])
+
     return (
         <div
             className="tooltip__container"
             style={{ ...style, placeContent: inline ? '' : 'center' }}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
+            onMouseOver={() => setShowTooltip(true)}
+            onMouseOut={() => setShowTooltip(false)}
             ref={containerRef}>
             {children}
             <div className={inline ? 'tooltip__box-inline' : 'tooltip__box'} style={{
                 display: showTooltip ? 'block' : 'none',
-                marginLeft: inline ? childrenWidth * 1.1 : '',
+                marginLeft: inline ? childrenWidth * 1.2 : '',
                 top: !inline ? childrenHeight * -2.5 : '',
                 marginTop: inline ? childrenHeight / 10 : '',
                 ...boxStyle

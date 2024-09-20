@@ -89,7 +89,18 @@ export type alertType = {
     type?: string
     userAlert?: boolean
     message?: string
-    createdBy?: string
+    createdAt?: Date
+    updatedAt?: Date
+    newData?: alertType
+}
+
+export type SubscriptionType = {
+    _id?: string
+    systemId?: string
+    type?: string
+    subscriberEmail?: string
+    email?: string
+    username?: string
     createdAt?: Date
     updatedAt?: Date
     newData?: alertType
