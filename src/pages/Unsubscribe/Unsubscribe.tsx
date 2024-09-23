@@ -25,7 +25,7 @@ export default function Unsubscribe({ }: Props) {
         const subId = new URLSearchParams(document.location.search).get('subId')
         const sId = new URLSearchParams(document.location.search).get('sId')
 
-        if (!system || !subEmail || !subId) return history.push('/')
+        // if (!system || !subEmail || !subId) return history.push('/')
 
         setSystemName(system || '')
         setEmail(subEmail || '')
@@ -46,7 +46,7 @@ export default function Unsubscribe({ }: Props) {
         try {
             setLoading(true)
             const unsubscibed = await deleteSubscription({ _id: subscriberId, systemId })
-            // const unsubscibed = await deleteSubscription({ _id: '66ed731733229d8230fff406', systemId: '66ed72fc33229d8230fff3a5' })
+            // const unsubscibed = await deleteSubscription({ _id: '66f13bd4e48d478fcf02f3b3', systemId: '66f13bc0e48d478fcf02f359' })
             if (unsubscibed) {
                 setLoading(false)
                 toast.success('You are now unsubscribed.')

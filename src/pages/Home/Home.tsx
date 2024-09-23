@@ -149,11 +149,11 @@ const Home = () => {
       let history = await getAllHistory()
       if (history && Array.isArray(history)) {
         setAllStatus(history)
-      }
-      let alerts = await getAllAlerts()
-      if (alerts && Array.isArray(alerts)) {
-        setAllAlerts(alerts)
-      }
+        let alerts = await getAllAlerts()
+        if (alerts && Array.isArray(alerts)) {
+          setAllAlerts(alerts)
+        }
+      } else setTimeout(loadData, 1500)
     } catch (error) {
       console.error(error)
     }
