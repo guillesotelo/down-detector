@@ -49,8 +49,8 @@ export default function Unsubscribe({ }: Props) {
     const unsubscribe = async () => {
         try {
             setLoading(true)
-            // const unsubscibed = await deleteSubscription({ _id: subscriberId, systemId, email, username })
-            const unsubscibed = await deleteSubscription({ _id: '66f3c72149b9bb4ad3b1347b', systemId: '66f3c71149b9bb4ad3b13434' })
+            const unsubscibed = await deleteSubscription({ _id: subscriberId, systemId, email, username })
+            // const unsubscibed = await deleteSubscription({ _id: '66f3c72149b9bb4ad3b1347b', systemId: '66f3c71149b9bb4ad3b13434' })
             if (unsubscibed) {
                 setLoading(false)
                 toast.success('You are now unsubscribed.')
