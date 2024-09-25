@@ -98,8 +98,8 @@ const Home = () => {
   }, [selectedLog])
 
   const getStatusAndAlerts = () => {
-    const statusAndAlertsByID = allStatus.filter((status: eventType) => status.systemId === selected)
-      .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected))
+    const statusAndAlertsByID = sortArray(allStatus.filter((status: eventType) => status.systemId === selected)
+      .concat(allAlerts.filter((alert: alertType) => alert.systemId === selected)), 'createdAt', true)
       .reverse()
       .map((item, i, arr) => {
         if (!item.status) {
