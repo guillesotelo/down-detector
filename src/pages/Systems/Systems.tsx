@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Button from '../../components/Button/Button'
 import DataTable from '../../components/DataTable/DataTable'
-import { eventType, onChangeEventType, systemType, userType } from '../../types'
+import { dataObj, eventType, onChangeEventType, systemType, userType } from '../../types'
 import Modal from '../../components/Modal/Modal'
 import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
@@ -23,7 +23,8 @@ import {
   deleteSystem,
   getAllUsers,
   getSystemsByOwnerId,
-  updateSystemOrder
+  updateSystemOrder,
+  createSubscription
 } from '../../services'
 import { toast } from 'react-toastify'
 import DatePicker from "react-datepicker";
@@ -302,6 +303,39 @@ export default function Systems({ }: Props) {
       setLoading(false)
       toast.error('Error updating order')
       console.error(error)
+    }
+  }
+
+  const checkSubscription = () => {
+    const email = data.subscriberEmail
+    if (!email) return false
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    return emailPattern.test(email)
+  }
+
+  const subscribeForUpdates = async () => {
+    try {
+      if (!checkSubscription()) return toast.error('Enter a valid email')
+      setLoading(true)
+
+      const subscriptionData = {
+        ...data,
+        systemId: data._id,
+        email: data.subscriberEmail,
+        username: user.username || (data.subscriberEmail?.split('@')[0]) || '',
+        isOwner: true
+      }
+
+      const subscribed = await createSubscription(subscriptionData)
+      if (subscribed && subscribed._id) {
+        toast.success('Subscribed successfully')
+        discardChanges()
+        getSystems()
+      } else toast.error('Subscription error. Please Try again.')
+      setLoading(false)
+    } catch (error) {
+      toast.error('Subscription error. Please Try again.')
+      setLoading(false)
     }
   }
 
@@ -624,6 +658,15 @@ export default function Systems({ }: Props) {
                   style={{ width: '45%' }}
                   disabled={loading}
                 />
+                {data.unsubscriptions && JSON.parse(data.unsubscriptions || '[]').includes(user.email) ?
+                  <Button
+                    label='Subscribe for updates'
+                    handleClick={subscribeForUpdates}
+                    bgColor={APP_COLORS.BLUE_TWO}
+                    textColor='white'
+                    style={{ width: '45%' }}
+                    disabled={loading}
+                  /> : ''}
                 <Button
                   label='Save Changes'
                   handleClick={saveChanges}

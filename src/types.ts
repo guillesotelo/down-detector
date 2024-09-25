@@ -54,6 +54,8 @@ export type systemType = {
     bannerFlag?: string | Date | null
     broadcastMessages?: string
     firstStatus?: boolean
+    unsubscriptions?: string
+    subscriberEmail?: string
 }
 
 export type eventType = {
