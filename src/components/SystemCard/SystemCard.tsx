@@ -6,7 +6,7 @@ import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
 import { getDate, getDateWithGivenHour, parseDateTime, sortArray } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
-import LiveIcon from '../../assets/icons/live.svg'
+import LiveIcon from '../../assets/icons/heart-pulse.svg'
 import Api from '../../assets/icons/api.svg'
 import Report from '../../assets/icons/report.svg'
 import Subscribe from '../../assets/icons/subscribe.svg'
@@ -110,7 +110,7 @@ const SystemCard = (props: Props) => {
                                     status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
-                    borderWidth: 4,
+                    borderWidth: 3,
                     pointBorderWidth: 0,
                 }
             ]

@@ -13,22 +13,26 @@ export default function Unsubscribe({ }: Props) {
     const [loading, setLoading] = useState(false)
     const [systemName, setSystemName] = useState('')
     const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [systemId, setSystemId] = useState('')
     const [subscriberId, setSubscriberId] = useState('')
     const [subs, setSubs] = useState<SubscriptionType[]>([])
     const { darkMode } = useContext(AppContext)
     const history = useHistory()
+    const dev = process.env.NODE_ENV !== 'production'
 
     useEffect(() => {
         const system = new URLSearchParams(document.location.search).get('system')
         const subEmail = new URLSearchParams(document.location.search).get('subEmail')
+        const user = new URLSearchParams(document.location.search).get('username')
         const subId = new URLSearchParams(document.location.search).get('subId')
         const sId = new URLSearchParams(document.location.search).get('sId')
 
-        // if (!system || !subEmail || !subId) return history.push('/')
+        if (!dev && (!system || !subEmail || !subId || !sId)) return history.push('/')
 
         setSystemName(system || '')
         setEmail(subEmail || '')
+        setUsername(user || '')
         setSubscriberId(subId || '')
         setSystemId(sId || '')
 
@@ -45,8 +49,8 @@ export default function Unsubscribe({ }: Props) {
     const unsubscribe = async () => {
         try {
             setLoading(true)
-            const unsubscibed = await deleteSubscription({ _id: subscriberId, systemId })
-            // const unsubscibed = await deleteSubscription({ _id: '66f13bd4e48d478fcf02f3b3', systemId: '66f13bc0e48d478fcf02f359' })
+            // const unsubscibed = await deleteSubscription({ _id: subscriberId, systemId, email, username })
+            const unsubscibed = await deleteSubscription({ _id: '66f3c72149b9bb4ad3b1347b', systemId: '66f3c71149b9bb4ad3b13434' })
             if (unsubscibed) {
                 setLoading(false)
                 toast.success('You are now unsubscribed.')
@@ -64,15 +68,15 @@ export default function Unsubscribe({ }: Props) {
 
     return (
         <div className='unsubscribe__container'>
-            <h1>Hi, {email.split('@')[0]}</h1>
+            <h1>Hi, {username.split(' ')[0] || email.split('@')[0]}</h1>
             <div className="home__modal-issue-col">
                 <h2>You are about to unsubscribe from {systemName}</h2>
             </div>
-            {subs.map((s: any) => {
+            {dev ? subs.map((s: any) => {
                 return <div style={{ border: '1px solid gray', padding: '1rem', borderRadius: '1rem', margin: '.5rem' }}>
                     {Object.keys(s).map(key => key !== 'navigator' && <p><strong>{key}:</strong> {String(s[key])}</p>)}
                 </div>
-            })
+            }) : ''
             }
             <div className='unsubscribe__buttons'>
                 <Button
