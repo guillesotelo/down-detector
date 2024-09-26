@@ -585,7 +585,7 @@ const SystemCard = (props: Props) => {
                                         <img
                                             style={{
                                                 filter: reportedlyDown || status === 'BUSY' ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
-                                                    : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(93%) contrast(105%)' :
+                                                    : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(130%) contrast(105%)' :
                                                         'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
                                             }}
                                             src={LiveIcon}

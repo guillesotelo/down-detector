@@ -729,26 +729,27 @@ const Home = () => {
   const renderSystemList = () => {
     return allSystems.length ?
       allSystems.map((system: systemType, i: number) =>
-        <SystemCard
-          key={system._id || i}
-          index={i}
-          system={system}
-          selected={selected}
-          report={report}
-          subscription={subscription}
-          showDowntime={showDowntime}
-          reportIssue={setReport}
-          subscribe={setSubscription}
-          history={getHistoryBySystem(system)}
-          alerts={getAlertsBySystem(system)}
-          setSelected={setSelected}
-          setSelectedData={setChartData}
-          setModalChartOptions={setModalChartOptions}
-          downtime={getDownTime(system)}
-          lastCheck={getLastCheck(system)}
-          delay={String(i ? i / 10 : 0) + 's'}
-          setShowDowntime={setShowDowntime}
-        />)
+        system.name === 'TEST' ? '' :
+          <SystemCard
+            key={system._id || i}
+            index={i}
+            system={system}
+            selected={selected}
+            report={report}
+            subscription={subscription}
+            showDowntime={showDowntime}
+            reportIssue={setReport}
+            subscribe={setSubscription}
+            history={getHistoryBySystem(system)}
+            alerts={getAlertsBySystem(system)}
+            setSelected={setSelected}
+            setSelectedData={setChartData}
+            setModalChartOptions={setModalChartOptions}
+            downtime={getDownTime(system)}
+            lastCheck={getLastCheck(system)}
+            delay={String(i ? i / 10 : 0) + 's'}
+            setShowDowntime={setShowDowntime}
+          />)
       :
       Array.from({ length: 15 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
   }
