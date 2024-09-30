@@ -40,10 +40,10 @@ const getSystemById = async (_id: string) => {
     } catch (err) { console.log(err) }
 }
 
-const getSystemLogosAndRaw = async () => {
+const getSystemDataSelect = async (dataSelect: string) => {
     try {
-        const logos = await axios.get(`${API_URL}/api/system/getLogosAndRaw`, { params: { _id: getUser()._id }, headers: getHeaders() })
-        return logos.data
+        const systemData = await axios.get(`${API_URL}/api/system/getData`, { params: { _id: getUser()._id, dataSelect }, headers: getHeaders() })
+        return systemData.data
     } catch (err) { console.log(err) }
 }
 
@@ -79,7 +79,7 @@ export {
     getActiveSystems,
     getAllSystems,
     getSystemsByOwnerId,
-    getSystemLogosAndRaw,
+    getSystemDataSelect,
     createSystem,
     getSystemById,
     updateSystem,
