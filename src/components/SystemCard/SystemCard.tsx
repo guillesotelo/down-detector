@@ -30,6 +30,8 @@ type Props = {
     report?: string
     showDowntime?: downtimeModalType,
     subscription?: string
+    logo?: string
+    raw?: string
 }
 
 const SystemCard = (props: Props) => {
@@ -62,15 +64,15 @@ const SystemCard = (props: Props) => {
         report,
         showDowntime,
         subscribe,
-        subscription
+        subscription,
+        logo,
+        raw
     } = props
 
     const {
         _id,
         name,
         reportedlyDown,
-        logo,
-        raw,
         broadcastMessages,
     } = system || {}
 
