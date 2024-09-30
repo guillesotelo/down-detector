@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription, getSystemLogosAndRaw } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, SubscriptionType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -43,6 +43,7 @@ const Home = () => {
   const [editedLogMessage, setEditedLogMessage] = useState('')
   const [versionDate, setVersionDate] = useState('')
   const [countdownKey, setCountdownKey] = useState(0)
+  const [systemLogosAndRaw, setSystemLogosAndRaw] = useState<dataObj>({})
   const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
 
   const chartHeight = '30vh'
@@ -64,6 +65,7 @@ const Home = () => {
       getAllDownTimes()
       getTooltipVersionDate()
       setLoading(false)
+      getLogosAndRaw()
     }
   }, [])
 
@@ -72,9 +74,8 @@ const Home = () => {
     loadData()
     const intervalId = setInterval(() => {
       setCountdownKey(prev => prev + 1)
-      loadData()
       setAllSystems([])
-      getSystems()
+      loadData()
     }, 1 * 60 * 1000)
     return () => clearInterval(intervalId)
   }, [loadData])
@@ -96,6 +97,24 @@ const Home = () => {
       setEditedLogStatus('DOWN')
     }
   }, [selectedLog])
+
+  const getLogosAndRaw = async () => {
+    try {
+      const systems = await getSystemLogosAndRaw()
+      if (systems && Array.isArray(systems)) {
+        const systemMap: dataObj = {}
+        systems.forEach(system => {
+          systemMap[system._id] = {
+            logo: system.logo,
+            raw: system.raw
+          }
+        })
+        setSystemLogosAndRaw(systemMap)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const getStatusAndAlerts = () => {
     const statusAndAlertsByID = sortArray(allStatus.filter((status: eventType) => status.systemId === selected)
@@ -736,6 +755,8 @@ const Home = () => {
             system={system}
             selected={selected}
             report={report}
+            logo={systemLogosAndRaw[system._id || '']?.logo}
+            raw={systemLogosAndRaw[system._id || '']?.raw}
             subscription={subscription}
             showDowntime={showDowntime}
             reportIssue={setReport}
