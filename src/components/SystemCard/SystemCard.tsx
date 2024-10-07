@@ -94,22 +94,23 @@ const SystemCard = (props: Props) => {
             labels: lastDayData.length ? lastDayData.map(el => parseDateTime(el.time)) : [],
             datasets: [
                 {
-                    data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
+                    data: lastDayData.length ? lastDayData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: lastDayData.length ? lastDayData.map((el: statusType) => el.status) : [],
+                    data: lastDayData.length ? lastDayData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) =>
                             lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ? 'gray' :
                                 // Commenting this to remove the orange colors from the graphs   
                                 // lastDayData[ctx.p1DataIndex].busy || 
-                                reportedlyDown || status === 'BUSY' ? 'orange' :
-                                    status ? darkMode ? '#00b000' : 'green' : 'red'
+                                lastDayData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
+                                    reportedlyDown || status === 'BUSY' ? 'orange' :
+                                        status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     borderWidth: 3,
@@ -131,21 +132,22 @@ const SystemCard = (props: Props) => {
             labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
                 {
-                    data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: completeData.length ? completeData.map((el: statusType) => el.status) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ? 'gray' :
                             // Commenting this to remove the orange colors from the graphs   
                             // completeData[ctx.p1DataIndex].busy ||
-                            reportedlyDown || status === 'BUSY' ? 'orange' :
-                                status ? darkMode ? '#00b000' : 'green' : 'red'
+                            completeData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
+                                reportedlyDown || status === 'BUSY' ? 'orange' :
+                                    status ? darkMode ? '#00b000' : 'green' : 'red'
                     },
                     tension: .4,
                     pointBorderWidth: 0,
@@ -248,16 +250,17 @@ const SystemCard = (props: Props) => {
                     // We check if the next hour, but not more that 3 minutes after, the status changed
                     const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
                     if (nextTime && (nextTime - currentTime < 180000) && arr[i + 1].status !== register.status) {
+                        // If less than 3 minutes passed, we overwrite the hour status.
                         allHours.set(
                             time.toLocaleString(),
                             {
                                 ...register,
                                 status: arr[i + 1].status ? 1 : 0,
-                                busy: arr[i + 1].busy || false
+                                busy: arr[i + 1].busy || false,
+                                isDown: !arr[i + 1].status || !register.status || !allHours.get(time.toLocaleString()).status
                             }
                         )
                     }
-                    // If less than 3 minutes passed, we overwrite the hour status.
                     else if (
                         // register.status || 
                         currentTime - prevTime < 180000) {
@@ -266,7 +269,8 @@ const SystemCard = (props: Props) => {
                             {
                                 ...register,
                                 status: register.status ? 1 : 0,
-                                busy: allHours.get(time.toLocaleString()).busy || false
+                                busy: allHours.get(time.toLocaleString()).busy || false,
+                                isDown: !register.status || !allHours.get(time.toLocaleString()).status
                             }
                         )
                     } else {
@@ -282,26 +286,37 @@ const SystemCard = (props: Props) => {
                             nextHour.setSeconds(0)
                             allHours.set(
                                 nextHour.toLocaleString(),
-                                { ...register, createdAt: nextHour, status: register.status ? 1 : 0 }
+                                {
+                                    ...register,
+                                    createdAt: nextHour,
+                                    status: register.status ? 1 : 0,
+                                    isDown: !register.status || !allHours.get(time.toLocaleString()).status
+                                }
                             )
                         }
                     }
                 } else {
                     allHours.set(
                         time.toLocaleString(),
-                        { ...register, status: register.status ? 1 : 0 }
+                        {
+                            ...register,
+                            status: register.status ? 1 : 0,
+                            isDown: !register.status
+                        }
                     )
                 }
             })
 
         let prevStatus = 1
         let prevBusy = false
+        let prevIsDown = false
         // We add 2 hours to the set to render the full 24 hours in graph
         const set = Array.from({ length: hourSet + 2 }).map((_, i) => {
             const time = getDateWithGivenHour(hourSet - i)
             let status = lastStatus ? 1 : 0
             let unknown = false
             let busy = false
+            let isDown = false
 
             if (allHours.size > 1) {
                 // now < before === true
@@ -310,6 +325,7 @@ const SystemCard = (props: Props) => {
                     if (allHours.get(lastTime)) {
                         status = allHours.get(lastTime).status
                         busy = allHours.get(lastTime).busy || false
+                        isDown = !allHours.get(lastTime).status
                     }
                 }
                 // Copy all status from the left to the first registered
@@ -324,11 +340,14 @@ const SystemCard = (props: Props) => {
                     prevStatus = register.status
                     busy = register.busy || false
                     prevBusy = register.busy || false
+                    isDown = register.isDown
+                    prevIsDown = register.isDown
                 }
                 // Copy status in between registered statuses
                 else {
                     status = prevStatus
                     busy = prevBusy
+                    isDown = prevIsDown
                 }
             } else {
                 status = allHours.values().next().value.status
@@ -341,7 +360,8 @@ const SystemCard = (props: Props) => {
                 time,
                 status,
                 unknown,
-                busy
+                busy,
+                isDown
             }
 
             return itemStatus

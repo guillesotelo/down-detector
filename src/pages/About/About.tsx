@@ -1,8 +1,33 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../../AppContext"
+import { getVersionDate } from "../../services"
+import { APP_VERSION, days, months } from "../../constants/app"
 
 export default function Help() {
   const { isLoggedIn } = useContext(AppContext)
+  const [versionDate, setVersionDate] = useState('')
+
+  useEffect(() => {
+    getTooltipVersionDate()
+  }, [])
+
+  const getTooltipVersionDate = async () => {
+    try {
+      const vDate = await getVersionDate()
+      if (vDate) {
+        const date = new Date(vDate)
+        const number = date.getDate()
+        const letters = number === 1 ? 'st' : number === 2 ? 'nd' : 'th'
+        const day = days[date.getDay() - 1]
+        const month = months[date.getMonth()]
+        const year = date.getFullYear()
+
+        setVersionDate(`${day} ${number}${letters} of ${month}, ${year} [${APP_VERSION}]`)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className="about__container" style={{ width: isLoggedIn ? '85vw' : '' }}>
@@ -14,7 +39,7 @@ export default function Help() {
         </p>
         <h3 className="about__subtitle">1. System Discovery and Configuration</h3>
         <p className="about__text">
-          The process begins by gathering information about all internal systems along with their custom configurations. This initial step sets the foundation for effective monitoring.
+          The process begins by gathering information about all internal systems along with their custom configurations.
         </p>
         <h3 className="about__subtitle">2. Real-time Status Checks</h3>
         <p className="about__text">
@@ -38,21 +63,22 @@ export default function Help() {
         </p>
         <h3 className="about__subtitle">7. Dashboard Insights</h3>
         <p className="about__text">
-          The Dashboard serves as a centralized hub where users can access a snapshot of system data from the last 24 hours. Clicking on a system card provides a detailed breakdown, including a graph illustrating performance trends, the current status, and a Report button for user submissions.
+          The Dashboard serves as a centralized hub where users can access a snapshot of system data from the last 24 hours. Clicking on a system card provides a detailed breakdown, including a graph illustrating performance trends, the current status, and  Subscribe and Report buttons for user interactions.
         </p>
         <h3 className="about__subtitle">&nbsp;</h3>
         <p className="about__text">
-          Our system status monitoring process is designed to provide users with a comprehensive view of the health and performance of internal systems. By leveraging real-time checks, user reports, and planned downtime management, we ensure transparency and empower users to make informed decisions.
+          Our system status monitoring process is designed to provide users with a general view of internal systems' health and performance. By performing real-time checks, user reports, and planned downtime management, we ensure transparency and help users to make informed decisions.
         </p>
         <h3 className="about__subtitle">&nbsp;</h3>
         <h3 className="about__subtitle">Feedback and Contact Information</h3>
         <p className="about__text">
           We value your feedback, suggestions, and any concerns you may have regarding the system status monitoring application.
-          <br />The Stargate team is here to assist you and welcomes your input to enhance the developer experience.
+          <br />The Stargate team is here to assist you and welcomes your input to improve the developer experience.
         </p>
         <h4 className="about__subtitle">Stargate Team</h4>
         94530 HP System Architecture
         <p className="about__text"><a href="mailto:test@mail.com.com">test@mail.com.com</a></p>
+        <p><i>Last app update: {versionDate}</i></p>
       </div>
     </div>
   )
