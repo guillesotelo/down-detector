@@ -121,6 +121,8 @@ export type statusType = {
     time: Date | number
     status: number
     reg?: boolean
+    busy?: boolean
+    isDown?: boolean
 }
 
 export type onChangeEventType = React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>

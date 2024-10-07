@@ -100,7 +100,7 @@ export const hisrotyHeaders = [
 
 export const systemHisrotyHeaders = [
     {
-        name: 'CREATED',
+        name: 'DATE & TIME',
         value: 'createdAt'
     },
     {
