@@ -370,7 +370,7 @@ const Home = () => {
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
         <span style={{ fontWeight: 'normal' }}> ➜ </span>
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
-        <p className="systemcard__event-note">{event.note}</p>
+        <div className="systemcard__event-note" style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
       </span>
       )
     }
@@ -734,7 +734,7 @@ const Home = () => {
             {note ?
               <>
                 <strong>Reason</strong>
-                <div className='home__modal-downtime-note' dangerouslySetInnerHTML={{ __html: note || '' }} />
+                <div className='home__modal-downtime-note' style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: note || '' }} />
               </>
               : ''}
           </div>

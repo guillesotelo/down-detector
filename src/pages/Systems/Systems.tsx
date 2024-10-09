@@ -81,6 +81,13 @@ export default function Systems({ }: Props) {
     getUsers()
   }, [isSuper])
 
+  useEffect(() => {
+    if (start && !end) {
+      const newDate = new Date(start)
+      newDate.setHours(newDate.getHours() + 1)
+      setEnd(newDate)
+    }
+  }, [start, end])
 
   useEffect(() => {
     if (selected !== -1 || newSystem) document.body.style.overflow = 'hidden'
@@ -594,11 +601,13 @@ export default function Systems({ }: Props) {
                     />
                   </div>
                   <InputField
-                    label='Note'
+                    label='Note (accepts HTML)'
                     name='downtimeNote'
                     updateData={updateData}
                     value={data.downtimeNote}
                     placeholder='Write the downtime reason...'
+                    type='textarea'
+                    rows={3}
                   />
                 </div>
                 : ''}
