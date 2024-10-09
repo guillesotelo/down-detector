@@ -145,9 +145,9 @@ const SystemCard = (props: Props) => {
                         borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ? 'gray' :
                             // Commenting this to remove the orange colors from the graphs   
                             // completeData[ctx.p1DataIndex].busy ||
-                            completeData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
+                            !status ? 'red' : completeData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
                                 reportedlyDown || status === 'BUSY' ? 'orange' :
-                                    status ? darkMode ? '#00b000' : 'green' : 'red'
+                                    darkMode ? '#00b000' : 'green'
                     },
                     tension: .4,
                     pointBorderWidth: 0,
