@@ -370,7 +370,7 @@ const Home = () => {
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
         <span style={{ fontWeight: 'normal' }}> ➜ </span>
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
-        <div className="systemcard__event-note" style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
+        <div className={`systemcard__event-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
       </span>
       )
     }
@@ -576,7 +576,7 @@ const Home = () => {
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
                 'transparent' : '#ffdada' : darkMode ?
-                'transparent' : '#fcd9a59e',
+                'transparent' : '#b7b7b7',
               border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
@@ -728,13 +728,13 @@ const Home = () => {
           subtitle={system?.name}
           onClose={() => setShowDowntime(null)}>
           <div className="home__modal-col" style={{ margin: '1rem 0' }}>
-            <p className="home__modal-downtime-note">
+            <p className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`}>
               The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
             </p>
             {note ?
               <>
                 <strong>Reason</strong>
-                <div className='home__modal-downtime-note' style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: note || '' }} />
+                <div className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: note || '' }} />
               </>
               : ''}
           </div>

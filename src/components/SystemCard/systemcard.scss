@@ -42,8 +42,8 @@
 
             &:hover {
                 border: 1px solid rgb(148, 148, 148) !important;
-            z-index: 3;
-        }
+                z-index: 3;
+            }
         }
     }
 
@@ -76,7 +76,7 @@
     }
 
     &__name {
-        font-size: .9rem;
+        font-size: 1rem;
         font-weight: normal;
         margin: 0;
         max-width: inherit;
@@ -217,6 +217,7 @@
         overflow: hidden;
         width: calc(14rem + 1.4rem);
         padding: 1.5rem .8rem .8rem .8rem;
+        transform: translateY(-100%);
         animation: fade-in-down-event 1s ease-in forwards;
 
         &:hover .systemcard__event-note {
@@ -238,9 +239,13 @@
             overflow: hidden;
             width: calc(14rem + 1.4rem);
             padding: 1.5rem .8rem .8rem .8rem;
+            transform: translateY(-100%);
             animation: fade-in-down-event 1s ease-in forwards;
 
             &:hover .systemcard__event-note {
+                -webkit-line-clamp: unset;
+            }
+             &:hover .systemcard__event-note--dark {
                 -webkit-line-clamp: unset;
             }
         }
@@ -261,7 +266,7 @@
             width: inherit;
 
             &:hover {
-                filter: brightness(150%);
+                filter: brightness(120%);
             }
         }
 
@@ -292,6 +297,29 @@
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             transition: .3s;
+
+            &--dark {
+                margin: .4rem 0 0 0;
+                text-align: center;
+                font-size: .7rem;
+                font-weight: normal;
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                transition: .3s;
+
+                & * {
+                    background-color: transparent !important;
+                    color: white !important;
+                }
+            }
+
+            & * {
+                background-color: transparent !important;
+                color: black !important;
+            }
         }
     }
 
