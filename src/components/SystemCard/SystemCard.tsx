@@ -89,6 +89,16 @@ const SystemCard = (props: Props) => {
         generateLastDayData()
     }, [lastDayData])
 
+    const getStatusColor = (item: statusType) => {
+        if (!status) return 'red'
+        if (reportedlyDown || status === 'BUSY') return 'orange'
+
+        let color = darkMode ? '#00b000' : 'green'
+        if (item && item.unknown) color = 'gray'
+        // if (item.busy) color = darkMode ? '#b7ff00' : '#929e0e'
+        return color
+    }
+
     const generateLastDayData = useCallback(() => {
         setLastDayChartData({
             labels: lastDayData.length ? lastDayData.map(el => parseDateTime(el.time)) : [],
@@ -104,13 +114,7 @@ const SystemCard = (props: Props) => {
                     data: lastDayData.length ? lastDayData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: 'transparent',
                     segment: {
-                        borderColor: (ctx: any) =>
-                            lastDayData[ctx.p1DataIndex] && lastDayData[ctx.p1DataIndex].unknown ? 'gray' :
-                                // Commenting this to remove the orange colors from the graphs   
-                                // lastDayData[ctx.p1DataIndex].busy || 
-                                lastDayData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
-                                    reportedlyDown || status === 'BUSY' ? 'orange' :
-                                        status ? darkMode ? '#00b000' : 'green' : 'red'
+                        borderColor: (ctx: any) => getStatusColor(lastDayData[ctx.p1DataIndex])
                     },
                     tension: .4,
                     borderWidth: 3,
@@ -142,12 +146,7 @@ const SystemCard = (props: Props) => {
                     data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
                     backgroundColor: 'transparent',
                     segment: {
-                        borderColor: (ctx: any) => completeData[ctx.p1DataIndex] && completeData[ctx.p1DataIndex].unknown ? 'gray' :
-                            // Commenting this to remove the orange colors from the graphs   
-                            // completeData[ctx.p1DataIndex].busy ||
-                            !status ? 'red' : completeData[ctx.p1DataIndex].busy ? darkMode ? '#b7ff00' : '#929e0e' :
-                                reportedlyDown || status === 'BUSY' ? 'orange' :
-                                    darkMode ? '#00b000' : 'green'
+                        borderColor: (ctx: any) => getStatusColor(completeData[ctx.p1DataIndex])
                     },
                     tension: .4,
                     pointBorderWidth: 0,
@@ -377,7 +376,7 @@ const SystemCard = (props: Props) => {
                     <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
                     <span style={{ fontWeight: 'normal' }}> ➜ </span>
                     <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
-                    <div className="systemcard__event-note" dangerouslySetInnerHTML={{ __html: event.note || '' }} />
+                    <div className={`systemcard__event-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
                 </span>
             )
         }
@@ -650,14 +649,14 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161a6' : darkMode ?
-                                'black' : '#fcd9a59e',
+                                'black' : '#b7b7b7',
                             border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent',
                             animationDelay: `${delay || '0'}`
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
-                        <p className="systemcard__event-title">Planned downtime:</p>
+                        <p className="systemcard__event-title">⚠️ Planned downtime ⚠️</p>
                         {downtime.map((time, i) =>
                             <div
                                 key={i}

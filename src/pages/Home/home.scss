@@ -157,6 +157,20 @@
                 align-items: center;
                 justify-content: space-between;
             }
+
+            &-note {
+                & * {
+                    text-align: left !important;
+                    background-color: transparent !important;
+                    color: black !important;
+                }
+
+                &--dark * {
+                    text-align: left !important;
+                    background-color: transparent !important;
+                    color: white !important;
+                }
+            }
         }
     }
 

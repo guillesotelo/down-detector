@@ -82,7 +82,7 @@ export default function Systems({ }: Props) {
   }, [isSuper])
 
   useEffect(() => {
-    if (start && !end) {
+    if (start && start.getHours() !== 0 && !end) {
       const newDate = new Date(start)
       newDate.setHours(newDate.getHours() + 1)
       setEnd(newDate)
@@ -123,10 +123,8 @@ export default function Systems({ }: Props) {
 
   const getUsers = async () => {
     try {
-      setLoading(true)
       const users = isSuper ? await getAllUsers() : []
       if (users && users.length) setAllUsers(users)
-      setLoading(false)
     } catch (error) {
       setLoading(false)
       console.error(error)
