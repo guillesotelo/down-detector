@@ -95,7 +95,8 @@ const SystemCard = (props: Props) => {
 
         let color = darkMode ? '#00b000' : 'green'
         if (item && item.unknown) color = 'gray'
-        // if (item.busy) color = darkMode ? '#b7ff00' : '#929e0e'
+        if (item.busy) color = '#007f00'
+        if (item.isDown) color = '#006600'
         return color
     }
 
@@ -402,7 +403,7 @@ const SystemCard = (props: Props) => {
     const getCurrentStatus = () => {
         const lastHistories: historyType[] | null = history && Array.isArray(history) ?
             sortArray(history, 'createdAt', true).slice(0, 2) : null
-        const current = lastHistories ? { ...lastHistories[0] } || null : null
+        const current = lastHistories && lastHistories.length ? { ...lastHistories[0] } : null
 
         if (current && !current.status) {
             const currentStatus = current.status
