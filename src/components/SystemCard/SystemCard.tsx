@@ -95,8 +95,8 @@ const SystemCard = (props: Props) => {
 
         let color = darkMode ? '#00b000' : 'green'
         if (item && item.unknown) color = 'gray'
-        if (item.busy) color = '#007f00'
-        if (item.isDown) color = '#006600'
+        if (item.busy) color = darkMode ? '#007f00' : '#006000'
+        if (item.isDown) color = darkMode ? '#006600' : '#003a00'
         return color
     }
 
@@ -650,7 +650,7 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161a6' : darkMode ?
-                                'black' : '#b7b7b7',
+                                'black' : '#dedede',
                             border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent',
                             animationDelay: `${delay || '0'}`
@@ -661,7 +661,7 @@ const SystemCard = (props: Props) => {
                         {downtime.map((time, i) =>
                             <div
                                 key={i}
-                                className="systemcard__event-downtime"
+                                className={`systemcard__event-downtime${darkMode ? '--dark' : ''}`}
                                 onClick={() => setShowDowntime({ ...time, system, index })}
                                 style={{
                                     borderTop: i > 0 ? '1px solid gray' : '',

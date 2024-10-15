@@ -188,7 +188,7 @@ const Home = () => {
   const getCurrentStatus = (system: systemType) => {
     const lastHistories: historyType[] | null = allStatus && Array.isArray(allStatus) ?
       sortArray(allStatus.filter(h => h.systemId === system._id), 'createdAt', true) : null
-    const current = lastHistories ? { ...lastHistories[0] } || null : null
+    const current = lastHistories ? { ...lastHistories[0] } : null
 
     if (current && !current.status) {
       const currentStatus = current.status
