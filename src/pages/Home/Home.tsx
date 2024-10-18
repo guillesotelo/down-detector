@@ -453,6 +453,7 @@ const Home = () => {
   const discardChanges = () => {
     setSelected('')
     setSelectedLog(-1)
+    setShowDowntime(null)
     setEditLog(false)
     setEditedLogStatus('')
     setEditedLogMessage('')
@@ -561,6 +562,14 @@ const Home = () => {
     )
   }
 
+  const openDownTimeModal = () => {
+    setShowDowntime({
+      ...getComingEvent(getDownTime(getSelectedSystem() || {})),
+      ...getSelectedSystem(),
+      index: 0
+    })
+  }
+
   const renderSystemDetailsModal = () => {
     return (
       <Modal
@@ -573,10 +582,11 @@ const Home = () => {
         {getDowntimeString() ?
           <div
             className={`home__modal-downtime${darkMode ? '--dark' : ''}`}
+            onClick={openDownTimeModal}
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
                 'transparent' : '#ffdada' : darkMode ?
-                'transparent' : '#b7b7b7',
+                'transparent' : '#dedede',
               border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
@@ -726,7 +736,7 @@ const Home = () => {
         <Modal
           title='Planned Downtime'
           subtitle={system?.name}
-          onClose={() => setShowDowntime(null)}>
+          onClose={discardChanges}>
           <div className="home__modal-col" style={{ margin: '1rem 0' }}>
             <p className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`}>
               The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
