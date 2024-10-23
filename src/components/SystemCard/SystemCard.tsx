@@ -570,7 +570,7 @@ const SystemCard = (props: Props) => {
                 <div
                     className={`systemcard__container${darkMode ? '--dark' : ''}`}
                     style={{
-                        borderColor: darkMode ? '#424244' : '#d3d3d361',
+                        borderColor: darkMode ? '#424244' : '#d3d3d3',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading || (status !== false && status !== true && status !== 'BUSY') ? '' :
                             status === 'BUSY' ? darkMode ? 'linear-gradient(to right bottom, rgb(0, 0, 0), rgb(255 152 0 / 26%)'
@@ -650,7 +650,7 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161a6' : darkMode ?
-                                'black' : '#dedede',
+                                'black' : '#e8e8e8',
                             border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid orange' : '1px solid transparent',
                             animationDelay: `${delay || '0'}`
@@ -659,16 +659,20 @@ const SystemCard = (props: Props) => {
                         onMouseLeave={() => setShowMoreDowntime(false)}>
                         <p className="systemcard__event-title">⚠️ Planned downtime ⚠️</p>
                         {downtime.map((time, i) =>
-                            <div
-                                key={i}
-                                className={`systemcard__event-downtime${darkMode ? '--dark' : ''}`}
-                                onClick={() => setShowDowntime({ ...time, system, index })}
-                                style={{
-                                    borderTop: i > 0 ? '1px solid gray' : '',
-                                    paddingTop: i > 0 ? '1rem' : '',
-                                    marginTop: i > 0 ? '1rem' : '',
-                                    display: i > 0 && !showMoreDowntime ? 'none' : ''
-                                }}>{getDowntime(time)}</div>)}
+                            <>
+                                {showMoreDowntime && i > 0 ? <div className='systemcard__event-downtime-separator' /> : ''}
+                                <div
+                                    key={i}
+                                    className={`systemcard__event-downtime${darkMode ? '--dark' : ''}`}
+                                    onClick={() => setShowDowntime({ ...time, system, index })}
+                                    style={{ 
+                                        display: !showMoreDowntime ? 'none' : '',
+                                        marginTop: i === 0 ? '.5rem' : ''
+                                         }}>
+                                    {getDowntime(time)}
+                                </div>
+                            </>
+                        )}
                     </div>
                     : ''}
             </>
