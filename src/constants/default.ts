@@ -2,6 +2,10 @@ export const timeoutDefaultOptions = [
     {
         name: '10 seconds',
         value: 10000
+    },
+    {
+        name: '20 seconds',
+        value: 20000
     }
 ]
 
