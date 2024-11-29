@@ -14,6 +14,7 @@ import Settings from '../../assets/icons/settings.svg'
 import Help from '../../assets/icons/help.svg'
 import Api from '../../assets/icons/api.svg'
 import Users from '../../assets/icons/users.svg'
+import Subscriptions from '../../assets/icons/subscribe.svg'
 import Tooltip from '../Tooltip/Tooltip'
 import Sidebar from '../Sidebar/Sidebar'
 import { getUser } from '../../helpers'
@@ -201,6 +202,19 @@ export default function Header() {
             }}>
             <img src={AppLogs} alt="App Logs" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
             <p className="header__menu-item-label">App Logs</p>
+          </div>
+          <div
+            className="header__menu-item"
+            style={{
+              backgroundColor: item === '/subscriptions' ? darkMode ? 'rgb(57, 57, 57)' : 'rgb(237, 237, 237)' : ''
+            }}
+            onClick={() => {
+              history.push('/subscriptions')
+              setItem('/subscriptions')
+              setOpenMenu(!openMenu)
+            }}>
+            <img src={Subscriptions} alt="Subscriptions" draggable={false} className={`header__menu-item-svg${darkMode ? '--dark' : ''}`} />
+            <p className="header__menu-item-label">Subscriptions</p>
           </div>
           <div
             className="header__menu-item"
