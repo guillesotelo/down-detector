@@ -158,3 +158,34 @@ export const logHeaders = [
         value: 'module'
     },
 ]
+
+export const subscriptionHeaders = [
+    {
+        name: 'DATE',
+        value: 'updatedAt'
+    },
+    {
+        name: 'EMAIL',
+        value: 'email'
+    },
+    {
+        name: 'USERNAME',
+        value: 'username'
+    },
+    {
+        name: 'SYSTEM',
+        value: 'name'
+    },
+    {
+        name: 'URL',
+        value: 'url'
+    },
+    {
+        name: 'TYPE',
+        value: 'type'
+    },
+    {
+        name: 'GEO DATA',
+        value: 'geolocation'
+    },
+]
