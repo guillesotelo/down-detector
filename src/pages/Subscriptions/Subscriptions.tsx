@@ -68,7 +68,7 @@ export default function Subscriptions({ }: Props) {
                         handleChange={onChangeSearch}
                         triggerSearch={triggerSearch}
                         value={search}
-                        placeholder='Search logs...'
+                        placeholder='Search subscriptions...'
                     />
                 </div>
                 <div className="applogs__col">
