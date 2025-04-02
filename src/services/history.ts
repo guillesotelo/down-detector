@@ -2,7 +2,7 @@ import axios from 'axios';
 import { historyType } from '../types';
 import { getUser } from '../helpers';
 
-const API_URL = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_API_URL || ''
+const API_URL = process.env.REACT_APP_API_URL || ''
 
 const getHeaders = () => {
     return { authorization: `Bearer ${getUser().token}` }

@@ -15,6 +15,7 @@ import Help from './pages/About/About';
 import Account from './pages/Account/Account';
 import Unsubscribe from './pages/Unsubscribe/Unsubscribe';
 import Subscriptions from './pages/Subscriptions/Subscriptions';
+import BuildTracker from './pages/BuildTracker/BuildTracker';
 
 function App() {
   const location = useLocation()
@@ -27,6 +28,13 @@ function App() {
       hitType: 'pageview',
       page: window.location.pathname
     })
+
+    if (window.location.pathname.includes('build-tracker')) {
+      const head = document.head || document.querySelector('head')
+      const title = document.querySelector('title')
+      if (head) head.title = 'Build Tracker'
+      if (title) title.textContent = 'Build Tracker'
+    }
   }, [location, window.location.pathname])
 
   return (
@@ -118,6 +126,12 @@ function App() {
           </div>
         </div>
       </Route>
+
+      <Route exact path="/build-tracker">
+        <BuildTracker />
+      </Route>
+
+      {/* FALLBACK PAGE -> RENDER HOME*/}
       <Route>
         <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>
           <Header />

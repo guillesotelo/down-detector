@@ -189,3 +189,22 @@ export const subscriptionHeaders = [
         value: 'geolocation'
     },
 ]
+
+export const moduleHeaders =[
+    {
+        name: 'NAME',
+        value: 'name'
+    },
+    {
+        name: 'ART',
+        value: 'art'
+    },
+    {
+        name: 'SOLUTION',
+        value: 'solution'
+    },
+    {
+        name: 'STATUS',
+        value: 'status'
+    },
+]
