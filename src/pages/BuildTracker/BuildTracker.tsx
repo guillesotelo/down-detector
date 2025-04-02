@@ -77,6 +77,7 @@ export default function BuildTracker() {
                             tableData={moduleArray}
                             setTableData={setModuleArray}
                             tableHeaders={moduleHeaders}
+                            orderDataBy={moduleHeaders[3]}
                         />
                     </div>
                 </Modal>

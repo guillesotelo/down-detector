@@ -42,12 +42,18 @@
             margin: 0;
         }
 
+        &-classifier {
+            font-size: .9rem;
+            margin: .2rem 0;
+            opacity: .4;
+        }
+
         &-icon {
             height: 1.6rem;
         }
 
         &-branch {
-            margin: 0;
+            margin: .2rem 0;
             opacity: .5;
         }
     }
