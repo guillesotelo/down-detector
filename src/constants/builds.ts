@@ -2,7 +2,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema.json",
         title: "Night build",
-        classifier: 'kiwi',
+        classifier: 'p519_fcr',
         date: "2025-03-23T00:00:00Z",
         target_branch: "master",
         modules: {
@@ -11,7 +11,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -19,15 +19,15 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -35,7 +35,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -43,7 +43,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -51,15 +51,15 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -67,7 +67,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -75,7 +75,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -83,15 +83,15 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -99,7 +99,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -107,7 +107,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -115,15 +115,15 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -131,7 +131,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -139,15 +139,15 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -155,7 +155,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -163,7 +163,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -185,7 +185,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_2.json",
         title: "Alpha build",
-        classifier: 'mango',
+        classifier: 'p519_fcr',
         date: "2025-03-22T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -194,7 +194,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -202,15 +202,15 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -218,7 +218,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -226,7 +226,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -234,15 +234,15 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -250,7 +250,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -258,7 +258,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -266,15 +266,15 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -282,7 +282,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -290,7 +290,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -298,15 +298,15 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -314,7 +314,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -322,15 +322,15 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -338,7 +338,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -346,7 +346,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -368,7 +368,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_3.json",
         title: "Beta build",
-        classifier: 'orange',
+        classifier: 'p519_fcr',
         date: "2025-03-21T00:00:00Z",
         target_branch: "master",
         modules: {
@@ -377,7 +377,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -385,15 +385,15 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -401,7 +401,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -409,7 +409,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -417,15 +417,15 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -433,7 +433,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -441,7 +441,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -449,15 +449,15 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -465,7 +465,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -473,7 +473,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -481,15 +481,15 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -497,7 +497,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -505,15 +505,15 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -521,7 +521,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -529,7 +529,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -551,7 +551,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_4.json",
         title: "Night build 2",
-        classifier: 'apple',
+        classifier: 'p519_fcr',
         date: "2025-03-20T00:00:00Z",
         target_branch: "feature-xyz",
         modules: {
@@ -560,7 +560,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -568,15 +568,15 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -584,7 +584,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -592,7 +592,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -600,15 +600,15 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -616,7 +616,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -624,7 +624,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -632,15 +632,15 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -648,7 +648,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -656,7 +656,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -664,15 +664,15 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -680,7 +680,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -688,15 +688,15 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -704,7 +704,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -712,7 +712,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -734,7 +734,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_5.json",
         title: "Gamma build",
-        classifier: 'strawberry',
+        classifier: 'p519_fcr',
         date: "2025-03-19T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -743,7 +743,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -751,15 +751,15 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -767,7 +767,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -775,7 +775,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -783,15 +783,15 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -799,7 +799,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -807,7 +807,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -815,15 +815,15 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -831,7 +831,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -839,7 +839,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -847,15 +847,15 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -863,7 +863,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -871,15 +871,15 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
-                status: "pending",
+                status: "success",
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -887,7 +887,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -895,7 +895,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -917,7 +917,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_6.json",
         title: "Delta build",
-        classifier: 'pear',
+        classifier: 'p519_fcr',
         date: "2025-03-18T00:00:00Z",
         target_branch: "main",
         modules: {
@@ -926,7 +926,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -934,7 +934,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -942,7 +942,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -950,7 +950,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -958,7 +958,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -966,7 +966,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -974,7 +974,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -982,7 +982,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -990,7 +990,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -998,7 +998,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1006,7 +1006,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1014,7 +1014,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1022,7 +1022,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1030,7 +1030,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1038,7 +1038,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1046,7 +1046,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1054,7 +1054,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1062,7 +1062,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1070,7 +1070,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1078,7 +1078,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -1100,7 +1100,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_7.json",
         title: "Omega build",
-        classifier: 'banana',
+        classifier: 'p519_fcr',
         date: "2025-03-17T00:00:00Z",
         target_branch: "feature-abc",
         modules: {
@@ -1109,7 +1109,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -1117,7 +1117,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -1125,7 +1125,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -1133,7 +1133,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -1141,7 +1141,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -1149,7 +1149,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -1157,7 +1157,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -1165,7 +1165,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -1173,7 +1173,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -1181,7 +1181,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1189,7 +1189,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1197,7 +1197,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1205,7 +1205,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1213,7 +1213,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1221,7 +1221,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1229,7 +1229,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1237,7 +1237,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1245,7 +1245,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1253,7 +1253,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1261,7 +1261,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -1283,7 +1283,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_8.json",
         title: "Zeta build",
-        classifier: 'grape',
+        classifier: 'p519_fcr',
         date: "2025-03-16T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -1292,7 +1292,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -1300,7 +1300,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -1308,7 +1308,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -1316,7 +1316,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -1324,7 +1324,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -1332,7 +1332,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -1340,7 +1340,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -1348,7 +1348,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -1356,7 +1356,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -1364,7 +1364,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1372,7 +1372,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1380,7 +1380,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1388,7 +1388,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1396,7 +1396,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1404,7 +1404,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1412,7 +1412,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1420,7 +1420,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1428,7 +1428,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1436,7 +1436,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1444,7 +1444,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -1466,7 +1466,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_9.json",
         title: "Theta build",
-        classifier: 'blueberry',
+        classifier: 'p519_fcr',
         date: "2025-03-15T00:00:00Z",
         target_branch: "master",
         modules: {
@@ -1475,7 +1475,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -1483,7 +1483,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -1491,7 +1491,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -1499,7 +1499,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -1507,7 +1507,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -1515,7 +1515,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -1523,7 +1523,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -1531,7 +1531,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -1539,7 +1539,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -1547,7 +1547,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1555,7 +1555,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1563,7 +1563,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1571,7 +1571,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1579,7 +1579,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1587,7 +1587,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1595,7 +1595,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1603,7 +1603,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1611,7 +1611,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1619,7 +1619,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1627,7 +1627,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -1649,7 +1649,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_10.json",
         title: "Iota build",
-        classifier: 'peach',
+        classifier: 'p519_fcr',
         date: "2025-03-14T00:00:00Z",
         target_branch: "feature-lmn",
         modules: {
@@ -1658,7 +1658,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -1666,7 +1666,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -1674,7 +1674,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -1682,7 +1682,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -1690,7 +1690,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -1698,7 +1698,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -1706,7 +1706,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -1714,7 +1714,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -1722,7 +1722,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -1730,7 +1730,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1738,7 +1738,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1746,7 +1746,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1754,7 +1754,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1762,7 +1762,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1770,7 +1770,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1778,7 +1778,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1786,7 +1786,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1794,7 +1794,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1802,7 +1802,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1810,7 +1810,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -1832,7 +1832,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_11.json",
         title: "Kappa build",
-        classifier: 'kiwi',
+        classifier: 'p519_fcr',
         date: "2025-03-13T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -1841,7 +1841,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -1849,7 +1849,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -1857,7 +1857,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -1865,7 +1865,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -1873,7 +1873,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -1881,7 +1881,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -1889,7 +1889,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -1897,7 +1897,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -1905,7 +1905,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -1913,7 +1913,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -1921,7 +1921,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -1929,7 +1929,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -1937,7 +1937,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -1945,7 +1945,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -1953,7 +1953,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -1961,7 +1961,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -1969,7 +1969,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -1977,7 +1977,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -1985,7 +1985,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -1993,7 +1993,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2015,7 +2015,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_12.json",
         title: "Lambda build",
-        classifier: 'orange',
+        classifier: 'p519_fcr',
         date: "2025-03-12T00:00:00Z",
         target_branch: "master",
         modules: {
@@ -2024,7 +2024,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2032,7 +2032,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2040,7 +2040,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2048,7 +2048,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2056,7 +2056,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2064,7 +2064,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2072,7 +2072,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2080,7 +2080,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -2088,7 +2088,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -2096,7 +2096,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -2104,7 +2104,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -2112,7 +2112,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -2120,7 +2120,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -2128,7 +2128,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -2136,7 +2136,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -2144,7 +2144,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -2152,7 +2152,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -2160,7 +2160,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -2168,7 +2168,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -2176,7 +2176,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2198,7 +2198,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_13.json",
         title: "Mu build",
-        classifier: 'banana',
+        classifier: 'p519_fcr',
         date: "2025-03-11T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -2207,7 +2207,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2215,7 +2215,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2223,7 +2223,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2231,7 +2231,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2239,7 +2239,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2247,7 +2247,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2255,7 +2255,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2263,7 +2263,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -2271,7 +2271,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -2279,7 +2279,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -2287,7 +2287,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -2295,7 +2295,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -2303,7 +2303,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -2311,7 +2311,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -2319,7 +2319,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -2327,7 +2327,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -2335,7 +2335,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -2343,7 +2343,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -2351,7 +2351,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -2359,7 +2359,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2381,7 +2381,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_14.json",
         title: "Nu build",
-        classifier: 'grape',
+        classifier: 'p519_fcr',
         date: "2025-03-10T00:00:00Z",
         target_branch: "feature-xyz",
         modules: {
@@ -2390,7 +2390,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2398,7 +2398,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2406,7 +2406,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2414,7 +2414,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2422,7 +2422,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2430,7 +2430,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2438,7 +2438,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2446,7 +2446,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -2454,7 +2454,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -2462,7 +2462,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -2470,7 +2470,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -2478,7 +2478,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -2486,7 +2486,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -2494,7 +2494,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -2502,7 +2502,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -2510,7 +2510,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -2518,7 +2518,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -2526,7 +2526,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -2534,7 +2534,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -2542,7 +2542,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2564,7 +2564,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_15.json",
         title: "Xi build",
-        classifier: 'peach',
+        classifier: 'p519_fcr',
         date: "2025-03-09T00:00:00Z",
         target_branch: "develop",
         modules: {
@@ -2573,7 +2573,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2581,7 +2581,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2589,7 +2589,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2597,7 +2597,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2605,7 +2605,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2613,7 +2613,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2621,7 +2621,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2629,7 +2629,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -2637,7 +2637,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -2645,7 +2645,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -2653,7 +2653,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -2661,7 +2661,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -2669,7 +2669,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -2677,7 +2677,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -2685,7 +2685,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -2693,7 +2693,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -2701,7 +2701,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -2709,7 +2709,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -2717,7 +2717,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -2725,7 +2725,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2747,7 +2747,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_16.json",
         title: "Pi build",
-        classifier: 'kiwi',
+        classifier: 'p519_fcr',
         date: "2025-03-08T00:00:00Z",
         target_branch: "master",
         modules: {
@@ -2756,7 +2756,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2764,7 +2764,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2772,7 +2772,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2780,7 +2780,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2788,7 +2788,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2796,7 +2796,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2804,7 +2804,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2812,7 +2812,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -2820,7 +2820,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -2828,7 +2828,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -2836,7 +2836,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -2844,7 +2844,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -2852,7 +2852,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -2860,7 +2860,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -2868,7 +2868,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -2876,7 +2876,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -2884,7 +2884,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -2892,7 +2892,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -2900,7 +2900,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -2908,7 +2908,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },
@@ -2930,7 +2930,7 @@ export const testBuilds = [
     {
         id: "https://gerrit.net/nightly_rebuild_schema_17.json",
         title: "Rho build",
-        classifier: 'orange',
+        classifier: 'p519_fcr',
         date: "2025-03-07T00:00:00Z",
         target_branch: "feature-abc",
         modules: {
@@ -2939,7 +2939,7 @@ export const testBuilds = [
                 date: "2025-03-20T00:00:00Z",
                 org: {
                     art: "ARTCSAS",
-                    solution: "Solution of module"
+                    solution: "SWEP"
                 }
             },
             module2: {
@@ -2947,7 +2947,7 @@ export const testBuilds = [
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
-                    solution: "Solution of failure module"
+                    solution: "SWEP"
                 }
             },
             module3: {
@@ -2955,7 +2955,7 @@ export const testBuilds = [
                 date: "2025-03-18T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module4: {
@@ -2963,7 +2963,7 @@ export const testBuilds = [
                 date: "2025-03-17T00:00:00Z",
                 org: {
                     art: "ARTMNO",
-                    solution: "Solution for module"
+                    solution: "SWEP"
                 }
             },
             module5: {
@@ -2971,7 +2971,7 @@ export const testBuilds = [
                 date: "2025-03-16T00:00:00Z",
                 org: {
                     art: "ARTZYY",
-                    solution: "Zeta solution"
+                    solution: "SWEP"
                 }
             },
             module6: {
@@ -2979,7 +2979,7 @@ export const testBuilds = [
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
-                    solution: "Solution for failed module"
+                    solution: "SWEP"
                 }
             },
             module7: {
@@ -2987,7 +2987,7 @@ export const testBuilds = [
                 date: "2025-03-14T00:00:00Z",
                 org: {
                     art: "ARTDEF",
-                    solution: "Pending solution for module"
+                    solution: "SWEP"
                 }
             },
             module8: {
@@ -2995,7 +2995,7 @@ export const testBuilds = [
                 date: "2025-03-13T00:00:00Z",
                 org: {
                     art: "ARTVBG",
-                    solution: "Solution for successful module"
+                    solution: "SWEP"
                 }
             },
             module9: {
@@ -3003,7 +3003,7 @@ export const testBuilds = [
                 date: "2025-03-12T00:00:00Z",
                 org: {
                     art: "ARTSKL",
-                    solution: "Module Succeeding"
+                    solution: "SWEP"
                 }
             },
             module10: {
@@ -3011,7 +3011,7 @@ export const testBuilds = [
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Failure solution"
+                    solution: "SWEP"
                 }
             },
             module11: {
@@ -3019,7 +3019,7 @@ export const testBuilds = [
                 date: "2025-03-10T00:00:00Z",
                 org: {
                     art: "ARTHJK",
-                    solution: "Pending solution"
+                    solution: "SWEP"
                 }
             },
             module12: {
@@ -3027,7 +3027,7 @@ export const testBuilds = [
                 date: "2025-03-09T00:00:00Z",
                 org: {
                     art: "ARTQRS",
-                    solution: "Completed module"
+                    solution: "SWEP"
                 }
             },
             module13: {
@@ -3035,7 +3035,7 @@ export const testBuilds = [
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
-                    solution: "Module failed"
+                    solution: "SWEP"
                 }
             },
             module14: {
@@ -3043,7 +3043,7 @@ export const testBuilds = [
                 date: "2025-03-07T00:00:00Z",
                 org: {
                     art: "ARTOPQ",
-                    solution: "Working solution"
+                    solution: "SWEP"
                 }
             },
             module15: {
@@ -3051,7 +3051,7 @@ export const testBuilds = [
                 date: "2025-03-06T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "In progress solution"
+                    solution: "SWEP"
                 }
             },
             module16: {
@@ -3059,7 +3059,7 @@ export const testBuilds = [
                 date: "2025-03-05T00:00:00Z",
                 org: {
                     art: "ARTLMN",
-                    solution: "Successfully completed"
+                    solution: "SWEP"
                 }
             },
             module17: {
@@ -3067,7 +3067,7 @@ export const testBuilds = [
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
-                    solution: "Solution for failure"
+                    solution: "SWEP"
                 }
             },
             module18: {
@@ -3075,7 +3075,7 @@ export const testBuilds = [
                 date: "2025-03-03T00:00:00Z",
                 org: {
                     art: "ARTTUV",
-                    solution: "Still pending solution"
+                    solution: "SWEP"
                 }
             },
             module19: {
@@ -3083,7 +3083,7 @@ export const testBuilds = [
                 date: "2025-03-02T00:00:00Z",
                 org: {
                     art: "ARTXYZ",
-                    solution: "Completed successfully"
+                    solution: "SWEP"
                 }
             },
             module20: {
@@ -3091,7 +3091,7 @@ export const testBuilds = [
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
-                    solution: "Solution failed"
+                    solution: "SWEP"
                 }
             }
         },

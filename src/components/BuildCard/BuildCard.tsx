@@ -83,7 +83,10 @@ export default function BuildCard(props: Props) {
                         <p className="buildcard__header-title">{title}</p>
                         <img src={statusIcon} alt="Icon Status" className="buildcard__header-icon" />
                     </div>
-                    <p className="buildcard__header-branch">{target_branch}</p>
+                    <div className="buildcard__header-row">
+                        <p className="buildcard__header-branch">{target_branch}</p>
+                        <p className="buildcard__header-classifier">{classifier}</p>
+                    </div>
                 </div>
                 <p className={`buildcard__status-${getBuildStatus() || 'unknown'}`}>{getStatusLabel()}</p>
                 {/* <div className="buildcard__tags">

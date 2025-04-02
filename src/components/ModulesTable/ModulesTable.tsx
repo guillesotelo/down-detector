@@ -142,7 +142,7 @@ export default function ModulesTable(props: Props) {
                     onClick={() => orderBy(header)}
                     style={{
                         width: `${100 / tableHeaders.length}%`,
-                        textAlign: header.value === 'status' ? 'center' : 'unset',
+                        // textAlign: header.value === 'status' ? 'center' : 'unset',
                     }}>
                     {header.name} {Object.keys(ordered).includes(header.name) ? ordered[header.name] ? `▼` : `▲` : ''}
                 </h4>
@@ -171,7 +171,7 @@ export default function ModulesTable(props: Props) {
                                 color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
                                     row[header.value] === 'failure' ? 'red' :
                                         row[header.value] === 'success' ? 'green' : 'gray' : '',
-                                textAlign: header.value === 'status' ? 'center' : 'unset',
+                                // textAlign: header.value === 'status' ? 'center' : 'unset',
                             }}>
                             {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
                                 && row[header.value] ? `${getDate(row[header.value])}` :
