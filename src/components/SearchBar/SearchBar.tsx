@@ -5,7 +5,7 @@ import { AppContext } from '../../AppContext'
 
 type Props = {
     handleChange: (value: onChangeEventType) => void,
-    triggerSearch: () => void,
+    triggerSearch?: () => void,
     placeholder?: string,
     value?: string,
     style?: React.CSSProperties
@@ -23,7 +23,7 @@ export default function SearchBar(props: Props) {
     } = props
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement> ) => {
-        if(e.key === 'Enter') triggerSearch()
+        if(e.key === 'Enter' && triggerSearch) triggerSearch()
     }
     
     return (
