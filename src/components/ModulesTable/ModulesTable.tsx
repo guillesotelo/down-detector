@@ -47,8 +47,8 @@ export default function ModulesTable(props: Props) {
     const { darkMode } = useContext(AppContext)
 
     useEffect(() => {
-        if (orderDataBy) orderBy(orderDataBy)
-    }, [])
+        if (orderDataBy) setTimeout(() => orderBy(orderDataBy), 100)
+    }, [orderDataBy])
 
     useEffect(() => {
         setStartTime(new Date())
@@ -152,7 +152,7 @@ export default function ModulesTable(props: Props) {
 
     const renderTable = () => {
         return <div className='datatable__data-rows'>
-            {tableData.map((row: dataObj, i: number) => i < maxItems &&
+            {tableData.map((row: dataObj, i: number) =>
                 <div
                     key={i}
                     className={selected === i ? `datatable__row-selected${darkMode ? '--dark' : ''}` : `datatable__row${darkMode ? '--dark' : ''}`}
@@ -169,8 +169,8 @@ export default function ModulesTable(props: Props) {
                             style={{
                                 width: `${100 / tableHeaders.length}%`,
                                 color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
-                                    row[header.value] === 'failure' ? 'red' :
-                                        row[header.value] === 'success' ? 'green' : 'gray' : '',
+                                    row[header.value] === 'failure' ? darkMode ? '#ff2d2d' : 'red' :
+                                        row[header.value] === 'success' ? darkMode ? '#00d300' : 'green' : 'gray' : '',
                                 // textAlign: header.value === 'status' ? 'center' : 'unset',
                             }}>
                             {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
@@ -186,13 +186,6 @@ export default function ModulesTable(props: Props) {
                     )}
                 </div>
             )}
-            {
-                maxItems < tableData.length ?
-                    <button className={`datatable__lazy-btn${darkMode ? '--dark' : ''}`} onClick={() => setMaxItems(maxItems + 10)}>{`Show more ${name ? name : ''} ▼`}</button>
-                    : tableData.length && maxItems >= tableData.length && tableData.length > (max || 10) ?
-                        <button className={`datatable__lazy-btn${darkMode ? '--dark' : ''}`} onClick={() => setMaxItems(max || 10)}>Show less ▲</button>
-                        : ''
-            }
         </div >
     }
 
@@ -202,7 +195,7 @@ export default function ModulesTable(props: Props) {
                 {provided =>
                     <div {...provided.droppableProps} ref={provided.innerRef}>
                         <div className='datatable__data-rows'>
-                            {tableData.map((row: dataObj, i: number) => i < maxItems &&
+                            {tableData.map((row: dataObj, i: number) =>
                                 <Draggable key={i} draggableId={String(i)} index={i}>
                                     {provided =>
                                         <div
@@ -243,13 +236,6 @@ export default function ModulesTable(props: Props) {
                                     }
                                 </Draggable>
                             )}
-                            {!dragging ?
-                                maxItems < tableData.length ?
-                                    <button className={`datatable__lazy-btn${darkMode ? '--dark' : ''}`} onClick={() => setMaxItems(maxItems + 10)}>{`Show more ${name ? name : ''} ▼`}</button>
-                                    : tableData.length && maxItems >= tableData.length && tableData.length > (max || 10) ?
-                                        <button className={`datatable__lazy-btn${darkMode ? '--dark' : ''}`} onClick={() => setMaxItems(max || 10)}>Show less ▲</button>
-                                        : '' : ''
-                            }
                         </div>
                         {provided.placeholder}
                     </div>

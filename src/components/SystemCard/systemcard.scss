@@ -15,7 +15,7 @@
         z-index: 2;
         position: relative;
         background-color: white;
-        transition: .1s;
+        // transition: .1s;
 
         &:hover {
             // box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
@@ -38,7 +38,7 @@
             z-index: 2;
             position: relative;
             background-color: #000000;
-            transition: .1s;
+            // transition: .1s;
 
             &:hover {
                 border: 1px solid rgb(148, 148, 148) !important;

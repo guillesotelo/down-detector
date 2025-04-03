@@ -29,7 +29,7 @@
             border: 1px solid #525252;
             border-radius: 1rem;
             transition: 0.3s;
-            background-color: #3c3c3c;
+            background-color: transparent;
 
             &:focus-within {
                 border: 1px solid #105ec6;
@@ -42,7 +42,7 @@
         font-size: .9rem;
         text-decoration: none;
         width: 90%;
-        background-color: #F9FAFB;
+        // background-color: #F9FAFB;
         margin: 0 .2rem;
 
         &:focus {
@@ -59,7 +59,7 @@
             font-size: .9rem;
             text-decoration: none;
             width: 90%;
-            background-color: #3c3c3c;
+            background-color: transparent;
             margin: 0 .2rem;
             color: lightgray;
 
