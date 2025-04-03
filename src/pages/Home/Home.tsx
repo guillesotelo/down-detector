@@ -789,7 +789,7 @@ const Home = () => {
             setShowDowntime={setShowDowntime}
           />)
       :
-      Array.from({ length: 18 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
+      Array.from({ length: 19 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
   }
 
   return (

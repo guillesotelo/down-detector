@@ -2,9 +2,10 @@ import BuildOk from '../../assets/icons/build-ok.svg'
 import BuildPending from '../../assets/icons/build-pending.svg'
 import BuildFail from '../../assets/icons/build-fail.svg'
 import BuildUnknown from '../../assets/icons/build-unknown.svg'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getDate } from '../../helpers'
 import { dataObj } from '../../types'
+import { AppContext } from '../../AppContext'
 
 type Props = {
     build: dataObj
@@ -14,6 +15,7 @@ type Props = {
 
 export default function BuildCard(props: Props) {
     const [statusIcon, setStatusIcon] = useState(BuildUnknown)
+    const { darkMode } = useContext(AppContext)
 
     const {
         build,
@@ -71,10 +73,10 @@ export default function BuildCard(props: Props) {
 
     return (
         <div
-            className="buildcard__container"
+            className={`buildcard__container${darkMode ? '--dark' : ''}`}
             onClick={() => setOpenModal(id)}
             style={{
-                backgroundImage: `linear-gradient(to right bottom, white, ${getStatusBG()})`,
+                backgroundImage: `linear-gradient(to right bottom, ${darkMode ? 'black' : 'white'}, ${getStatusBG()})`,
                 animationDelay: `${delay || '0'}`
             }}>
             <div className="buildcard__wrapper">
