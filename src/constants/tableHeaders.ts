@@ -196,12 +196,20 @@ export const moduleHeaders =[
         value: 'name'
     },
     {
+        name: 'DATE',
+        value: 'date'
+    },
+    {
         name: 'ART',
         value: 'art'
     },
     {
         name: 'SOLUTION',
         value: 'solution'
+    },
+    {
+        name: 'VERSION',
+        value: 'version'
     },
     {
         name: 'STATUS',

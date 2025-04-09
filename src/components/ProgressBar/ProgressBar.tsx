@@ -28,8 +28,8 @@ export default function ProgressBar({ label, arrData, colors, objKey, percentage
     const getPercentage = () => {
         if (colors && colors.length === 2 && arrData && arrData.length && percentageFor) {
             const matchLength = arrData.filter(d => d[percentageFor.key] === percentageFor.value).length
-            console.log(arrData)
-            return `${(matchLength * 100 / arrData.length)}%`
+            const result = parseFloat(`${(matchLength * 100 / arrData.length)}`).toFixed(1)
+            return (result.split('.')[1] === "0" ? result.split('.')[0] : result) + '%'
         }
         return ''
     }

@@ -156,7 +156,7 @@ export default function DataTable(props: Props) {
                     onClick={() => setSelected ? i === selected ? setSelected(-1) : setSelected(i) : {}}
                     style={{
                         backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
-                            : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
+                            : selected === i ? '#5e598b85' : i % 2 === 0 ? '#38383852' : '',
                         animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
                     }}>
                     {tableHeaders.map((header: dataObj, j: number) =>
@@ -210,7 +210,7 @@ export default function DataTable(props: Props) {
                                                 onClick={() => setSelected ? i === selected ? setSelected(-1) : setSelected(i) : {}}
                                                 style={{
                                                     backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
-                                                        : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
+                                                        : selected === i ? '#5e598b85' : i % 2 === 0 ? '#38383852' : '',
                                                     animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
                                                 }}>
                                                 {tableHeaders.map((header: dataObj, j: number) =>

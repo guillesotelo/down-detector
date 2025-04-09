@@ -1,5 +1,5 @@
 import { getAllAlerts, getAllHistory } from "../services"
-import * as fs from 'fs';
+import { Build } from "../types"
 
 export const chunkArray = (arr: any[], chunkSize: number) => {
     const result = []
@@ -111,4 +111,24 @@ export const getDateWithGivenHour = (hour: number) => {
     today.setSeconds(0)
     today.setHours(today.getHours() - hour)
     return today.toLocaleString()
+}
+
+export const randomColors = (array: any[]) => {
+    return array.map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+}
+
+export const getBuildStatus = (build: Build) => {
+    const moduleStats = new Map()
+    Object.keys(build.modules).forEach(key => {
+        if (build.modules[key].status === 'success') moduleStats.set('success', (moduleStats.get('success') || 0) + 1)
+        // if (build.modules[key].status === 'pending') moduleStats.set('pending', (moduleStats.get('pending') || 0) + 1)
+        if (build.modules[key].status === 'failed') moduleStats.set('failed', (moduleStats.get('failed') || 0) + 1)
+    })
+
+    const status = moduleStats.entries() ? Object.keys(build.modules).length === moduleStats.get('success') ? 'success'
+        : moduleStats.get('failed') > 0 ? 'failed' : moduleStats.get('pending') > 0 ? 'pending' : 'unknown' : 'unknown'
+
+    return status
 }
