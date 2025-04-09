@@ -148,3 +148,30 @@ export type configType = {
     createdAt?: Date
     updatedAt?: Date
 }
+
+type ModuleStatus = "success" | "failed";
+
+export interface OrgInfo {
+    art: string;
+    solution: string;
+}
+
+export interface ModuleInfo {
+    status: ModuleStatus;
+    name?: string;
+    date: string;
+    org: OrgInfo;
+    version: string;
+    art?: string
+    solution?: string;
+}
+
+export interface Build {
+    classifier: string;
+    date: string;
+    target_branch: string;
+    modules: Record<string, ModuleInfo>;
+    id?: string
+    name?: string
+    tags?: dataObj[]
+}

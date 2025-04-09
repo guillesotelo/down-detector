@@ -8,7 +8,7 @@ import { getDate } from '../../helpers';
 
 type Props = {
     tableData: dataObj[]
-    setTableData?: (value: dataObj[]) => void
+    setTableData?: (value: any[]) => void
     tableHeaders: dataObj
     title?: string
     name?: string
@@ -120,6 +120,43 @@ export default function ModulesTable(props: Props) {
         if (setTableData) setTableData(items)
     }
 
+    const getRowValue = (header: dataObj, row: dataObj) => {
+        return (header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'date')
+            && row[header.value] ? `${getDate(row[header.value])}` :
+            header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
+                header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
+                    header.value === 'status' ? typeof row[header.value] === 'string' ? row[header.value] : row[header.value] ? 'UP' : 'DOWN' :
+                        header.value === 'message' ? row.userAlert && row[header.value] ? row[header.value] : row['message'] || '--' :
+                            typeof row[header.value] === 'number' ? row[header.value] :
+                                row && row[header.value] ? String(row[header.value])
+                                    : '--'
+    }
+
+    const getRowStyles = (i: number) => {
+        return {
+            backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
+                : selected === i ? '#5e598b85' : i % 2 === 0 ? '#38383852' : '',
+            animationDelay: i > 50 ? '0s' : `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
+        }
+    }
+
+    const getCellStyles = (header: dataObj, row: dataObj, i: number) => {
+        return {
+            width: i === 0 ? '25%' : '15%', // `${100 / tableHeaders.length}%`,
+            color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
+                row[header.value] === 'failed' ? darkMode ? '#ff2d2d' : 'red' :
+                    row[header.value] === 'success' ? darkMode ? '#00d300' : 'green' : 'gray' : '',
+            // textAlign: header.value === 'status' ? 'center' : 'unset',
+        }
+    }
+
+    const getHeaderStyles = (i: number) => {
+        return {
+            width: i === 0 ? '25%' : '15%', // `${100 / tableHeaders.length}%`,
+            // textAlign: header.value === 'status' ? 'center' : 'unset',
+        }
+    }
+
     const renderLoading = () => {
         return <div className='datatable__loading'>
             <MoonLoader color='#0057ad' size={50} />
@@ -140,10 +177,7 @@ export default function ModulesTable(props: Props) {
                     key={i}
                     className={`datatable__header${darkMode ? '--dark' : ''}`}
                     onClick={() => orderBy(header)}
-                    style={{
-                        width: `${100 / tableHeaders.length}%`,
-                        // textAlign: header.value === 'status' ? 'center' : 'unset',
-                    }}>
+                    style={getHeaderStyles(i)}>
                     {header.name} {Object.keys(ordered).includes(header.name) ? ordered[header.name] ? `▼` : `▲` : ''}
                 </h4>
             )}
@@ -157,31 +191,13 @@ export default function ModulesTable(props: Props) {
                     key={i}
                     className={selected === i ? `datatable__row-selected${darkMode ? '--dark' : ''}` : `datatable__row${darkMode ? '--dark' : ''}`}
                     onClick={() => setSelected ? i === selected ? setSelected(-1) : setSelected(i) : {}}
-                    style={{
-                        backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
-                            : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                        animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
-                    }}>
+                    style={getRowStyles(i)}>
                     {tableHeaders.map((header: dataObj, j: number) =>
                         <h4
                             key={j}
                             className={`datatable__row-item datatable__row-${header.value}`}
-                            style={{
-                                width: `${100 / tableHeaders.length}%`,
-                                color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
-                                    row[header.value] === 'failure' ? darkMode ? '#ff2d2d' : 'red' :
-                                        row[header.value] === 'success' ? darkMode ? '#00d300' : 'green' : 'gray' : '',
-                                // textAlign: header.value === 'status' ? 'center' : 'unset',
-                            }}>
-                            {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
-                                && row[header.value] ? `${getDate(row[header.value])}` :
-                                header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
-                                    header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
-                                        header.value === 'status' ? typeof row[header.value] === 'string' ? row[header.value] : row[header.value] ? 'UP' : 'DOWN' :
-                                            header.value === 'message' ? row.userAlert && row[header.value] ? row[header.value] : row['message'] || '--' :
-                                                typeof row[header.value] === 'number' ? row[header.value] :
-                                                    row && row[header.value] ? String(row[header.value])
-                                                        : '--'}
+                            style={getCellStyles(header, row, j)}>
+                            {getRowValue(header, row)}
                         </h4>
                     )}
                 </div>
@@ -205,30 +221,13 @@ export default function ModulesTable(props: Props) {
                                             {...provided.dragHandleProps}>
                                             <div className={selected === i ? `datatable__row-selected${darkMode ? '--dark' : ''}` : `datatable__row${darkMode ? '--dark' : ''}`}
                                                 onClick={() => setSelected ? i === selected ? setSelected(-1) : setSelected(i) : {}}
-                                                style={{
-                                                    backgroundColor: !darkMode ? selected === i ? '#d4e1f6' : i % 2 === 0 ? 'white' : '#f5f5f5'
-                                                        : selected === i ? '#656565' : i % 2 === 0 ? '#383838' : '',
-                                                    animationDelay: `${((i || 1) + (maxItems > 10 ? (max || 10) - maxItems : maxItems)) / 30}s`
-                                                }}>
+                                                style={getRowStyles(i)}>
                                                 {tableHeaders.map((header: dataObj, j: number) =>
                                                     <h4
                                                         key={j}
                                                         className={`datatable__row-item datatable__row-${header.value}`}
-                                                        style={{
-                                                            width: `${100 / tableHeaders.length}%`,
-                                                            color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
-                                                                row[header.value] === 'failure' ? 'red' :
-                                                                    row[header.value] === 'success' ? 'green' : 'gray' : ''
-                                                        }}>
-                                                        {(header.value === 'createdAt' || header.value === 'updatedAt' || header.value === 'start' || header.value === 'end')
-                                                            && row[header.value] ? `${getDate(row[header.value])}` :
-                                                            header.value === 'active' || header.value === 'isSuper' ? row[header.value] ? 'Yes' : 'No' :
-                                                                header.value === 'createdBy' ? row[header.value] ? `User: ${row[header.value]}` : 'App' :
-                                                                    header.value === 'status' ? row[header.value] ? 'UP' : 'DOWN' :
-                                                                        header.value === 'message' ? row.userAlert && row[header.value] ? row[header.value] : row['message'] || '--' :
-                                                                            typeof row[header.value] === 'number' ? row[header.value] :
-                                                                                row && row[header.value] ? String(row[header.value])
-                                                                                    : '--'}
+                                                        style={getCellStyles(header, row, j)}>
+                                                        {getRowValue(header, row)}
                                                     </h4>
                                                 )}
                                             </div>
@@ -247,7 +246,7 @@ export default function ModulesTable(props: Props) {
     return (
         <div className={`datatable__container${darkMode ? '--dark' : ''}`} style={style}>
             <div className='datatable__titles'>
-                <h4 className='datatable__title'>{title || ''}</h4>
+                <p className='datatable__title'>{title || ''}</p>
             </div>
             {renderHeaders()}
             {loading ? renderLoading() :

@@ -160,12 +160,12 @@
             cursor: pointer;
             align-items: center;
             overflow: hidden;
-            background-color: #444444;
+            background-color: #38383885;
             opacity: 0;
             animation: fade-in .5s forwards;
 
             &:hover {
-                background-color: #626772 !important;
+                filter: brightness(1.5) !important;
             }
 
             &-selected {
