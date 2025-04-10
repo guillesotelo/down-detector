@@ -197,7 +197,7 @@ export default function BuildTracker() {
                             tableData={builds || []}
                             tableHeaders={[{ name: 'Module', value: 'name' }]}
                             max={4}
-                            style={{ width: '18rem', margin: '.5rem 1rem 1rem' }}
+                            style={{ width: '18rem', margin: '.5rem 1rem 1rem', maxHeight: '15rem', overflow: 'auto' }}
                             setSelected={i => {
                                 const selected = (builds || [])[i < 0 ? 0 : i]
                                 setBuild(selected)
@@ -226,18 +226,19 @@ export default function BuildTracker() {
                 title={build.name}
                 subtitle={getDate(build.date)}
                 onClose={closeModal}
-                style={{ maxHeight: '80vh', overflow: 'hidden', width: '42rem' }}>
+                style={{ maxHeight: '85vh', width: '42rem' }}
+                contentStyle={{ overflow: 'hidden' }}>
                 <div className="buildtracker__modal">
                     <div className="buildtracker__modal-row" style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
                         <div className="buildtracker__modal-col">
-                            <TextData label="Classifier" value={build.classifier} style={{ marginBottom: '.7rem' }} />
                             <TextData label="Target branch" value={build.target_branch} style={{ marginBottom: '.7rem' }} />
+                            <TextData label="Classifier" value={build.classifier} style={{ marginBottom: '.7rem' }} />
                             <TextData label="Module count" value={copyModuleArray.length} />
                         </div>
                         <DoughnutChart
                             label="ARTs involved"
                             chartData={artsChartData}
-                            style={{ width: '10rem', textAlign: 'center' }}
+                            style={{ width: '7rem', textAlign: 'center' }}
                             chartOptions={{
                                 plugins: {
                                     legend: {
@@ -259,12 +260,9 @@ export default function BuildTracker() {
                                     <ProgressBar
                                         label="Score"
                                         arrData={copyModuleArray}
-                                        colors={[
-                                            { key: "success", color: "#00b500" },
-                                            { key: "failed", color: "#e70000" },
-                                        ]}
+                                        colors={{ "success": "#00b500", "failed": "#e70000" }}
                                         objKey="status"
-                                        percentageFor={{ key: 'status', value: 'success' }}
+                                        percentageFor='success'
                                     />
                                     <div className="buildtracker__modal-table">
                                         <div className="buildtracker__modal-table-container">
@@ -297,7 +295,7 @@ export default function BuildTracker() {
                                 setTableData={setModuleArray}
                                 tableHeaders={moduleHeaders}
                                 orderDataBy={moduleHeaders[5]}
-                                style={{ maxHeight: '60%', marginTop: '2rem' }}
+                                style={{ maxHeight: '28vh', marginTop: '2rem', overflow: 'auto' }}
                                 selected={selectedModule}
                                 setSelected={setSelectedModule}
                             />

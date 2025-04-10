@@ -29,8 +29,13 @@
         overflow: hidden;
 
     }
-    
+
     &__step {
         height: .3rem;
+        transition: .2s;
+
+        &:hover {
+            filter:saturate(2)
+        }
     }
 }

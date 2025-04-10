@@ -120,19 +120,19 @@
             width: fit-content;
             border-radius: .5rem;
             outline: none;
-            border: 1px solid #54a2b4a3;
+            border: 1px solid #005585a3;
             padding: .4rem .6rem;
             font-size: 1rem;
             cursor: pointer;
-            background-color: #54a2b4a3;
+            background-color: #005585a3;
             color: white;
             margin-bottom: 1rem;
-            transition: .2s;
+            transition: .1s;
 
             &:hover {
                 background-color: transparent;
-                color: #54A2B4;
-                border: 1px solid #54A2B4;
+                color: #005585a3;
+                border: 1px solid #005585a3;
             }
         }
 
