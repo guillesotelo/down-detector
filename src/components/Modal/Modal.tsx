@@ -8,11 +8,12 @@ type Props = {
     title?: string | null
     subtitle?: string | null
     style?: React.CSSProperties
+    contentStyle?: React.CSSProperties
     logo?: string
     showLogo?: boolean
 }
 
-export default function Modal({ children, onClose, title, subtitle, style, logo, showLogo }: Props) {
+export default function Modal({ children, onClose, title, subtitle, style, contentStyle, logo, showLogo }: Props) {
     const [closeAnimation, setCloseAnimation] = useState('')
     const { darkMode } = useContext(AppContext)
 
@@ -61,7 +62,7 @@ export default function Modal({ children, onClose, title, subtitle, style, logo,
                     </div>
                     <button className={`modal__close${darkMode ? '--dark' : ''}`} onClick={closeModal}>X</button>
                 </div>
-                <div className="modal__content">
+                <div className="modal__content" style={contentStyle}>
                     {children}
                 </div>
             </div>

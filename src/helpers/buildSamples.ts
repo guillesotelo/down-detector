@@ -67,7 +67,7 @@ function getRandomElement<T>(array: T[]): T {
 }
 
 function generateVersion(): string {
-    return `${Math.floor(Math.random() * 2)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`;
+    return `${Math.floor(Math.random() * 5 + 1)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`;
 }
 
 export const generateBuildSamples = (buildCount: number = 20, modulesPerBuild: number = 100): Build[] => {
@@ -98,7 +98,7 @@ export const generateBuildSamples = (buildCount: number = 20, modulesPerBuild: n
         builds.push({
             name: buildNames[i],
             classifier: getRandomElement(fruits),
-            date: "2025-03-23T00:00:00Z",
+            date: getRandomDate(new Date("2025-03-23"), 10),
             target_branch: getRandomElement(branches),
             modules
         })

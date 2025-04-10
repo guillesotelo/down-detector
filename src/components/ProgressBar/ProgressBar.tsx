@@ -5,29 +5,17 @@ import { dataObj } from "../../types"
 type Props = {
     label?: string
     arrData?: dataObj[]
-    colors?: { key: string; color: string }[]
-    objKey?: string
-    percentageFor?: { key: string; value: any }
+    colors: { [value: string]: string }
+    objKey: string
+    percentageFor: string
     style?: React.CSSProperties
 }
 
 export default function ProgressBar({ label, arrData, colors, objKey, percentageFor, style }: Props) {
 
-    const getColor = (item: dataObj) => {
-        let bg = ""
-        if (colors) {
-            colors.forEach(c => {
-                if (objKey && item[objKey] && item[objKey] === c.key) {
-                    bg = c.color
-                }
-            })
-        }
-        return bg
-    }
-
-    const getPercentage = () => {
-        if (colors && colors.length === 2 && arrData && arrData.length && percentageFor) {
-            const matchLength = arrData.filter(d => d[percentageFor.key] === percentageFor.value).length
+    const getPercentage = (key: string) => {
+        if (Object.keys(colors) && arrData && arrData.length) {
+            const matchLength = arrData.filter(d => d[objKey] === key).length
             const result = parseFloat(`${(matchLength * 100 / arrData.length)}`).toFixed(1)
             return (result.split('.')[1] === "0" ? result.split('.')[0] : result) + '%'
         }
@@ -39,16 +27,15 @@ export default function ProgressBar({ label, arrData, colors, objKey, percentage
             <div className="progressbar__row">
                 <p className="progressbar__label">{label || ''}</p>
                 {percentageFor ?
-                    <p className="progressbar__percentage">{getPercentage()}</p>
+                    <p className="progressbar__percentage">{getPercentage(percentageFor)}</p>
                     : ''}
             </div>
             <div className="progressbar__bar">
-                {sortArray((arrData || []), objKey || '', true)?.map((d, i) =>
+                {Object.keys(colors).map(key => 
                     <div
-                        key={i}
                         style={{
-                            background: getColor(d),
-                            width: `calc(100% / ${arrData?.length})`
+                            background: colors[key],
+                            width: `${getPercentage(key)}`
                         }}
                         className="progressbar__step"
                     />

@@ -21,7 +21,7 @@
 
     &__title {
         font-size: 1rem;
-        margin: .3rem 0;
+        margin:0 0 .4rem 0;
         text-align: center;
     }
 
@@ -29,7 +29,7 @@
         display: flex;
         flex-direction: row;
         font-size: .8rem;
-        border-radius: .5rem;
+        border-radius: .5rem .5rem 0 0;
         padding: .4rem;
         text-align: left;
         height: fit-content;
@@ -45,7 +45,7 @@
             display: flex;
             flex-direction: row;
             font-size: .8rem;
-            border-radius: .5rem;
+            border-radius: .5rem .5rem 0 0;
             padding: .4rem;
             text-align: left;
             height: fit-content;
@@ -96,7 +96,7 @@
         display: flex;
         flex-direction: row;
         font-size: .9rem;
-        border-radius: .5rem;
+        // border-radius: .5rem;
         padding: .4rem;
         text-align: left;
         height: fit-content;
@@ -114,7 +114,7 @@
             display: flex;
             flex-direction: row;
             font-size: .9rem;
-            border-radius: .5rem;
+            // border-radius: .5rem;
             padding: .4rem;
             text-align: left;
             height: fit-content;
@@ -125,7 +125,7 @@
                 display: flex;
                 flex-direction: row;
                 font-size: .9rem;
-                border-radius: .5rem;
+                // border-radius: .5rem;
                 padding: .4rem;
                 text-align: left;
                 height: fit-content;
@@ -153,14 +153,14 @@
             display: flex;
             flex-direction: row;
             font-size: .9rem;
-            border-radius: .5rem;
+            // border-radius: .5rem;
             padding: .4rem;
             text-align: left;
             height: fit-content;
             cursor: pointer;
             align-items: center;
             overflow: hidden;
-            background-color: #38383885;
+            background-color: #3838389c;
             opacity: 0;
             animation: fade-in .5s forwards;
 
@@ -212,7 +212,7 @@
         border: none;
         border-bottom-left-radius: .5rem;
         border-bottom-right-radius: .5rem;
-        background-color: #F9FAFB;
+        background-color: #efefef;
         padding: .6rem;
         color: rgb(79, 79, 79);
         cursor: pointer;
