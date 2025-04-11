@@ -295,7 +295,7 @@ export default function BuildTracker() {
                                 setTableData={setModuleArray}
                                 tableHeaders={moduleHeaders}
                                 orderDataBy={moduleHeaders[5]}
-                                style={{ maxHeight: '28vh', marginTop: '2rem', overflow: 'auto' }}
+                                style={{ maxHeight: '40vh', marginTop: '2rem', overflow: 'auto' }}
                                 selected={selectedModule}
                                 setSelected={setSelectedModule}
                             />
