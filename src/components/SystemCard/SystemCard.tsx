@@ -348,6 +348,10 @@ const SystemCard = (props: Props) => {
                     status = prevStatus
                     busy = prevBusy
                     isDown = prevIsDown
+
+                    prevStatus = 1
+                    prevBusy = false
+                    prevIsDown = false
                 }
             } else {
                 status = allHours.values().next().value.status
@@ -650,9 +654,9 @@ const SystemCard = (props: Props) => {
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
                                 'black' : '#ff6161a6' : darkMode ?
-                                'black' : '#e8e8e8',
+                                'black' : 'transparent',
                             border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
-                                : '1px solid transparent' : darkMode ? '1px solid #ffc7006b' : '1px solid transparent',
+                                : '1px solid transparent' : darkMode ? '1px solid #ffc7006b' : '1px solid #dbdbdb',
                             animationDelay: `${delay || '0'}`
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
@@ -665,10 +669,10 @@ const SystemCard = (props: Props) => {
                                     key={i}
                                     className={`systemcard__event-downtime${darkMode ? '--dark' : ''}`}
                                     onClick={() => setShowDowntime({ ...time, system, index })}
-                                    style={{ 
+                                    style={{
                                         display: !showMoreDowntime ? 'none' : '',
                                         marginTop: i === 0 ? '.5rem' : ''
-                                         }}>
+                                    }}>
                                     {getDowntime(time)}
                                 </div>
                             </>

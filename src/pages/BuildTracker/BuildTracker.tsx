@@ -269,7 +269,7 @@ export default function BuildTracker() {
                                             <div className="buildtracker__modal-table-row">
                                                 <p className="buildtracker__modal-table-text">Built</p>
                                                 <p className="buildtracker__modal-table-value" style={{ color: 'green' }}>
-                                                     {copyModuleArray.filter(m => m.status === 'success').length}
+                                                    {copyModuleArray.filter(m => m.status === 'success').length}
                                                 </p>
                                             </div>
                                             <div className="buildtracker__modal-table-row">
