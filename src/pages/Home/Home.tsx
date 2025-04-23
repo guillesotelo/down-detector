@@ -574,7 +574,7 @@ const Home = () => {
     return (
       <Modal
         title={String(getSystemData(selected, 'name'))}
-        logo={String(getSystemData(selected, 'logo') || '')}
+        logo={systemLogos[selected] || ''}
         showLogo
         // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={discardChanges}
@@ -586,7 +586,7 @@ const Home = () => {
             style={{
               backgroundColor: isLiveDowntime() ? darkMode ?
                 'transparent' : '#ffdada' : darkMode ?
-                'transparent' : '#dedede',
+                'transparent' : '#f1f1f1',
               border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
             <p className='home__modal-downtime-text'>Planned downtime:</p>
