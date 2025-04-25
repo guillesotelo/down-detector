@@ -4,7 +4,7 @@ import { onChangeEventType } from '../../types'
 import { AppContext } from '../../AppContext'
 
 type Props = {
-    handleChange: (value: onChangeEventType) => void,
+    handleChange?: (value: onChangeEventType) => void,
     triggerSearch?: () => void,
     placeholder?: string,
     value?: string,

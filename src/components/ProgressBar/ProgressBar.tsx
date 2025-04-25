@@ -31,8 +31,9 @@ export default function ProgressBar({ label, arrData, colors, objKey, percentage
                     : ''}
             </div>
             <div className="progressbar__bar">
-                {Object.keys(colors).map(key => 
+                {Object.keys(colors).map(key =>
                     <div
+                        key={key}
                         style={{
                             background: colors[key],
                             width: `${getPercentage(key)}`

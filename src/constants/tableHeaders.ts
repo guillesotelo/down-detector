@@ -216,3 +216,26 @@ export const moduleHeaders =[
         value: 'status'
     },
 ]
+
+export const buildLogHeaders =[
+    {
+        name: 'CREATED',
+        value: 'createdAt'
+    },
+    {
+        name: 'NAME',
+        value: 'name'
+    },
+    {
+        name: 'CLASSIFIER',
+        value: 'classifier'
+    },
+    {
+        name: 'BRANCH',
+        value: 'target_branch'
+    },
+    {
+        name: 'ACTIVE',
+        value: 'active'
+    },
+]

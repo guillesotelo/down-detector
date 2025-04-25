@@ -174,4 +174,5 @@ export interface Build {
     id?: string
     name?: string
     tags?: dataObj[]
+    active?: boolean
 }
