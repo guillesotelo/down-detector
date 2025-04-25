@@ -16,6 +16,7 @@ import Account from './pages/Account/Account';
 import Unsubscribe from './pages/Unsubscribe/Unsubscribe';
 import Subscriptions from './pages/Subscriptions/Subscriptions';
 import BuildTracker from './pages/BuildTracker/BuildTracker';
+import BuildTrackerBuilds from './pages/BuildTracker/BuildTrackerBuilds';
 
 function App() {
   const location = useLocation()
@@ -129,6 +130,10 @@ function App() {
 
       <Route exact path="/build-tracker">
         <BuildTracker />
+      </Route>
+
+      <Route exact path="/build-tracker/builds">
+        <BuildTrackerBuilds />
       </Route>
 
       {/* FALLBACK PAGE -> RENDER HOME*/}

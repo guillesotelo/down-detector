@@ -40,5 +40,11 @@
     &__logo {
         height: 2rem;
         margin-left: .5rem;
+        cursor: pointer;
+        transition: .2s;
+
+        &:hover {
+            transform: scale(1.025);
+        }
     }
 }

@@ -16,6 +16,7 @@ import { COLOR_PALETTE, DARK_MODE_COLOR_PALETTE } from "../../constants/app"
 import { generateBuildSamples } from "../../helpers/buildSamples"
 import PolarAreaChart from "../../components/PolarAreaChart/PolarAreaChart"
 import DataTable from "../../components/DataTable/DataTable"
+import { getAllBuildLogs } from "../../services/buildtracker"
 
 export default function BuildTracker() {
     const [builds, setBuilds] = useState<null | Build[]>(null)
@@ -32,6 +33,7 @@ export default function BuildTracker() {
     const [modulePresenceChartData, setModulePresenceChartData] = useState<dataObj>([])
     const { darkMode, setDarkMode } = useContext(AppContext)
     const buildSamples = generateBuildSamples()
+    const CSDOX_URL = process.env.REACT_APP_CSDOX_URL
 
     useEffect(() => {
         getBuilds()
@@ -76,12 +78,32 @@ export default function BuildTracker() {
 
     const getBuilds = async () => {
         try {
+            const _buildLogs = await getAllBuildLogs()
+
+            let _builds = _buildLogs.map((b: Build, i: number) => {
+                return {
+                    ...b,
+                    name: getBuildName(b, i),
+                    id: getBuildId(b),
+                    modules: JSON.parse(typeof b.modules === 'string' ? b.modules : '{}')
+                }
+            })
+
+            setBuilds(_builds)
+            setCopyBuilds(_builds)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const getFakeBuilds = async () => {
+        try {
             let samples = sortBuildsByStatus(buildSamples)
             if (samples && Array.isArray(samples) && samples.length) {
-                samples = samples.map(build => {
+                samples = samples.map((build, i) => {
                     return {
                         ...build,
-                        name: getBuildName(build),
+                        name: getBuildName(build, i),
                         id: getBuildId(build)
                     }
                 })
@@ -97,12 +119,13 @@ export default function BuildTracker() {
         return `${build.classifier}__${build.target_branch}`
     }
 
-    const getBuildName = (build: Build) => {
+    const getBuildName = (build: Build, index: number) => {
+        const placeholder = `Build #${index + 1}`
         if (buildsDB?.length) {
             const found = buildsDB.find(b => getBuildId(b) === getBuildId(build))
-            return found?.name || ''
+            return found?.name || placeholder
         }
-        return build.name || ''
+        return build.name || placeholder
     }
 
     const getBuildsDB = () => {
@@ -191,6 +214,10 @@ export default function BuildTracker() {
                             <TextData label="ART" value={art} inline />
                             <TextData label="Solution" value={solution} inline />
                             <TextData label="Version" value={version} inline />
+                            <a
+                                href={`${CSDOX_URL}/products/spa2_ad_hpb/branches/${build?.target_branch}/modules/${name}`}
+                                target="_blank"
+                            >View in cs-dox</a>
                         </div>
                         <DataTable
                             title="Presence in other builds"
@@ -226,7 +253,7 @@ export default function BuildTracker() {
                 title={build.name}
                 subtitle={getDate(build.date)}
                 onClose={closeModal}
-                style={{ maxHeight: '85vh', width: '42rem' }}
+                style={{ maxHeight: '85vh', width: '50rem' }}
                 contentStyle={{ overflow: 'hidden' }}>
                 <div className="buildtracker__modal">
                     <div className="buildtracker__modal-row" style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
@@ -312,8 +339,10 @@ export default function BuildTracker() {
                 search={search}
                 setSearch={setSearch}
                 onChangeSearch={onChangeSearch}
+                style={{ filter: openModal ? 'blur(7px)' : '' }}
             />
             {openModal && renderBuildModal()}
+            <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Rebuild activities</h1>
             <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
                 {builds?.map((b, i) =>
                     <BuildCard
