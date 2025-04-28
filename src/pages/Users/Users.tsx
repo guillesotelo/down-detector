@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
-import { deleteUser, getAllSystems, getAllUsers, registerUser, updateUser, verifyToken } from '../../services'
-import { logHeaders, userHeaders } from '../../constants/tableHeaders'
-import { onChangeEventType, systemType, userType } from '../../types'
+import { deleteUser, getAllSystems, getAllUsers, registerUser, updateUser } from '../../services'
+import { userHeaders } from '../../constants/tableHeaders'
+import { systemType, userType } from '../../types'
 import { toast } from 'react-toastify'
 import Modal from '../../components/Modal/Modal'
 import InputField from '../../components/InputField/InputField'
@@ -28,7 +28,7 @@ export default function Users({ }: Props) {
   const [ownedSystems, setOwnedSystems] = useState<systemType[]>([])
   const { isLoggedIn, isSuper } = useContext(AppContext)
   const history = useHistory()
-  
+
   useEffect(() => {
     loadData()
   }, [])
@@ -90,7 +90,7 @@ export default function Users({ }: Props) {
   }
 
 
-  const updateData = (key: string, e: onChangeEventType) => {
+  const updateData = (key: string, e: any) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
   }
@@ -235,6 +235,13 @@ export default function Users({ }: Props) {
                 label='Super User'
                 value={selectedIsSuper}
                 setValue={setSelectedIsSuper}
+                on='Yes'
+                off='No'
+              />
+              <Switch
+                label='Build Tracker access'
+                value={data.buildTrackerAccess || false}
+                setValue={newVal => updateData('buildTrackerAccess', { target: { value: newVal } })}
                 on='Yes'
                 off='No'
               />

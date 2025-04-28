@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react"
 import BuildCard from "../../components/BuildCard/BuildCard"
 import Modal from "../../components/Modal/Modal"
 import { Build, dataObj, ModuleInfo, onChangeEventType } from "../../types"
-import { testBuilds } from "../../constants/builds"
 import { AppContext } from "../../AppContext"
 import ModulesTable from "../../components/ModulesTable/ModulesTable"
 import { moduleHeaders } from "../../constants/tableHeaders"
@@ -14,30 +13,28 @@ import DoughnutChart from "../../components/DoughnutChart/DoughnutChart"
 import TextData from "../../components/TextData/TextData"
 import { COLOR_PALETTE, DARK_MODE_COLOR_PALETTE } from "../../constants/app"
 import { generateBuildSamples } from "../../helpers/buildSamples"
-import PolarAreaChart from "../../components/PolarAreaChart/PolarAreaChart"
 import DataTable from "../../components/DataTable/DataTable"
 import { getAllBuildLogs } from "../../services/buildtracker"
+import { HashLoader } from "react-spinners"
 
 export default function BuildTracker() {
     const [builds, setBuilds] = useState<null | Build[]>(null)
     const [copyBuilds, setCopyBuilds] = useState<null | Build[]>(null)
-    const [buildsDB, setBuildsDB] = useState<null | Build[]>(null)
     const [openModal, setOpenModal] = useState<null | string>(null)
     const [build, setBuild] = useState<null | Build>(null)
+    const [loading, setLoading] = useState(false)
     const [search, setSearch] = useState('')
     const [searchModules, setSearchModules] = useState('')
     const [moduleArray, setModuleArray] = useState<ModuleInfo[]>([])
     const [copyModuleArray, setCopyModuleArray] = useState<ModuleInfo[]>([])
     const [selectedModule, setSelectedModule] = useState(-1)
     const [artsChartData, setArtsChartData] = useState<dataObj>([])
-    const [modulePresenceChartData, setModulePresenceChartData] = useState<dataObj>([])
-    const { darkMode, setDarkMode } = useContext(AppContext)
+    const { darkMode } = useContext(AppContext)
     const buildSamples = generateBuildSamples()
     const CSDOX_URL = process.env.REACT_APP_CSDOX_URL
 
     useEffect(() => {
         getBuilds()
-        getBuildsDB()
     }, [])
 
     useEffect(() => {
@@ -78,20 +75,25 @@ export default function BuildTracker() {
 
     const getBuilds = async () => {
         try {
+            setLoading(true)
             const _buildLogs = await getAllBuildLogs()
 
-            let _builds = _buildLogs.map((b: Build, i: number) => {
-                return {
-                    ...b,
-                    name: getBuildName(b, i),
-                    id: getBuildId(b),
-                    modules: JSON.parse(typeof b.modules === 'string' ? b.modules : '{}')
-                }
-            })
+            let _builds = _buildLogs
+                .filter((b: Build) => b.active)
+                .map((b: Build, i: number) => {
+                    return {
+                        ...b,
+                        name: getBuildName(b, i),
+                        id: getBuildId(b),
+                        modules: JSON.parse(typeof b.modules === 'string' ? b.modules : '{}')
+                    }
+                })
 
             setBuilds(_builds)
             setCopyBuilds(_builds)
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.error(error)
         }
     }
@@ -121,16 +123,7 @@ export default function BuildTracker() {
 
     const getBuildName = (build: Build, index: number) => {
         const placeholder = `Build #${index + 1}`
-        if (buildsDB?.length) {
-            const found = buildsDB.find(b => getBuildId(b) === getBuildId(build))
-            return found?.name || placeholder
-        }
         return build.name || placeholder
-    }
-
-    const getBuildsDB = () => {
-        const db = JSON.parse(localStorage.getItem('buildsDB') || '[]')
-        setBuildsDB(db)
     }
 
     const sortBuildsByStatus = (builds: Build[]) => {
@@ -342,16 +335,19 @@ export default function BuildTracker() {
                 style={{ filter: openModal ? 'blur(7px)' : '' }}
             />
             {openModal && renderBuildModal()}
-            <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Rebuild activities</h1>
+            <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Builds activity</h1>
             <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
-                {builds?.map((b, i) =>
-                    <BuildCard
-                        key={i}
-                        build={b}
-                        setOpenModal={setOpenModal}
-                        delay={String(i ? i / 20 : 0) + 's'}
-                    />
-                )}
+                {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined}/><p>Loading builds activity...</p></div>
+                    : builds && builds.length ? builds.map((b, i) =>
+                        <BuildCard
+                            key={i}
+                            build={b}
+                            setOpenModal={setOpenModal}
+                            delay={String(i ? i / 20 : 0) + 's'}
+                        />
+                    )
+                        : <p style={{ textAlign: 'center', width: '100%' }}>No active build activity found.</p>
+                }
             </div>
         </div>
     )

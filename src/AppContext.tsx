@@ -56,6 +56,7 @@ export const AppProvider = ({ children }: Props) => {
         if (verified) {
             setIsLoggedIn(true)
             setIsSuper(verified.isSuper)
+            localStorage.setItem('user', JSON.stringify(verified))
         } else setIsLoggedIn(false)
     }
 

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { createBuildLog, deleteBuildLog, getAllBuildLogs, updateBuildLog } from '../../services/buildtracker'
+import { useEffect, useState } from 'react'
+import { deleteBuildLog, getAllBuildLogs, updateBuildLog } from '../../services/buildtracker'
 import { dataObj } from '../../types'
 import DataTable from '../../components/DataTable/DataTable'
 import { buildLogHeaders } from '../../constants/tableHeaders'
 import BuildTrackerHeader from '../../components/BuildTrackerHeader/BuildTrackerHeader'
 import Modal from '../../components/Modal/Modal'
-import { JsonView, allExpanded, darkStyles, defaultStyles } from 'react-json-view-lite';
+import { JsonView } from 'react-json-view-lite';
 import { getDate } from '../../helpers'
 import 'react-json-view-lite/dist/index.css';
 import Switch from '../../components/Switch/Swith'
@@ -15,7 +15,7 @@ import InputField from '../../components/InputField/InputField'
 
 type Props = {}
 
-export default function BuildTrackerBuilds({ }: Props) {
+export default function BuildTrackerPanel({ }: Props) {
     const [buildLogs, setBuildLogs] = useState<null | dataObj[]>(null)
     const [selected, setSelected] = useState<null | dataObj>(null)
     const [openModal, setOpenModal] = useState(false)
@@ -52,7 +52,7 @@ export default function BuildTrackerBuilds({ }: Props) {
             setLoading(true)
             if (!selected) return
             const saved = await updateBuildLog(selected)
-            
+
             if (saved) {
                 toast.success('Build activity saved!')
                 getBuildLogs()
@@ -92,6 +92,7 @@ export default function BuildTrackerBuilds({ }: Props) {
                 title={getDate(selected?.createdAt)}
                 onClose={() => setSelected(null)}>
                 <div className="buildtracker__buildmodal">
+                    <p className='buildtracker__buildmodal-json-title'>JSON</p>
                     <div className="buildtracker__buildmodal-json">
                         <JsonView data={selected || {}} />
                     </div>
@@ -100,6 +101,7 @@ export default function BuildTrackerBuilds({ }: Props) {
                             label='Name'
                             value={selected?.name}
                             name='name'
+                            placeholder='Build #N'
                             updateData={(key, e) => setSelected(prev => ({ ...prev, [key]: e.target.value }))}
                             style={{ width: '80%' }}
                         />
@@ -143,14 +145,16 @@ export default function BuildTrackerBuilds({ }: Props) {
 
     return (
         <div className="buildtracker__container">
-            <BuildTrackerHeader />
+            <BuildTrackerHeader style={{ filter: openModal ? 'blur(5px)' : '' }} />
             {openModal && renderBuildModal()}
+            <h1 style={{ alignSelf: 'flex-start', margin: 0, filter: openModal ? 'blur(5px)' : '' }}>Control Panel</h1>
             <DataTable
                 title='Build Logs'
                 tableData={buildLogs || []}
                 setTableData={setBuildLogs}
                 tableHeaders={buildLogHeaders}
                 setSelected={index => setSelected(buildLogs ? buildLogs[index] : null)}
+                style={{ filter: openModal ? 'blur(5px)' : '' }}
             />
         </div>
     )
