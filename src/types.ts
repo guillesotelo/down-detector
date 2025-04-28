@@ -23,6 +23,7 @@ export type userType = {
     isSuper?: boolean
     newData?: userType
     ownedSystems?: systemType[]
+    buildTrackerAccess?: boolean
 }
 
 export type systemType = {

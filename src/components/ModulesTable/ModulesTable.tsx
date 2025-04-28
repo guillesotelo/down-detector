@@ -142,7 +142,7 @@ export default function ModulesTable(props: Props) {
 
     const getCellStyles = (header: dataObj, row: dataObj, i: number) => {
         return {
-            width: i === 0 ? '25%' : '15%', // `${100 / tableHeaders.length}%`,
+            width: i === 0 ? '28%' : '18%', // `${100 / tableHeaders.length}%`,
             color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
                 row[header.value] === 'failed' ? darkMode ? '#ff2d2d' : 'red' :
                     row[header.value] === 'success' ? darkMode ? '#00d300' : 'green' : 'gray' : '',
@@ -152,7 +152,7 @@ export default function ModulesTable(props: Props) {
 
     const getHeaderStyles = (i: number) => {
         return {
-            width: i === 0 ? '25%' : '15%', // `${100 / tableHeaders.length}%`,
+            width: i === 0 ? '28%' : '18%', // `${100 / tableHeaders.length}%`,
             // textAlign: header.value === 'status' ? 'center' : 'unset',
         }
     }

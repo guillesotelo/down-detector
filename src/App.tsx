@@ -16,7 +16,8 @@ import Account from './pages/Account/Account';
 import Unsubscribe from './pages/Unsubscribe/Unsubscribe';
 import Subscriptions from './pages/Subscriptions/Subscriptions';
 import BuildTracker from './pages/BuildTracker/BuildTracker';
-import BuildTrackerBuilds from './pages/BuildTracker/BuildTrackerBuilds';
+import BuildTrackerPanel from './pages/BuildTracker/BuildTrackerPanel';
+import { getUser } from './helpers';
 
 function App() {
   const location = useLocation()
@@ -132,10 +133,12 @@ function App() {
         <BuildTracker />
       </Route>
 
-      <Route exact path="/build-tracker/builds">
-        <BuildTrackerBuilds />
-      </Route>
-
+      {getUser().buildTrackerAccess ?
+        <Route exact path="/build-tracker/control-panel">
+          <BuildTrackerPanel />
+        </Route>
+        : ''}
+        
       {/* FALLBACK PAGE -> RENDER HOME*/}
       <Route>
         <div className={`page__wrapper${darkMode ? '--dark' : ''}`}>

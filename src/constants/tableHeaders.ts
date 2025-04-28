@@ -195,10 +195,10 @@ export const moduleHeaders =[
         name: 'NAME',
         value: 'name'
     },
-    {
-        name: 'DATE',
-        value: 'date'
-    },
+    // {
+    //     name: 'DATE',
+    //     value: 'date'
+    // },
     {
         name: 'ART',
         value: 'art'
