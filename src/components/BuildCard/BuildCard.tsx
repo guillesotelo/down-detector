@@ -3,7 +3,7 @@ import BuildPending from '../../assets/icons/build-pending.svg'
 import BuildFail from '../../assets/icons/build-fail.svg'
 import BuildUnknown from '../../assets/icons/build-unknown.svg'
 import { useContext, useEffect, useState } from 'react'
-import { getBuildStatus, getDate } from '../../helpers'
+import { getBuildStatus, getDate, whenDateIs } from '../../helpers'
 import { Build, dataObj } from '../../types'
 import { AppContext } from '../../AppContext'
 
@@ -28,6 +28,7 @@ export default function BuildCard(props: Props) {
         name,
         classifier,
         date,
+        createdAt,
         target_branch,
         modules,
         tags,
@@ -51,7 +52,7 @@ export default function BuildCard(props: Props) {
 
     const getStatusBG = () => {
         const status = getBuildStatus(build)
-        return status === 'failed' ? "#ff000014"
+        return status === 'failure' ? "#ff000014"
             : status === 'pending' ? "#ffa5001a"
                 : status === 'success' ? "#00800017"
                     : "#80808026"
@@ -81,7 +82,8 @@ export default function BuildCard(props: Props) {
                     {tags?.map((tag: dataObj, i: number) => <p key={i} className={`buildcard__tag-${tag.color || 'default'}`}>{tag.value}</p>)}
                 </div> */}
                 <div className="buildcard__footer">
-                    <p className="buildcard__footer-date">{getDate(date)}</p>
+                    <p className="buildcard__footer-date">{getDate(date || createdAt)}</p>
+                    <p className="buildcard__footer-when">{whenDateIs(date || createdAt)}</p>
                 </div>
             </div>
         </div>

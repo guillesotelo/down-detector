@@ -144,7 +144,7 @@ export default function ModulesTable(props: Props) {
         return {
             width: i === 0 ? '28%' : '18%', // `${100 / tableHeaders.length}%`,
             color: header.value === 'status' ? row[header.value] === 'pending' ? 'orange' :
-                row[header.value] === 'failed' ? darkMode ? '#ff2d2d' : 'red' :
+                row[header.value] === 'failure' ? darkMode ? '#ff2d2d' : 'red' :
                     row[header.value] === 'success' ? darkMode ? '#00d300' : 'green' : 'gray' : '',
             // textAlign: header.value === 'status' ? 'center' : 'unset',
         }

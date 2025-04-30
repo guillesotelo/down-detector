@@ -84,7 +84,7 @@ export const generateBuildSamples = (buildCount: number = 20, modulesPerBuild: n
             usedModules.add(moduleName);
 
             modules[moduleName] = {
-                status: (j % 7 === 0 && i % 7 === 0) ? 'failed' : 'success',
+                status: (j % 7 === 0 && i % 7 === 0) ? 'failure' : 'success',
                 date: getRandomDate(new Date("2025-03-23"), 10),
                 org: {
                     art: getRandomElement(["ARTCSAS", "ARTBFS", "ARTXYZ", "ARTDEF"]),
