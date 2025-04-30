@@ -83,7 +83,7 @@
             margin: 0;
         }
 
-        &-failed {
+        &-failure {
             color: red;
             font-weight: bold;
             margin: 0;
@@ -152,6 +152,13 @@
             margin: 0;
             font-size: .8rem;
             opacity: .6;
+        }
+
+        &-when {
+            margin: 0;
+            font-size: .8rem;
+            opacity: .6;
+            font-style: italic;
         }
     }
 }

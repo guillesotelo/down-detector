@@ -5,7 +5,7 @@ import { Build, dataObj, ModuleInfo, onChangeEventType } from "../../types"
 import { AppContext } from "../../AppContext"
 import ModulesTable from "../../components/ModulesTable/ModulesTable"
 import { moduleHeaders } from "../../constants/tableHeaders"
-import { getBuildStatus, getDate, randomColors, sortArray } from "../../helpers"
+import { capitalizeFirstLetter, getBuildStatus, getDate, randomColors, sortArray } from "../../helpers"
 import BuildTrackerHeader from "../../components/BuildTrackerHeader/BuildTrackerHeader"
 import ProgressBar from "../../components/ProgressBar/ProgressBar"
 import SearchBar from "../../components/SearchBar/SearchBar"
@@ -88,7 +88,6 @@ export default function BuildTracker() {
                         modules: JSON.parse(typeof b.modules === 'string' ? b.modules : '{}')
                     }
                 })
-
             setBuilds(_builds)
             setCopyBuilds(_builds)
             setLoading(false)
@@ -122,7 +121,11 @@ export default function BuildTracker() {
     }
 
     const getBuildName = (build: Build, index: number) => {
-        const placeholder = `Build #${index + 1}`
+        // Removing placeholder for now
+        // const placeholder = `Build #${index + 1}`
+        const startName =  capitalizeFirstLetter(build.target_branch.slice(0, 2))
+        const endName =  capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
+        const placeholder = startName + endName
         return build.name || placeholder
     }
 
@@ -165,7 +168,7 @@ export default function BuildTracker() {
     const chartCalculator = (arrData: dataObj[], key: string, value: any) => {
         let sum = 0
         arrData.forEach(data => {
-            if (value === 'failed' && data[key] && data[key] !== 'success') sum += 1
+            if (value === 'failure' && data[key] && data[key] !== 'success') sum += 1
             else if (data[key] && data[key] === value) sum += 1
         })
         return sum
@@ -280,7 +283,7 @@ export default function BuildTracker() {
                                     <ProgressBar
                                         label="Score"
                                         arrData={copyModuleArray}
-                                        colors={{ "success": "#00b500", "failed": "#e70000" }}
+                                        colors={{ "success": "#00b500", "failure": "#e70000" }}
                                         objKey="status"
                                         percentageFor='success'
                                     />
@@ -314,7 +317,7 @@ export default function BuildTracker() {
                                 tableData={moduleArray}
                                 setTableData={setModuleArray}
                                 tableHeaders={moduleHeaders}
-                                orderDataBy={moduleHeaders[5]}
+                                orderDataBy={moduleHeaders[4]}
                                 style={{ maxHeight: '40vh', marginTop: '2rem', overflow: 'auto' }}
                                 selected={selectedModule}
                                 setSelected={setSelectedModule}
@@ -337,7 +340,7 @@ export default function BuildTracker() {
             {openModal && renderBuildModal()}
             <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Builds activity</h1>
             <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
-                {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined}/><p>Loading builds activity...</p></div>
+                {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
                     : builds && builds.length ? builds.map((b, i) =>
                         <BuildCard
                             key={i}

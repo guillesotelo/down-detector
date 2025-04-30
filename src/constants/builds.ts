@@ -16,7 +16,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module2: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
@@ -52,7 +52,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module6: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
@@ -88,7 +88,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module10: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
@@ -115,7 +115,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module13: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
@@ -151,7 +151,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module17: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
@@ -178,7 +178,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module20: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",
@@ -219,7 +219,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module2: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-19T00:00:00Z",
                 org: {
                     art: "ARTBFS",
@@ -255,7 +255,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module6: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-15T00:00:00Z",
                 org: {
                     art: "ARTABC",
@@ -291,7 +291,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module10: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-11T00:00:00Z",
                 org: {
                     art: "ARTLMN",
@@ -318,7 +318,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module13: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-08T00:00:00Z",
                 org: {
                     art: "ARTWXY",
@@ -354,7 +354,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module17: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-04T00:00:00Z",
                 org: {
                     art: "ARTVRT",
@@ -381,7 +381,7 @@ export const testBuilds = [
                 version: '0.1.1'
             },
             module20: {
-                status: "failed",
+                status: "failure",
                 date: "2025-03-01T00:00:00Z",
                 org: {
                     art: "ARTEFG",

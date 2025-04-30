@@ -150,7 +150,7 @@ export type configType = {
     updatedAt?: Date
 }
 
-type ModuleStatus = "success" | "failed";
+type ModuleStatus = "success" | "failure";
 
 export interface OrgInfo {
     art: string;
@@ -176,4 +176,6 @@ export interface Build {
     name?: string
     tags?: dataObj[]
     active?: boolean
+    createdAt?: string | Date
+    updatedAt?: string | Date
 }

@@ -124,11 +124,34 @@ export const getBuildStatus = (build: Build) => {
     Object.keys(build.modules).forEach(key => {
         if (build.modules[key].status === 'success') moduleStats.set('success', (moduleStats.get('success') || 0) + 1)
         // if (build.modules[key].status === 'pending') moduleStats.set('pending', (moduleStats.get('pending') || 0) + 1)
-        if (build.modules[key].status === 'failed') moduleStats.set('failed', (moduleStats.get('failed') || 0) + 1)
+        if (build.modules[key].status === 'failure') moduleStats.set('failure', (moduleStats.get('failure') || 0) + 1)
     })
 
     const status = moduleStats.entries() ? Object.keys(build.modules).length === moduleStats.get('success') ? 'success'
-        : moduleStats.get('failed') > 0 ? 'failed' : moduleStats.get('pending') > 0 ? 'pending' : 'unknown' : 'unknown'
+        : moduleStats.get('failure') > 0 ? 'failure' : moduleStats.get('pending') > 0 ? 'pending' : 'unknown' : 'unknown'
 
     return status
+}
+
+export const capitalizeFirstLetter = (str: string) => {
+    return String(str).charAt(0).toUpperCase() + String(str).slice(1)
+}
+
+export const whenDateIs = (date: Date | string | number | undefined) => {
+    if(!date) return ''
+
+    const current = new Date(date)
+    const today = new Date().toLocaleDateString()
+    const yesterday = new Date(new Date().getTime() - 86400000).toLocaleDateString() // minus 1 day in miliseconds
+    const lastWeek = new Date().getTime() - 604800000
+    const lastMonth = new Date().getTime() - 2505600000
+    const lastYear = new Date().getTime() - 31449600000
+
+    if(today === current.toLocaleDateString()) return 'Today'
+    if(yesterday === current.toLocaleDateString()) return 'Yesterday'
+
+    if (current.getTime() >= lastWeek) return 'Last week'
+    if (current.getTime() < lastWeek) return 'Last month'
+    if (current.getTime() < lastMonth) return 'Months ago'
+    if (current.getTime() < lastYear) return 'More than a year ago'
 }
