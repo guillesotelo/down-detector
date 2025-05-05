@@ -8,6 +8,13 @@
         padding: 12vh 1rem;
     }
 
+    &__pageview {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        width: 80vw;
+    }
+
     &__loading {
         display: flex;
         flex-direction: column;
@@ -16,10 +23,9 @@
     }
 
     &__title {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         margin: 0;
         text-align: start;
-        width: 80vw;
         // color: #434395;
         // border-bottom: 2px solid #434395;
         animation: fade-in 1s;

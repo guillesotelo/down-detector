@@ -128,7 +128,7 @@ export const getBuildStatus = (build: Build) => {
     })
 
     const status = moduleStats.entries() ? Object.keys(build.modules).length === moduleStats.get('success') ? 'success'
-        : moduleStats.get('failure') > 0 ? 'failure' : moduleStats.get('pending') > 0 ? 'pending' : 'unknown' : 'unknown'
+        : moduleStats.get('failure') > 0 ? 'failure' : 'unknown' : 'unknown'
 
     return status
 }

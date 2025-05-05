@@ -40,22 +40,29 @@ export default function BuildCard(props: Props) {
 
     const getStatusIcon = () => {
         const status = getBuildStatus(build)
-        return !status ? BuildUnknown : status === 'success' ? BuildOk
-            : status === 'pending' ? BuildPending : BuildFail
+        console.log(status)
+        return status === 'success' ? BuildOk
+            : status === 'unknown' ? BuildUnknown : BuildFail
     }
 
     const getStatusLabel = () => {
         const status = getBuildStatus(build)
-        return !status ? 'Unknown status' : status === 'success' ? 'Successfully built'
-            : status === 'pending' ? 'Build in progress' : 'Build failed'
+        const labels: { [value: string]: string } = {
+            'unknown': 'Insufficient data',
+            'failure': 'Build failed',
+            'success': 'Successfully built'
+        }
+        return labels[status]
     }
 
     const getStatusBG = () => {
         const status = getBuildStatus(build)
-        return status === 'failure' ? "#ff000014"
-            : status === 'pending' ? "#ffa5001a"
-                : status === 'success' ? "#00800017"
-                    : "#80808026"
+        const colors: { [value: string]: string } = {
+            'unknown': '#80808026',
+            'failure': '#ff000014',
+            'success': '#00800017'
+        }
+        return colors[status] || "#80808026"
     }
 
     return (
