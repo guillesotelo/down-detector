@@ -14,9 +14,9 @@ type Props = {
 export default function ProgressBar({ label, arrData, colors, objKey, percentageFor, style }: Props) {
 
     const getPercentage = (key: string) => {
-        if (Object.keys(colors) && arrData && arrData.length) {
-            const matchLength = arrData.filter(d => d[objKey] === key).length
-            const result = parseFloat(`${(matchLength * 100 / arrData.length)}`).toFixed(1)
+        if (Object.keys(colors)) {
+            const matchLength = (arrData || []).filter(d => d[objKey] === key).length
+            const result = parseFloat(`${(matchLength * 100 / (arrData || []).length)}`).toFixed(1)
             return (result.split('.')[1] === "0" ? result.split('.')[0] : result) + '%'
         }
         return ''
@@ -27,7 +27,7 @@ export default function ProgressBar({ label, arrData, colors, objKey, percentage
             <div className="progressbar__row">
                 <p className="progressbar__label">{label || ''}</p>
                 {percentageFor ?
-                    <p className="progressbar__percentage">{getPercentage(percentageFor)}</p>
+                    <p className="progressbar__percentage">{getPercentage(percentageFor).replace('NaN', '- ')}</p>
                     : ''}
             </div>
             <div className="progressbar__bar">
@@ -41,6 +41,14 @@ export default function ProgressBar({ label, arrData, colors, objKey, percentage
                         className="progressbar__step"
                     />
                 )}
+                {!arrData || !arrData.length &&
+                    <div
+                        style={{
+                            background: 'gray',
+                            width: `100%`
+                        }}
+                        className="progressbar__step"
+                    />}
             </div>
         </div>
     )

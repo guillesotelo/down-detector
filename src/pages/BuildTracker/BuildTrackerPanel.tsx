@@ -101,7 +101,7 @@ export default function BuildTrackerPanel({ }: Props) {
                             label='Name'
                             value={selected?.name}
                             name='name'
-                            placeholder='Build #N'
+                            placeholder='Custom build name...'
                             updateData={(key, e) => setSelected(prev => ({ ...prev, [key]: e.target.value }))}
                             style={{ width: '80%' }}
                         />

@@ -123,8 +123,8 @@ export default function BuildTracker() {
     const getBuildName = (build: Build, index: number) => {
         // Removing placeholder for now
         // const placeholder = `Build #${index + 1}`
-        const startName =  capitalizeFirstLetter(build.target_branch.slice(0, 2))
-        const endName =  capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
+        const startName = capitalizeFirstLetter(build.target_branch.slice(0, 2))
+        const endName = capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
         const placeholder = startName + endName
         return build.name || placeholder
     }
@@ -304,12 +304,13 @@ export default function BuildTracker() {
                                         </div>
                                     </div>
                                 </div>
-                                <SearchBar
-                                    handleChange={onChangeSearchModules}
-                                    value={searchModules}
-                                    placeholder='Search modules...'
-                                    style={{ width: '30%', alignSelf: 'flex-start' }}
-                                />
+                                {moduleArray.length ?
+                                    <SearchBar
+                                        handleChange={onChangeSearchModules}
+                                        value={searchModules}
+                                        placeholder='Search modules...'
+                                        style={{ width: '30%', alignSelf: 'flex-start' }}
+                                    /> : ''}
                             </div>
 
                             <ModulesTable
@@ -321,6 +322,7 @@ export default function BuildTracker() {
                                 style={{ maxHeight: '40vh', marginTop: '2rem', overflow: 'auto' }}
                                 selected={selectedModule}
                                 setSelected={setSelectedModule}
+                                name="modules"
                             />
                         </>
                     }
@@ -338,19 +340,21 @@ export default function BuildTracker() {
                 style={{ filter: openModal ? 'blur(7px)' : '' }}
             />
             {openModal && renderBuildModal()}
-            <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Builds activity</h1>
-            <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
-                {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
-                    : builds && builds.length ? builds.map((b, i) =>
-                        <BuildCard
-                            key={i}
-                            build={b}
-                            setOpenModal={setOpenModal}
-                            delay={String(i ? i / 20 : 0) + 's'}
-                        />
-                    )
-                        : <p style={{ textAlign: 'center', width: '100%' }}>No active build activity found.</p>
-                }
+            <div className="buildtracker__pageview">
+                <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Build activity</h1>
+                <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
+                    {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
+                        : builds && builds.length ? builds.map((b, i) =>
+                            <BuildCard
+                                key={i}
+                                build={b}
+                                setOpenModal={setOpenModal}
+                                delay={String(i ? i / 20 : 0) + 's'}
+                            />
+                        )
+                            : <p style={{ textAlign: 'center', width: '100%' }}>No active build activity found.</p>
+                    }
+                </div>
             </div>
         </div>
     )
