@@ -2,8 +2,8 @@
     &__container {
         cursor: pointer;
         border-radius: 1.5rem;
-        height: 8.5rem;
-        width: 18vw;
+        // height: 8.5rem;
+        width: 20rem;
         border: 1px solid rgb(223, 223, 223);
         box-shadow: 2px 2px 10px rgba(211, 211, 211, 0.529);
         opacity: 0;
@@ -12,11 +12,13 @@
         &--dark {
             cursor: pointer;
             border-radius: 1.5rem;
-            height: 8.5rem;
-            width: 18rem;
+            // height: 8.5rem;
+            width: 20rem;
+
             border: 1px solid rgb(73, 73, 73);
             opacity: 0;
             animation: fade-in-down .3s ease-in forwards;
+
             &:hover {
                 border: 1px solid #82a1c4;
             }
@@ -159,6 +161,18 @@
             font-size: .8rem;
             opacity: .6;
             font-style: italic;
+        }
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .buildcard {
+        &__container {
+            width: 85vw;
+
+            &--dark {
+                width: 85vw;
+            }
         }
     }
 }

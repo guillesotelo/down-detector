@@ -5,7 +5,7 @@ import { Build, dataObj, ModuleInfo, onChangeEventType } from "../../types"
 import { AppContext } from "../../AppContext"
 import ModulesTable from "../../components/ModulesTable/ModulesTable"
 import { moduleHeaders } from "../../constants/tableHeaders"
-import { capitalizeFirstLetter, getBuildStatus, getDate, randomColors, sortArray } from "../../helpers"
+import { capitalizeFirstLetter, getDate, getModuleArray, randomColors } from "../../helpers"
 import BuildTrackerHeader from "../../components/BuildTrackerHeader/BuildTrackerHeader"
 import ProgressBar from "../../components/ProgressBar/ProgressBar"
 import SearchBar from "../../components/SearchBar/SearchBar"
@@ -97,25 +97,6 @@ export default function BuildTracker() {
         }
     }
 
-    const getFakeBuilds = async () => {
-        try {
-            let samples = sortBuildsByStatus(buildSamples)
-            if (samples && Array.isArray(samples) && samples.length) {
-                samples = samples.map((build, i) => {
-                    return {
-                        ...build,
-                        name: getBuildName(build, i),
-                        id: getBuildId(build)
-                    }
-                })
-                setBuilds(samples)
-                setCopyBuilds(samples)
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     const getBuildId = (build: Build) => {
         return `${build.classifier}__${build.target_branch}`
     }
@@ -127,32 +108,6 @@ export default function BuildTracker() {
         const endName = capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
         const placeholder = startName + endName
         return build.name || placeholder
-    }
-
-    const sortBuildsByStatus = (builds: Build[]) => {
-        return sortArray(builds.map(b => ({ ...b, status: getBuildStatus(b) })), 'status')
-    }
-
-    const getModuleArray = (modules: dataObj) => {
-        const seedModules = Array.from({ length: 10 }).map((_, i) => ({
-            name: `module${i + 21}`,
-            status: "success",
-            date: "2025-03-16T00:00:00Z",
-            art: "ARTCSAS",
-            solution: "SEED",
-            version: '0.1.2'
-        }))
-
-        return Object.keys(modules).map(key => {
-            return {
-                ...modules[key],
-                name: key,
-                org: null,
-                art: modules[key].org.art,
-                solution: modules[key].org.solution,
-            }
-        })
-        // .concat(seedModules)
     }
 
     const onChangeSearch = (e: onChangeEventType) => {
@@ -341,7 +296,7 @@ export default function BuildTracker() {
             />
             {openModal && renderBuildModal()}
             <div className="buildtracker__pageview">
-                <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Build activity</h1>
+                {/* <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Build activity</h1> */}
                 <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
                     {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
                         : builds && builds.length ? builds.map((b, i) =>

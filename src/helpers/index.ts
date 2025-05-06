@@ -1,5 +1,5 @@
 import { getAllAlerts, getAllHistory } from "../services"
-import { Build } from "../types"
+import { Build, dataObj } from "../types"
 
 export const chunkArray = (arr: any[], chunkSize: number) => {
     const result = []
@@ -138,7 +138,7 @@ export const capitalizeFirstLetter = (str: string) => {
 }
 
 export const whenDateIs = (date: Date | string | number | undefined) => {
-    if(!date) return ''
+    if (!date) return ''
 
     const current = new Date(date)
     const today = new Date().toLocaleDateString()
@@ -147,11 +147,23 @@ export const whenDateIs = (date: Date | string | number | undefined) => {
     const lastMonth = new Date().getTime() - 2505600000
     const lastYear = new Date().getTime() - 31449600000
 
-    if(today === current.toLocaleDateString()) return 'Today'
-    if(yesterday === current.toLocaleDateString()) return 'Yesterday'
+    if (today === current.toLocaleDateString()) return 'Today'
+    if (yesterday === current.toLocaleDateString()) return 'Yesterday'
 
     if (current.getTime() >= lastWeek) return 'Last week'
     if (current.getTime() < lastWeek) return 'Last month'
     if (current.getTime() < lastMonth) return 'Months ago'
     if (current.getTime() < lastYear) return 'More than a year ago'
+}
+
+export const getModuleArray = (modules: dataObj) => {
+    return Object.keys(modules).map(key => {
+        return {
+            ...modules[key],
+            name: key,
+            org: null,
+            art: modules[key].org.art,
+            solution: modules[key].org.solution,
+        }
+    })
 }
