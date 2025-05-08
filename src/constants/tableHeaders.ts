@@ -238,4 +238,12 @@ export const buildLogHeaders =[
         name: 'ACTIVE',
         value: 'active'
     },
+    {
+        name: 'SUCCESS RATE',
+        value: 'successRate'
+    },
+    {
+        name: 'STATUS',
+        value: 'status'
+    },
 ]

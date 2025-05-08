@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { deleteBuildLog, getAllBuildLogs, updateBuildLog } from '../../services/buildtracker'
-import { dataObj } from '../../types'
+import { dataObj, ModuleInfo } from '../../types'
 import DataTable from '../../components/DataTable/DataTable'
 import { buildLogHeaders } from '../../constants/tableHeaders'
 import BuildTrackerHeader from '../../components/BuildTrackerHeader/BuildTrackerHeader'
 import Modal from '../../components/Modal/Modal'
 import { JsonView } from 'react-json-view-lite';
-import { getDate } from '../../helpers'
+import { getBuildName, getBuildStatus, getBuildSuccessRate, getDate } from '../../helpers'
 import 'react-json-view-lite/dist/index.css';
 import Switch from '../../components/Switch/Swith'
 import Button from '../../components/Button/Button'
@@ -34,8 +34,14 @@ export default function BuildTrackerPanel({ }: Props) {
             const _buildLogs = await getAllBuildLogs()
             if (_buildLogs && Array.isArray(_buildLogs)) {
                 setBuildLogs(_buildLogs.map(b => {
-                    if (b.classifier) return { ...b, modules: JSON.parse(b.modules || '{}') }
-                    if (b.data || b.rawData) return { _id: b._id, ...JSON.parse(b.rawData || b.data || '{}') }
+                    const modules = JSON.parse(b.modules || '{}')
+                    return {
+                        ...b,
+                        modules,
+                        status: getBuildStatus({ ...b, modules: JSON.parse(b.modules || '{}') }),
+                        successRate: getBuildSuccessRate(b),
+                        name: getBuildName(b)
+                    }
                 }))
             }
         } catch (error) {
@@ -149,12 +155,13 @@ export default function BuildTrackerPanel({ }: Props) {
             {openModal && renderBuildModal()}
             <h1 style={{ alignSelf: 'flex-start', margin: 0, filter: openModal ? 'blur(5px)' : '' }}>Control Panel</h1>
             <DataTable
-                title='Build Logs'
+                title='Build Logs (raw JSON files)'
                 tableData={buildLogs || []}
                 setTableData={setBuildLogs}
                 tableHeaders={buildLogHeaders}
                 setSelected={index => setSelected(buildLogs ? buildLogs[index] : null)}
                 style={{ filter: openModal ? 'blur(5px)' : '' }}
+                max={20}
             />
         </div>
     )

@@ -133,6 +133,22 @@ export const getBuildStatus = (build: Build) => {
     return status
 }
 
+export const getBuildSuccessRate = (build: Build) => {
+    const modules = typeof build.modules === 'string' ? JSON.parse(build.modules || '{}') : build.modules
+    const succeeded = Object.keys(modules).filter(key => modules[key].status === 'success').length
+    const total = Object.keys(modules).length
+    return succeeded && total ? `${(succeeded * 100 / total).toFixed(1)}%` : ''
+}
+
+export const getBuildName = (build: Build, index?: number) => {
+    // Removing placeholder for now
+    // const placeholder = `Build #${index + 1}`
+    const startName = capitalizeFirstLetter(build.target_branch.slice(0, 2))
+    const endName = capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
+    const placeholder = startName + endName
+    return build.name || placeholder
+}
+
 export const capitalizeFirstLetter = (str: string) => {
     return String(str).charAt(0).toUpperCase() + String(str).slice(1)
 }
