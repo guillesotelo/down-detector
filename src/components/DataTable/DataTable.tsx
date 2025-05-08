@@ -165,7 +165,7 @@ export default function DataTable(props: Props) {
                             className={`datatable__row-item datatable__row-${header.value}`}
                             style={{
                                 width: `${100 / tableHeaders.length}%`,
-                                color: header.value === 'status' && typeof row[header.value] === 'string' ? 'orange' :
+                                color: header.value === 'status' && typeof row[header.value] === 'string' ? row[header.value] === 'success' ? 'green' : row[header.value] === 'failure' ? 'red' : 'orange' :
                                     typeof row[header.value] === 'boolean' && header.value != 'userAlert' ?
                                         row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                             }}>
@@ -219,7 +219,7 @@ export default function DataTable(props: Props) {
                                                         className={`datatable__row-item datatable__row-${header.value}`}
                                                         style={{
                                                             width: `${100 / tableHeaders.length}%`,
-                                                            color: header.value === 'status' && typeof row[header.value] === 'string' ? 'orange' :
+                                                            color: header.value === 'status' && typeof row[header.value] === 'string' ? row[header.value] === 'success' ? 'green' : row[header.value] === 'failure' ? 'red' : 'orange' :
                                                                 typeof row[header.value] === 'boolean' && header.value != 'userAlert' ?
                                                                     row[header.value] ? darkMode ? '#00b000' : 'green' : 'red' : ''
                                                         }}>

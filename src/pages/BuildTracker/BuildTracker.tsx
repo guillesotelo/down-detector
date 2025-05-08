@@ -5,7 +5,7 @@ import { Build, dataObj, ModuleInfo, onChangeEventType } from "../../types"
 import { AppContext } from "../../AppContext"
 import ModulesTable from "../../components/ModulesTable/ModulesTable"
 import { moduleHeaders } from "../../constants/tableHeaders"
-import { capitalizeFirstLetter, getDate, getModuleArray, randomColors } from "../../helpers"
+import { capitalizeFirstLetter, getBuildName, getDate, getModuleArray, randomColors } from "../../helpers"
 import BuildTrackerHeader from "../../components/BuildTrackerHeader/BuildTrackerHeader"
 import ProgressBar from "../../components/ProgressBar/ProgressBar"
 import SearchBar from "../../components/SearchBar/SearchBar"
@@ -99,15 +99,6 @@ export default function BuildTracker() {
 
     const getBuildId = (build: Build) => {
         return `${build.classifier}__${build.target_branch}`
-    }
-
-    const getBuildName = (build: Build, index: number) => {
-        // Removing placeholder for now
-        // const placeholder = `Build #${index + 1}`
-        const startName = capitalizeFirstLetter(build.target_branch.slice(0, 2))
-        const endName = capitalizeFirstLetter(build.classifier.slice(1).slice(-3))
-        const placeholder = startName + endName
-        return build.name || placeholder
     }
 
     const onChangeSearch = (e: onChangeEventType) => {
