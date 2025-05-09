@@ -15,7 +15,7 @@ import { COLOR_PALETTE, DARK_MODE_COLOR_PALETTE } from "../../constants/app"
 import { generateBuildSamples } from "../../helpers/buildSamples"
 import DataTable from "../../components/DataTable/DataTable"
 import { getAllBuildLogs } from "../../services/buildtracker"
-import { HashLoader } from "react-spinners"
+import BuildCardPlaceholder from "../../components/BuildCard/BuildCardPlaceholder"
 
 export default function BuildTracker() {
     const [builds, setBuilds] = useState<null | Build[]>(null)
@@ -289,7 +289,9 @@ export default function BuildTracker() {
             <div className="buildtracker__pageview">
                 {/* <h1 className="buildtracker__title" style={{ filter: openModal ? 'blur(7px)' : '' }}>Build activity</h1> */}
                 <div className="buildtracker__list" style={{ filter: openModal ? 'blur(7px)' : '' }}>
-                    {loading ? <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
+                    {loading ?
+                        // <div className="buildtracker__loading"><HashLoader size={30} color={darkMode ? '#fff' : undefined} /><p>Loading builds activity...</p></div>
+                        Array.from({ length: 15 }).map((_, i) => <BuildCardPlaceholder />)
                         : builds && builds.length ? builds.map((b, i) =>
                             <BuildCard
                                 key={i}
