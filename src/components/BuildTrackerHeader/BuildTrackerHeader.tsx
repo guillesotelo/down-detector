@@ -54,7 +54,7 @@ export default function BuildTrackerHeader({ search, setSearch, onChangeSearch, 
                             <img src={ControlPanel} alt="Control Panel" onClick={() => history.push('/build-tracker/control-panel')} draggable={false} className={`header__login-icon${darkMode ? '--dark' : ''}`} style={{ transform: 'scale(1.2)' }} />
                         </Tooltip>
                         : ''}
-                    <Tooltip tooltip='Account'>
+                    <Tooltip tooltip={isLoggedIn ? 'My Account' : 'Login'}>
                         <img src={UserIcon} alt="User Login" onClick={userOptions} draggable={false} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
                     </Tooltip>
                     <Tooltip tooltip='Switch Mode'>

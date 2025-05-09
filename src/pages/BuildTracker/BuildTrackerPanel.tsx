@@ -31,6 +31,7 @@ export default function BuildTrackerPanel({ }: Props) {
 
     const getBuildLogs = async () => {
         try {
+            setLoading(true)
             const _buildLogs = await getAllBuildLogs()
             if (_buildLogs && Array.isArray(_buildLogs)) {
                 setBuildLogs(_buildLogs.map(b => {
@@ -44,7 +45,9 @@ export default function BuildTrackerPanel({ }: Props) {
                     }
                 }))
             }
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.error(error)
         }
     }
@@ -110,6 +113,7 @@ export default function BuildTrackerPanel({ }: Props) {
                             placeholder='Custom build name...'
                             updateData={(key, e) => setSelected(prev => ({ ...prev, [key]: e.target.value }))}
                             style={{ width: '80%' }}
+                            disabled={loading}
                         />
                         <Switch
                             label='Active'
@@ -162,6 +166,7 @@ export default function BuildTrackerPanel({ }: Props) {
                 setSelected={index => setSelected(buildLogs ? buildLogs[index] : null)}
                 style={{ filter: openModal ? 'blur(5px)' : '' }}
                 max={20}
+                loading={loading}
             />
         </div>
     )
