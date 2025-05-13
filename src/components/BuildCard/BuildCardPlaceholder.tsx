@@ -39,8 +39,8 @@ export default function BuildCardPlaceholder({ delay }: Props) {
                 justifyContent: 'space-between',
                 cursor: 'default'
             }}>
-            {BuildCardPlaceholderBlock(darkMode, '3rem')}
             {BuildCardPlaceholderBlock(darkMode, '.6rem')}
+            {BuildCardPlaceholderBlock(darkMode, '3rem')}
             {BuildCardPlaceholderBlock(darkMode, '.2rem')}
         </div>
     )
