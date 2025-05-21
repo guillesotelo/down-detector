@@ -247,6 +247,19 @@ const SystemCard = (props: Props) => {
                     // based on how much time has passed (>3 mins)
                     const prevTime = new Date(allHours.get(time.toLocaleString()).createdAt || new Date()).getTime()
 
+                    // If just one or two records registered, then we overwrite with latest (current iterated)
+                    if (arr.length < 3) {
+                        allHours.set(
+                            time.toLocaleString(),
+                            {
+                                ...register,
+                                status: register.status ? 1 : 0,
+                                busy: allHours.get(time.toLocaleString()).busy || false,
+                                isDown: !register.status || !allHours.get(time.toLocaleString()).status
+                            }
+                        )
+                    }
+
                     // We check if the next hour, but not more that 3 minutes after, the status changed
                     const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
                     if (nextTime && (nextTime - currentTime < 180000) && arr[i + 1].status !== register.status) {
