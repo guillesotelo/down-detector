@@ -100,6 +100,7 @@ export type alertType = {
 export type SubscriptionType = {
     _id?: string
     systemId?: string
+    name?: string
     type?: string
     subscriberEmail?: string
     email?: string
