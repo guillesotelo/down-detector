@@ -734,13 +734,14 @@ const Home = () => {
       const { system, start, end, note, index } = showDowntime
       return (
         <Modal
-          title='Planned Downtime'
+          title={system?.name === 'GitLab' ? 'Decommission' : 'Planned Downtime'}
           subtitle={system?.name}
           onClose={discardChanges}>
           <div className="home__modal-col" style={{ margin: '1rem 0' }}>
-            <p className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`}>
-              The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
-            </p>
+            {system?.name === 'GitLab' ? '' :
+              <p className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`}>
+                The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
+              </p>}
             {note ?
               <>
                 <strong>Reason</strong>
