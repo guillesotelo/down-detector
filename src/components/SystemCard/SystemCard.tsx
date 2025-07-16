@@ -392,8 +392,8 @@ const SystemCard = (props: Props) => {
             return (
                 <span>
                     <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
-                    <span style={{ fontWeight: 'normal' }}> ➜ </span>
-                    <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
+                    {name === 'GitLab' ? '' : <span style={{ fontWeight: 'normal' }}> ➜ </span>}
+                    {name === 'GitLab' ? '' : <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>getDate(event.end)</span>}
                     <div className={`systemcard__event-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
                 </span>
             )
@@ -665,16 +665,16 @@ const SystemCard = (props: Props) => {
                     <div
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
-                            backgroundColor: isLiveDowntime(downtime[0]) ? darkMode ?
+                            backgroundColor: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ?
                                 'black' : '#ff6161a6' : darkMode ?
                                 'black' : 'transparent',
-                            border: isLiveDowntime(downtime[0]) ? darkMode ? '1px solid red'
+                            border: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid #ffc7006b' : '1px solid #dbdbdb',
                             animationDelay: `${delay || '0'}`
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
-                        <p className="systemcard__event-title">⚠️ Planned downtime ⚠️</p>
+                        <p className="systemcard__event-title">⚠️ {name === 'GitLab' ? 'Decommission' : 'Planned downtime'} ⚠️</p>
                         {downtime.map((time, i) =>
                             <>
                                 {showMoreDowntime && i > 0 ? <div className='systemcard__event-downtime-separator' /> : ''}
