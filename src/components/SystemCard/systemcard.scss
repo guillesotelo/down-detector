@@ -1,7 +1,7 @@
 .systemcard {
     &__container {
         width: 15rem;
-        height: 10rem;
+        height: 8rem;
         // box-shadow: .2rem .3rem 1rem rgba(0, 0, 0, 0.172);
         border: 1px solid rgba(0, 0, 0, 0.074);
         border-radius: 1rem;
@@ -25,7 +25,7 @@
 
         &--dark {
             width: 15rem;
-            height: 10rem;
+            height: 8rem;
             border: 1px solid lightgray;
             border-radius: 1rem;
             padding: 1rem;
@@ -50,6 +50,7 @@
     &__wrapper {
         // opacity: 0;
         // animation: fade-in .5s ease-in forwards;
+        position: relative;
     }
 
     &__loading-block {
@@ -216,9 +217,11 @@
         z-index: 1;
         overflow: hidden;
         width: calc(14rem + 1.4rem);
-        padding: 1.5rem .8rem .8rem .8rem;
+        padding: 1.1rem .8rem .3rem .8rem;
         transform: translateY(-100%);
         animation: fade-in-down-event 1s ease-in forwards;
+        position: absolute;
+        z-index: 3;
 
         &:hover .systemcard__event-note {
             -webkit-line-clamp: unset;
@@ -238,9 +241,11 @@
             z-index: 1;
             overflow: hidden;
             width: calc(14rem + 1.4rem);
-            padding: 1.5rem .8rem .8rem .8rem;
+            padding: 1.1rem .8rem .3rem .8rem;
             transform: translateY(-100%);
             animation: fade-in-down-event 1s ease-in forwards;
+            position: absolute;
+            z-index: 3;
 
             &:hover .systemcard__event-note {
                 -webkit-line-clamp: unset;
@@ -253,7 +258,7 @@
 
         &-title {
             margin: 0;
-            font-size: .8rem;
+            font-size: .75rem;
             font-weight: bold;
         }
 
@@ -320,7 +325,7 @@
             display: -webkit-box;
             overflow: hidden;
             text-overflow: ellipsis;
-            -webkit-line-clamp: 1;
+            -webkit-line-clamp: unset;
             -webkit-box-orient: vertical;
             transition: .3s;
 
@@ -332,7 +337,7 @@
                 display: -webkit-box;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                -webkit-line-clamp: 1;
+                -webkit-line-clamp: unset;
                 -webkit-box-orient: vertical;
                 transition: .3s;
 
