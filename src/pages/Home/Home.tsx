@@ -368,8 +368,8 @@ const Home = () => {
     if (event && event.start && event.end) {
       return (<span>
         <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
-        <span style={{ fontWeight: 'normal' }}> ➜ </span>
-        <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>
+        {getSystemData(selected, 'name') === 'GitLab' ? '' : <span style={{ fontWeight: 'normal' }}> ➜ </span>}
+        {getSystemData(selected, 'name') === 'GitLab' ? '' : <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>}
         <div className={`systemcard__event-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
       </span>
       )
@@ -589,7 +589,7 @@ const Home = () => {
                 'transparent' : '#f1f1f1',
               border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
-            <p className='home__modal-downtime-text'>Planned downtime:</p>
+            <p className='home__modal-downtime-text'>{getSystemData(selected, 'name') === 'GitLab' ? 'Decommission' : 'Planned downtime:'}</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
           </div>
           : ''}

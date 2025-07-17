@@ -44,8 +44,8 @@ const SystemCard = (props: Props) => {
     const [status, setStatus] = useState<boolean | null | string | undefined>(null)
     const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
 
-    const chartHeight = '30vw'
-    const chartWidth = '40vw'
+    const chartHeight = '1rem'
+    const chartWidth = ''
 
     const {
         system,
@@ -491,7 +491,7 @@ const SystemCard = (props: Props) => {
                     color: 'gray'
                 },
                 grid: {
-                    display: true,
+                    display: false,
                     drawBorder: false,
                     drawChartArea: false,
                     color: darkMode ? '#333333a1' : '#dbdbdb9d'
@@ -506,7 +506,7 @@ const SystemCard = (props: Props) => {
                     display: false
                 },
                 grid: {
-                    display: true,
+                    display: false,
                     drawBorder: false,
                     drawChartArea: false,
                     color: darkMode ? '#333333a1' : '#dbdbdb9d'
@@ -557,7 +557,7 @@ const SystemCard = (props: Props) => {
                     // color: 'gray'
                 },
                 grid: {
-                    display: true,
+                    display: false,
                     drawBorder: false,
                     drawChartArea: false,
                     color: darkMode ? '#333333a1' : '#dbdbdb9d'
@@ -572,7 +572,7 @@ const SystemCard = (props: Props) => {
                     display: false
                 },
                 grid: {
-                    display: true,
+                    display: false,
                     drawBorder: false,
                     drawChartArea: false,
                     color: (ctx: any) => ctx.tick.value !== .5 ? darkMode ? '#333333a1' : '#dbdbdb9d' : 'transparent'
@@ -594,8 +594,12 @@ const SystemCard = (props: Props) => {
                                 : 'linear-gradient(to right bottom, white, rgb(202 120 0 / 17%))' : darkMode ?
                                 `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
                                 :
-                                `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`
-                    }}>
+                                `linear-gradient(to bottom right, white, ${status ? 'rgba(0, 128, 0, 0.120)' : 'rgba(255, 0, 0, 0.120)'})`,
+                        zIndex: downtime && downtime.length ? 4 : '',
+                        borderBottom: downtime && downtime.length ? 'none' : `1px solid ${darkMode ? '#424244' : '#d3d3d3'}`,
+                    }}
+                    onMouseEnter={() => setShowMoreDowntime(true)}
+                    onMouseLeave={() => setShowMoreDowntime(false)}>
                     <div className="systemcard__header" onClick={selectSystem}>
                         <img
                             src={logo || Api}
@@ -620,7 +624,12 @@ const SystemCard = (props: Props) => {
                             style={{ color: loading ? 'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
                                 <>
-                                    <span style={{ animation: selected || report || subscription ? 'none' : '' }} className='systemcard__status-dot'>
+                                    <span
+                                        style={{
+                                            animation: selected || report || subscription ? 'none' : '',
+                                            animationDelay: `${delay || '0'}`
+                                        }}
+                                        className='systemcard__status-dot'>
                                         <img
                                             style={{
                                                 filter: reportedlyDown || status === 'BUSY' ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
@@ -646,6 +655,7 @@ const SystemCard = (props: Props) => {
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Subscribe}
                                     tooltip='Subscribe for updates'
+                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .3rem' }}
                                 />
                                 <Button
                                     handleClick={() => reportIssue(_id || '')}
@@ -653,6 +663,7 @@ const SystemCard = (props: Props) => {
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Report}
                                     tooltip='Report Issue'
+                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .3rem' }}
                                 />
                             </div>
                             : !loading && (status || status === false) && lastCheck ?
@@ -666,7 +677,7 @@ const SystemCard = (props: Props) => {
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ?
-                                'black' : '#ff6161a6' : darkMode ?
+                                'black' : '#ffc3c3' : darkMode ?
                                 'black' : 'transparent',
                             border: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid #ffc7006b' : '1px solid #dbdbdb',
