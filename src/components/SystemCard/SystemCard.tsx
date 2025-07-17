@@ -687,10 +687,9 @@ const SystemCard = (props: Props) => {
                         onMouseLeave={() => setShowMoreDowntime(false)}>
                         <p className="systemcard__event-title">⚠️ {name === 'GitLab' ? 'Decommission' : 'Planned downtime'} ⚠️</p>
                         {downtime.map((time, i) =>
-                            <>
+                            <div key={i}>
                                 {showMoreDowntime && i > 0 ? <div className='systemcard__event-downtime-separator' /> : ''}
                                 <div
-                                    key={i}
                                     className={`systemcard__event-downtime${darkMode ? '--dark' : ''}`}
                                     onClick={() => setShowDowntime({ ...time, system, index })}
                                     style={{
@@ -699,7 +698,7 @@ const SystemCard = (props: Props) => {
                                     }}>
                                     {getDowntime(time)}
                                 </div>
-                            </>
+                            </div>
                         )}
                     </div>
                     : ''}
