@@ -587,7 +587,7 @@ const Home = () => {
               backgroundColor: isLiveDowntime() ? darkMode ?
                 'transparent' : '#ffdada' : darkMode ?
                 'transparent' : '#f1f1f1',
-              border: isLiveDowntime() ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
+              border: isLiveDowntime() || getSystemData(selected, 'name') === 'GitLab' ? '1px solid red' : darkMode ? '1px solid orange' : '1px solid transparent'
             }}>
             <p className='home__modal-downtime-text'>{getSystemData(selected, 'name') === 'GitLab' ? 'Decommission' : 'Planned downtime:'}</p>
             <p className='home__modal-downtime-text'>{getDowntimeString()}</p>
@@ -732,13 +732,14 @@ const Home = () => {
   const renderDowntimeModal = () => {
     if (showDowntime) {
       const { system, start, end, note, index } = showDowntime
+
       return (
         <Modal
-          title={system?.name === 'GitLab' ? 'Decommission' : 'Planned Downtime'}
-          subtitle={system?.name}
+          title={(system?.name || getSystemData(selected, 'name')) === 'GitLab' ? 'Decommission' : 'Planned downtime:'}
+          subtitle={system?.name || String(getSystemData(selected, 'name'))}
           onClose={discardChanges}>
           <div className="home__modal-col" style={{ margin: '1rem 0' }}>
-            {system?.name === 'GitLab' ? '' :
+            {(system?.name || getSystemData(selected, 'name')) === 'GitLab' ? '' :
               <p className={`home__modal-downtime-note${darkMode ? '--dark' : ''}`}>
                 The system will probably be down between <strong>{getDate(start || '')}</strong> and <strong>{getDate(end || '')}</strong>.
               </p>}
