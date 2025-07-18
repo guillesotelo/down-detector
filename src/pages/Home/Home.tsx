@@ -570,14 +570,20 @@ const Home = () => {
     })
   }
 
+  const parseLink = (link: string) => {
+    const [scheme, _, url] = link.split('/')
+    if (!url) return ''
+    return scheme + '//' + url + '/'
+  }
+
   const renderSystemDetailsModal = () => {
     return (
       <Modal
         title={String(getSystemData(selected, 'name'))}
         logo={systemLogos[selected] || ''}
         showLogo
-        // subtitle={parseUrl(String(getSystemData(selected, 'url')))}
         onClose={discardChanges}
+        linkTitle={parseLink(String(getSystemData(selected, 'url') || ''))}
         style={{ width: isMobile ? '' : '50vw' }}>
         {getDowntimeString() ?
           <div
