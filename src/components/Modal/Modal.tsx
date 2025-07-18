@@ -11,9 +11,10 @@ type Props = {
     contentStyle?: React.CSSProperties
     logo?: string
     showLogo?: boolean
+    linkTitle?: string
 }
 
-export default function Modal({ children, onClose, title, subtitle, style, contentStyle, logo, showLogo }: Props) {
+export default function Modal({ children, onClose, title, subtitle, style, contentStyle, logo, showLogo, linkTitle }: Props) {
     const [closeAnimation, setCloseAnimation] = useState('')
     const { darkMode } = useContext(AppContext)
 
@@ -53,7 +54,10 @@ export default function Modal({ children, onClose, title, subtitle, style, conte
                                     }}
                                     draggable={false}
                                 />
-                                <h1 className="modal__title">{title}</h1>
+                                {linkTitle ?
+                                    <a href={linkTitle} target='_blank' className='modal__title-link'><h1 className="modal__title">{title}</h1></a> :
+                                    <h1 className="modal__title">{title}</h1>
+                                }
                             </div>
                             :
                             <h1 className="modal__title">{title}</h1>
