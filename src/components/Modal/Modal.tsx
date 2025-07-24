@@ -25,10 +25,10 @@ export default function Modal({ children, onClose, title, subtitle, style, conte
         const closeOnEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') closeModal()
         }
-        document.addEventListener('click', closeOnOuterClick)
+        // document.addEventListener('click', closeOnOuterClick)
         document.addEventListener('keydown', closeOnEsc)
         return () => {
-            document.removeEventListener('click', closeOnOuterClick)
+            // document.removeEventListener('click', closeOnOuterClick)
             document.removeEventListener('keydown', closeOnEsc)
         }
     }, [])

@@ -35,7 +35,7 @@ const Home = () => {
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
   const [data, setData] = useState<alertType & SubscriptionType>({})
   const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
-  const [reportedStatus, setReportedStatus] = useState({ name: 'Unable to access' })
+  const [reportedStatus, setReportedStatus] = useState({ name: 'Not responding' })
   const [modalChartOptions, setModalChartOptions] = useState({})
   const [selectedLog, setSelectedLog] = useState(-1)
   const [editLog, setEditLog] = useState(false)
@@ -51,11 +51,12 @@ const Home = () => {
   const chartWidth = '80vw'
 
   const issueOptions = [
-    { name: 'Unable to access' },
     { name: `Not responding` },
-    { name: 'Slow response time' },
+    { name: 'Unable to access' },
+    { name: 'Slow loading' },
     { name: 'Unstable' },
-    { name: 'Internal issues' },
+    { name: 'Throwing errors' },
+    { name: 'Other (explain)' },
   ]
 
   const loadData = useMemo(() => {
@@ -460,7 +461,7 @@ const Home = () => {
     setReport('')
     setSubscription('')
     setData({})
-    setReportedStatus({ name: 'Unable to access' })
+    setReportedStatus({ name: 'Not responding' })
   }
 
   const discardLogEdit = () => {
