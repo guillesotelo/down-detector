@@ -655,7 +655,7 @@ const SystemCard = (props: Props) => {
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Subscribe}
                                     tooltip='Subscribe for updates'
-                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .3rem' }}
+                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .4§rem' }}
                                 />
                                 <Button
                                     handleClick={() => reportIssue(_id || '')}
@@ -663,7 +663,7 @@ const SystemCard = (props: Props) => {
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Report}
                                     tooltip='Report Issue'
-                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .3rem' }}
+                                    style={{ minHeight: '1.75rem', width: '1rem', padding: '0 .4rem' }}
                                 />
                             </div>
                             : !loading && (status || status === false) && lastCheck ?
