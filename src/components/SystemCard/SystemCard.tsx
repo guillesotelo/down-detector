@@ -610,7 +610,7 @@ const SystemCard = (props: Props) => {
                             }}
                             draggable={false}
                         />
-                        <h1 className="systemcard__name">{hasPageMessage() ? '️⚠️ ' : ''}{name || 'Api Name'}</h1>
+                        <h1 className="systemcard__name">{hasPageMessage() ? '️🚧 ' : ''}{name || 'Api Name'}</h1>
                     </div>
                     {loading || (status !== false && status !== true && status !== 'BUSY') ?
                         SystemCardPlaceholderBlock(darkMode)
@@ -685,7 +685,7 @@ const SystemCard = (props: Props) => {
                         }}
                         onMouseEnter={() => setShowMoreDowntime(true)}
                         onMouseLeave={() => setShowMoreDowntime(false)}>
-                        <p className="systemcard__event-title">⚠️ {name === 'GitLab' ? 'Decommission' : 'Planned downtime'} ⚠️</p>
+                        <p className="systemcard__event-title">🚧 {name === 'GitLab' ? 'Decommission' : 'Planned downtime'} 🚧</p>
                         {downtime.map((time, i) =>
                             <div key={i}>
                                 {showMoreDowntime && i > 0 ? <div className='systemcard__event-downtime-separator' /> : ''}
