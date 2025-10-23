@@ -32,7 +32,7 @@ export default function Help() {
   return (
     <div className="about__container" style={{ width: isLoggedIn ? '85vw' : '' }}>
       <div className="about__section">
-        <h1 className="page__header-title">About Down@VolvoCars</h1>
+        <h1 className="page__header-title">About {process.env.REACT_APP_NAME || ''}</h1>
         <h2 className="about__title">Process Overview</h2>
         <p className="about__text">
           Our system status monitoring process oversees the availability of some selected internal Volvo Cars systems. This comprehensive solution involves real-time checks, user reports, and planned downtime management.
