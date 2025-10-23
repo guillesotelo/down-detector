@@ -35,7 +35,7 @@ export default function Help() {
         <h1 className="page__header-title">About {process.env.REACT_APP_NAME || ''}</h1>
         <h2 className="about__title">Process Overview</h2>
         <p className="about__text">
-          Our system status monitoring process oversees the availability of some selected internal Volvo Cars systems. This comprehensive solution involves real-time checks, user reports, and planned downtime management.
+          Our system status monitoring process oversees the availability of some selected internal {process.env.REACT_APP_COMPANY_NAME} systems. This comprehensive solution involves real-time checks, user reports, and planned downtime management.
         </p>
         <h3 className="about__subtitle">1. System Discovery and Configuration</h3>
         <p className="about__text">
