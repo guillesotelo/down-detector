@@ -393,7 +393,7 @@ const SystemCard = (props: Props) => {
                 <span>
                     <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.start)}</span>
                     {name === 'GitLab' ? '' : <span style={{ fontWeight: 'normal' }}> ➜ </span>}
-                    {name === 'GitLab' ? '' : <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>getDate(event.end)</span>}
+                    {name === 'GitLab' ? '' : <span className={`systemcard__event-time${darkMode ? '--dark' : ''}`}>{getDate(event.end)}</span>}
                     <div className={`systemcard__event-note${darkMode ? '--dark' : ''}`} dangerouslySetInnerHTML={{ __html: event.note || '' }} />
                 </span>
             )
