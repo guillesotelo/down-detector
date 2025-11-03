@@ -85,11 +85,15 @@ const SystemCard = (props: Props) => {
     useEffect(() => {
         processChartData()
         setStatus(getCurrentStatus())
-        if(targeted && !targetUsed.current) {
+    }, [history, alerts, system, selected])
+
+    useEffect(() => {
+        const hasData = lastDayChartData.datasets.length > 1
+        if (hasData && targeted && !targetUsed.current) {
             selectSystem()
             targetUsed.current = true
         }
-    }, [history, alerts, system, selected])
+    }, [lastDayChartData])
 
     useEffect(() => {
         generateLastDayData()
