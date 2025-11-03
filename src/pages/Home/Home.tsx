@@ -42,6 +42,7 @@ const Home = () => {
   const [editedLogStatus, setEditedLogStatus] = useState('DOWN')
   const [editedLogMessage, setEditedLogMessage] = useState('')
   const [versionDate, setVersionDate] = useState('')
+  const [targetedSystem, setTargetedSystem] = useState('')
   const [countdownKey, setCountdownKey] = useState(0)
   const [systemLogos, setSystemLogos] = useState<dataObj>({})
   const [systemRaw, setSystemRaw] = useState<dataObj>({})
@@ -70,6 +71,15 @@ const Home = () => {
       getLogosAndRaw()
     }
   }, [])
+
+  useEffect(() => {
+    const targetSystem = new URLSearchParams(window.location.search).get('system')
+    if (targetSystem) {
+      const targetSystemId = allSystems.find(s => s.name?.toLowerCase() === targetSystem)
+      if (targetSystemId?._id) setTargetedSystem(targetSystemId._id)
+      getAndRemoveQueryParam('system')
+    }
+  }, [allSystems])
 
   useEffect(() => {
     setHeaderLoading(true)
@@ -165,14 +175,6 @@ const Home = () => {
       let systems = await getActiveSystems()
       if (systems && Array.isArray(systems)) {
         setAllSystems(sortArray(systems, 'order'))
-        const targetSystem = new URLSearchParams(window.location.search).get('system')
-        if (targetSystem) {
-          const targetSystemId = systems.find(s => s.name.toLowerCase() === targetSystem)
-          if (targetSystemId) {
-            setSelected(targetSystemId)
-            getAndRemoveQueryParam('system')
-          }
-        }
       }
     } catch (error) {
       console.error(error)
@@ -461,6 +463,7 @@ const Home = () => {
 
   const discardChanges = () => {
     setSelected('')
+    setTargetedSystem('')
     setSelectedLog(-1)
     setShowDowntime(null)
     setEditLog(false)
@@ -804,6 +807,7 @@ const Home = () => {
             lastCheck={getLastCheck(system)}
             delay={String(i ? i / 10 : 0) + 's'}
             setShowDowntime={setShowDowntime}
+            targeted={targetedSystem}
           />)
       :
       Array.from({ length: 19 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)

@@ -32,6 +32,7 @@ type Props = {
     subscription?: string
     logo?: string
     raw?: string
+    targeted?: string
 }
 
 const SystemCard = (props: Props) => {
@@ -66,7 +67,8 @@ const SystemCard = (props: Props) => {
         subscribe,
         subscription,
         logo,
-        raw
+        raw,
+        targeted
     } = props
 
     const {
@@ -75,6 +77,10 @@ const SystemCard = (props: Props) => {
         reportedlyDown,
         broadcastMessages,
     } = system || {}
+
+    useEffect(() => {
+        if (targeted && targeted === _id) selectSystem()
+    }, [targeted, system])
 
     useEffect(() => {
         if ((loading || (status !== false && status !== true)) && !headerLoading) setHeaderLoading(true)
