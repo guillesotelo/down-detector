@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
@@ -32,7 +32,7 @@ type Props = {
     subscription?: string
     logo?: string
     raw?: string
-    targeted?: string
+    targeted?: boolean
 }
 
 const SystemCard = (props: Props) => {
@@ -44,7 +44,7 @@ const SystemCard = (props: Props) => {
     const [showMoreDowntime, setShowMoreDowntime] = useState(false)
     const [status, setStatus] = useState<boolean | null | string | undefined>(null)
     const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
-
+    const targetUsed = useRef<boolean>(false)
     const chartHeight = '1rem'
     const chartWidth = ''
 
@@ -85,7 +85,10 @@ const SystemCard = (props: Props) => {
     useEffect(() => {
         processChartData()
         setStatus(getCurrentStatus())
-        if(targeted) selectSystem()
+        if(targeted && !targetUsed.current) {
+            selectSystem()
+            targetUsed.current = true
+        }
     }, [history, alerts, system, selected])
 
     useEffect(() => {

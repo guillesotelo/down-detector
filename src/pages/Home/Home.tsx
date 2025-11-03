@@ -809,7 +809,7 @@ const Home = () => {
             lastCheck={getLastCheck(system)}
             delay={String(i ? i / 10 : 0) + 's'}
             setShowDowntime={setShowDowntime}
-            targeted={targetedSystem}
+            targeted={targetedSystem === system._id}
           />)
       :
       Array.from({ length: 19 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
