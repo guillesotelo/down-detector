@@ -74,10 +74,12 @@ const Home = () => {
 
   useEffect(() => {
     const targetSystem = new URLSearchParams(window.location.search).get('system')
-    if (targetSystem) {
+    if (targetSystem && allSystems.length) {
       const targetSystemId = allSystems.find(s => s.name?.toLowerCase() === targetSystem)
-      if (targetSystemId?._id) setTargetedSystem(targetSystemId._id)
-      getAndRemoveQueryParam('system')
+      if (targetSystemId?._id) {
+        setTargetedSystem(targetSystemId._id)
+        getAndRemoveQueryParam('system')
+      }
     }
   }, [allSystems])
 
