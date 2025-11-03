@@ -41,8 +41,8 @@
   },
   "scripts": {
     "dev": "react-scripts start",
-    "build": "if [ -d build ]; then mv build _build; fi && react-scripts build",
-    "restore": "if [ -d _build ]; then mv build __build && mv _build build; fi"
+    "build": "if [ -d _build ]; then rm -rf _build; fi && if [ -d build ]; then mv build _build; fi && react-scripts build",
+    "restore": "if [ -d _build ]; then rm -rf build && mv _build build; fi"
   },
   "eslintConfig": {
     "extends": [

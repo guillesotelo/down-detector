@@ -79,16 +79,13 @@ const SystemCard = (props: Props) => {
     } = system || {}
 
     useEffect(() => {
-        if (targeted && targeted === _id) selectSystem()
-    }, [targeted, system])
-
-    useEffect(() => {
         if ((loading || (status !== false && status !== true)) && !headerLoading) setHeaderLoading(true)
     }, [loading, status])
 
     useEffect(() => {
         processChartData()
         setStatus(getCurrentStatus())
+        if(targeted) selectSystem()
     }, [history, alerts, system, selected])
 
     useEffect(() => {
