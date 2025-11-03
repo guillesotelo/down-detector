@@ -13,7 +13,7 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
 import { toast } from 'react-toastify'
 import { APP_COLORS, APP_VERSION } from '../../constants/app'
-import { getDate, getUser, sortArray, toHex } from '../../helpers'
+import { getAndRemoveQueryParam, getDate, getUser, sortArray, toHex } from '../../helpers'
 import SystemCardPlaceholder from '../../components/SystemCard/SystemCardPlaceholder'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import LiveIcon from '../../assets/icons/live.svg'
@@ -165,6 +165,14 @@ const Home = () => {
       let systems = await getActiveSystems()
       if (systems && Array.isArray(systems)) {
         setAllSystems(sortArray(systems, 'order'))
+        const targetSystem = new URLSearchParams(window.location.search).get('system')
+        if (targetSystem) {
+          const targetSystemId = systems.find(s => s.name.toLowerCase() === targetSystem)
+          if (targetSystemId) {
+            setSelected(targetSystemId)
+            getAndRemoveQueryParam('system')
+          }
+        }
       }
     } catch (error) {
       console.error(error)

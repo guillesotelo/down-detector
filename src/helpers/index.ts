@@ -183,3 +183,12 @@ export const getModuleArray = (modules: dataObj) => {
         }
     })
 }
+
+export const getAndRemoveQueryParam = (param: string): string | null => {
+    const url = new URL(window.location.href)
+    const value = url.searchParams.get(param)
+    url.searchParams.delete(param)
+    const newUrl = url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '') + url.hash
+    window.history.replaceState({}, document.title, newUrl)
+    return value
+}
