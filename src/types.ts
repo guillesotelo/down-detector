@@ -12,6 +12,8 @@ export type AppContextType = {
     setDarkMode: (value: boolean) => void
     headerLoading: boolean
     setHeaderLoading: (value: boolean) => void
+    addSystemModal: boolean
+    setAddSystemModal: (value: boolean) => void
 }
 
 export type userType = {

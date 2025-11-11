@@ -15,6 +15,8 @@ export const AppContext = createContext<AppContextType>({
     setDarkMode: () => { },
     headerLoading: false,
     setHeaderLoading: () => { },
+    addSystemModal: false,
+    setAddSystemModal: () => { },
 })
 
 type Props = {
@@ -26,8 +28,9 @@ export const AppProvider = ({ children }: Props) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
     const [isSuper, setIsSuper] = useState(false)
     const [item, setItem] = useState('/')
-    const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('preferredMode') || 'true'))
+    const [darkMode, setDarkMode] = useState(localStorage.getItem('preferredMode') !== 'false')
     const [headerLoading, setHeaderLoading] = useState(false)
+    const [addSystemModal, setAddSystemModal] = useState(false)
 
     useEffect(() => {
         verifyUser()
@@ -71,7 +74,9 @@ export const AppProvider = ({ children }: Props) => {
         darkMode,
         setDarkMode,
         headerLoading,
-        setHeaderLoading
+        setHeaderLoading,
+        addSystemModal,
+        setAddSystemModal
     }), [
         isSuper,
         setIsSuper,
@@ -83,7 +88,9 @@ export const AppProvider = ({ children }: Props) => {
         darkMode,
         setDarkMode,
         headerLoading,
-        setHeaderLoading
+        setHeaderLoading,
+        addSystemModal,
+        setAddSystemModal
     ])
 
 

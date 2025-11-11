@@ -225,7 +225,7 @@
 
         &:hover .systemcard__event-note {
             -webkit-line-clamp: unset;
-            transition: .3s;
+            transition: .2s;
         }
 
         &--dark {
@@ -327,7 +327,7 @@
             text-overflow: ellipsis;
             -webkit-line-clamp: unset;
             -webkit-box-orient: vertical;
-            transition: .3s;
+            transition: .2s;
 
             &--dark {
                 margin: .4rem 0 0 0;
@@ -339,7 +339,7 @@
                 text-overflow: ellipsis;
                 -webkit-line-clamp: unset;
                 -webkit-box-orient: vertical;
-                transition: .3s;
+                transition: .2s;
 
                 & * {
                     background-color: transparent !important;

@@ -61,7 +61,7 @@ export default function Button({ label, handleClick, className, bgColor, textCol
                 onMouseEnter={() => setButtonStyle({
                     ...style,
                     backgroundColor: 'transparent',
-                    color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white' || APP_COLORS.BLUE_ONE
+                    color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white'
                 })}
                 onMouseLeave={() => setButtonStyle({
                     ...style,
@@ -88,7 +88,7 @@ export default function Button({ label, handleClick, className, bgColor, textCol
                 onMouseEnter={() => setButtonStyle({
                     ...style,
                     backgroundColor: 'transparent',
-                    color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white' || APP_COLORS.BLUE_ONE
+                    color: !darkMode ? isTooBright(bgColor) ? 'black' : bgColor : 'white'
                 })}
                 onMouseLeave={() => setButtonStyle({
                     ...style,

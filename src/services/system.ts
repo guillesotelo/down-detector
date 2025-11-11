@@ -47,6 +47,13 @@ const getSystemDataSelect = async (dataSelect: string) => {
     } catch (err) { console.log(err) }
 }
 
+const createSystemRequest = async (data: systemType) => {
+    try {
+        const sent = await axios.post(`${API_URL}/api/system/createRequest`, { ...data, user: getUser() }, getConfig())
+        return sent.data
+    } catch (err) { console.log(err) }
+}
+
 const createSystem = async (data: systemType) => {
     try {
         const system = await axios.post(`${API_URL}/api/system/create`, { ...data, user: getUser() }, getConfig())
@@ -80,6 +87,7 @@ export {
     getAllSystems,
     getSystemsByOwnerId,
     getSystemDataSelect,
+    createSystemRequest,
     createSystem,
     getSystemById,
     updateSystem,

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription, getSystemDataSelect } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription, getSystemDataSelect, createSystemRequest } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, SubscriptionType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -33,7 +33,7 @@ const Home = () => {
   const [statusAndAlerts, setStatusAndAlerts] = useState<alertType[] & historyType[]>([])
   const [allStatus, setAllStatus] = useState<historyType[]>([])
   const [allAlerts, setAllAlerts] = useState<alertType[]>([])
-  const [data, setData] = useState<alertType & SubscriptionType>({})
+  const [data, setData] = useState<alertType & SubscriptionType & systemType>({})
   const [chartData, setChartData] = useState<any>({ datasets: [{}], labels: [''] })
   const [reportedStatus, setReportedStatus] = useState({ name: 'Not responding' })
   const [modalChartOptions, setModalChartOptions] = useState({})
@@ -46,7 +46,15 @@ const Home = () => {
   const [countdownKey, setCountdownKey] = useState(0)
   const [systemLogos, setSystemLogos] = useState<dataObj>({})
   const [systemRaw, setSystemRaw] = useState<dataObj>({})
-  const { darkMode, setHeaderLoading, isMobile, isLoggedIn, isSuper } = useContext(AppContext)
+  const {
+    darkMode,
+    setHeaderLoading,
+    isMobile,
+    isLoggedIn,
+    isSuper,
+    addSystemModal,
+    setAddSystemModal
+  } = useContext(AppContext)
 
   const chartHeight = '30vh'
   const chartWidth = '80vw'
@@ -337,7 +345,7 @@ const Home = () => {
     return allStatus.filter((history: historyType) => history.systemId === system._id)
   }
 
-  const updateData = (key: string, e: onChangeEventType) => {
+  const updateData = (key: string, e: any) => {
     const value = e.target.value
     setData({ ...data, [key]: value })
   }
@@ -475,6 +483,7 @@ const Home = () => {
     setSubscription('')
     setData({})
     setReportedStatus({ name: 'Not responding' })
+    setAddSystemModal(false)
   }
 
   const discardLogEdit = () => {
@@ -490,6 +499,79 @@ const Home = () => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const requestNewSystem = async () => {
+    try {
+      if (!data.name || !data.url) return toast.error('Please check required fields.')
+
+      setLoading(true)
+      const sent = await createSystemRequest(data)
+
+      if (sent) {
+        toast.success('Request sent successfully.')
+        setLoading(false)
+        discardChanges()
+      } else toast.error('Error trying to send the request. Please try again')
+    } catch (error) {
+      toast.error('Error trying to send the request. Please try again')
+      console.error(error)
+    }
+  }
+
+  const getModalFilter = () => subscription || showDowntime || report || selected || addSystemModal ? 'blur(6px)' : ''
+
+  const renderAddSystemModal = () => {
+    return (
+      <Modal
+        title={`Request to add a new system, API or interface`}
+        onClose={discardChanges}>
+        <div className="home__modal-issue-col">
+          <InputField
+            label='Name'
+            name='name'
+            updateData={updateData}
+            value={data.name}
+            placeholder='Write system name'
+            disabled={loading}
+          />
+          <InputField
+            label='URL'
+            name='url'
+            updateData={updateData}
+            value={data.url}
+            placeholder='https://system-url.net'
+            disabled={loading}
+          />
+          <InputField
+            label='Owners (optional)'
+            name='owners'
+            updateData={updateData}
+            value={String(data.owners || '')}
+            placeholder='first@mail.com, second@mail.com...'
+            disabled={loading}
+          />
+        </div>
+        <div className="home__modal-issue-btns" style={{ marginTop: '3rem' }}>
+          <Button
+            label='Cancel'
+            handleClick={discardChanges}
+            bgColor={darkMode ? APP_COLORS.GRAY_ONE : APP_COLORS.GRAY_ONE}
+            textColor='white'
+            disabled={loading}
+            style={{ width: '45%' }}
+          />
+          <Button
+            label='Request addition'
+            handleClick={requestNewSystem}
+            disabled={loading}
+            bgColor={APP_COLORS.BLUE_TWO}
+            textColor='white'
+            style={{ width: '45%' }}
+          />
+        </div>
+      </Modal>
+    )
   }
 
   const renderReportModal = () => {
@@ -787,30 +869,27 @@ const Home = () => {
   const renderSystemList = () => {
     return allSystems.length ?
       allSystems.map((system: systemType, i: number) =>
-        system.name === 'TEST' ? '' :
-          <SystemCard
-            key={system._id || i}
-            index={i}
-            system={system}
-            selected={selected}
-            report={report}
-            logo={systemLogos[system._id || '']}
-            raw={systemRaw[system._id || '']}
-            subscription={subscription}
-            showDowntime={showDowntime}
-            reportIssue={setReport}
-            subscribe={setSubscription}
-            history={getHistoryBySystem(system)}
-            alerts={getAlertsBySystem(system)}
-            setSelected={setSelected}
-            setSelectedData={setChartData}
-            setModalChartOptions={setModalChartOptions}
-            downtime={getDownTime(system)}
-            lastCheck={getLastCheck(system)}
-            delay={String(i ? i / 10 : 0) + 's'}
-            setShowDowntime={setShowDowntime}
-            targeted={targetedSystem === system._id}
-          />)
+        <SystemCard
+          key={system._id || i}
+          index={i}
+          system={system}
+          animate={Boolean(!selected && !report && !subscription && !addSystemModal)}
+          logo={systemLogos[system._id || '']}
+          raw={systemRaw[system._id || '']}
+          showDowntime={showDowntime}
+          reportIssue={setReport}
+          subscribe={setSubscription}
+          history={getHistoryBySystem(system)}
+          alerts={getAlertsBySystem(system)}
+          setSelected={setSelected}
+          setSelectedData={setChartData}
+          setModalChartOptions={setModalChartOptions}
+          downtime={getDownTime(system)}
+          lastCheck={getLastCheck(system)}
+          delay={String(i ? i / 10 : 0) + 's'}
+          setShowDowntime={setShowDowntime}
+          targeted={targetedSystem === system._id}
+        />)
       :
       Array.from({ length: 19 }).map((_, i) => <SystemCardPlaceholder key={i} delay={String(i ? i / 10 : 0) + 's'} />)
   }
@@ -820,12 +899,13 @@ const Home = () => {
       className={`home__container${darkMode ? '--dark' : ''}`}
       style={{ width: isLoggedIn ? '90vw' : '' }}>
       {showDowntime ? renderDowntimeModal()
-        : report ? renderReportModal()
-          : subscription ? renderSubscribeModal()
-            : selected ? renderSystemDetailsModal() : ''}
+        : addSystemModal ? renderAddSystemModal()
+          : report ? renderReportModal()
+            : subscription ? renderSubscribeModal()
+              : selected ? renderSystemDetailsModal() : ''}
       <div
         className="home__system-list"
-        style={{ filter: subscription || showDowntime || report || selected ? 'blur(6px)' : '' }}>
+        style={{ filter: getModalFilter() }}>
         {renderSystemList()}
         <div className="home__system-list-separator"></div>
       </div>

@@ -18,7 +18,8 @@ import Subscriptions from '../../assets/icons/subscribe.svg'
 import Tooltip from '../Tooltip/Tooltip'
 import Sidebar from '../Sidebar/Sidebar'
 import { getUser } from '../../helpers'
-import { APP_VERSION } from '../../constants/app'
+import { APP_COLORS, APP_VERSION } from '../../constants/app'
+import Button from '../Button/Button'
 
 export default function Header() {
   const [barWidth, setBarWidth] = useState('0%')
@@ -31,7 +32,9 @@ export default function Header() {
     setDarkMode,
     headerLoading,
     setHeaderLoading,
-    isMobile
+    isMobile,
+    addSystemModal,
+    setAddSystemModal
   } = useContext(AppContext)
   const history = useHistory()
   const location = useLocation()
@@ -253,6 +256,13 @@ export default function Header() {
         </div>
         <div className="header__col">
           <div className="header__user-group">
+            <Button
+              label='Add system'
+              handleClick={() => setAddSystemModal(true)}
+              bgColor={darkMode ? '#424242' : '#000'}
+              textColor='white'
+              style={{ width: '45%' }}
+            />
             <img onClick={switchMode} src={darkMode ? Day : Night} draggable={false} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
             <img src={UserIcon} alt="User Login" onClick={userOptions} draggable={false} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
           </div>
