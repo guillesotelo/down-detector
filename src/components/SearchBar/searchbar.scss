@@ -10,7 +10,7 @@
         padding: .5rem .7rem;
         border: 1px solid lightgray;
         border-radius: 1rem;
-        transition: 0.3s;
+        transition: .2s;
         // background-color: #F9FAFB;
 
         &:focus-within {
@@ -28,7 +28,7 @@
             padding: .5rem .7rem;
             border: 1px solid #525252;
             border-radius: 1rem;
-            transition: 0.3s;
+            transition: .2s;
             background-color: transparent;
 
             &:focus-within {
@@ -78,7 +78,7 @@
         height: 18px;
         width: auto;
         cursor: pointer;
-        transition: 0.3s;
+        transition: .2s;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;

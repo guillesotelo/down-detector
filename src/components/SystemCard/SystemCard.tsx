@@ -26,10 +26,8 @@ type Props = {
     delay?: string
     setShowDowntime: (value: downtimeModalType) => void
     index: number
-    selected?: string
-    report?: string
     showDowntime?: downtimeModalType,
-    subscription?: string
+    animate?: boolean
     logo?: string
     raw?: string
     targeted?: boolean
@@ -61,11 +59,9 @@ const SystemCard = (props: Props) => {
         delay,
         setShowDowntime,
         index,
-        selected,
-        report,
+        animate,
         showDowntime,
         subscribe,
-        subscription,
         logo,
         raw,
         targeted
@@ -85,7 +81,7 @@ const SystemCard = (props: Props) => {
     useEffect(() => {
         processChartData()
         setStatus(getCurrentStatus())
-    }, [history, alerts, system, selected])
+    }, [history, alerts, system, animate])
 
     useEffect(() => {
         const hasData = lastDayData.length && completeData.length
@@ -626,7 +622,7 @@ const SystemCard = (props: Props) => {
                         SystemCardPlaceholderBlock(darkMode)
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
-                            {!selected && !report && !showDowntime && !subscription ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
+                            {animate && !showDowntime ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
                         </div>}
                     <div className="systemcard__footer">
                         <h2
@@ -636,7 +632,7 @@ const SystemCard = (props: Props) => {
                                 <>
                                     <span
                                         style={{
-                                            animation: selected || report || subscription ? 'none' : '',
+                                            animation: animate ? '' : 'none',
                                             animationDelay: `${delay || '0'}`
                                         }}
                                         className='systemcard__status-dot'>
@@ -661,7 +657,7 @@ const SystemCard = (props: Props) => {
                             <div className='systemcard__buttons'>
                                 <Button
                                     handleClick={() => subscribe(_id || '')}
-                                    bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                                    bgColor={darkMode ? '#2d2d2d' : '#dcdcdc'}
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Subscribe}
                                     tooltip='Subscribe for updates'
@@ -669,7 +665,7 @@ const SystemCard = (props: Props) => {
                                 />
                                 <Button
                                     handleClick={() => reportIssue(_id || '')}
-                                    bgColor={darkMode ? '#353535' : '#dcdcdc'}
+                                    bgColor={darkMode ? '#2d2d2d' : '#dcdcdc'}
                                     textColor={darkMode ? 'lightgray' : '#323232'}
                                     svg={Report}
                                     tooltip='Report Issue'
