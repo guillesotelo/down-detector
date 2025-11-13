@@ -53,7 +53,8 @@ const Home = () => {
     isLoggedIn,
     isSuper,
     addSystemModal,
-    setAddSystemModal
+    setAddSystemModal,
+    sort
   } = useContext(AppContext)
 
   const chartHeight = '30vh'
@@ -90,6 +91,10 @@ const Home = () => {
       }
     }
   }, [allSystems])
+
+  useEffect(() => {
+    if (allSystems.length) sortSystems()
+  }, [sort])
 
   useEffect(() => {
     setHeaderLoading(true)
@@ -189,6 +194,17 @@ const Home = () => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const sortSystems = () => {
+    const sortMap: dataObj = {
+      'Name': 'name',
+      'Status': 'lastCheckStatus',
+      'Last created': 'createdAt',
+      'Last updated': 'updatedAt',
+      'Relevance': 'order'
+    }
+    setAllSystems(sys => sortArray(sys, sortMap[sort]))
   }
 
   const getAllStatus = async () => {

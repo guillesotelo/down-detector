@@ -36,8 +36,13 @@ export const getHistoryAndAlerts = async (systemId?: string, getRaw?: boolean) =
     try {
         const history = await getAllHistory(systemId, getRaw)
         const userAlerts = await getAllAlerts(systemId)
-        if ((history && Array.isArray(history)) || (userAlerts && Array.isArray(userAlerts))) {
-            const allHistory = sortArray([...history, ...userAlerts], 'createdAt', true)
+        if (history || userAlerts) {
+            const allHistory = sortArray(
+                [...(Array.isArray(history) ? history : []),
+                ...(Array.isArray(userAlerts) ? userAlerts : [])],
+                'createdAt',
+                true
+            )
             return allHistory
         }
         return []

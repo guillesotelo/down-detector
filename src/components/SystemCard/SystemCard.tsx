@@ -43,7 +43,7 @@ const SystemCard = (props: Props) => {
     const [status, setStatus] = useState<boolean | null | string | undefined>(null)
     const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
     const targetUsed = useRef<boolean>(false)
-    const chartHeight = '1rem'
+    const chartHeight = '.5rem'
     const chartWidth = ''
 
     const {
@@ -619,7 +619,7 @@ const SystemCard = (props: Props) => {
                         <h1 className="systemcard__name">{hasPageMessage() ? '️🚧 ' : ''}{name || 'Api Name'}</h1>
                     </div>
                     {loading || (status !== false && status !== true && status !== 'BUSY') ?
-                        SystemCardPlaceholderBlock(darkMode)
+                        SystemCardPlaceholderBlock(darkMode, '3rem')
                         :
                         <div className="systemcard__graph" onClick={selectSystem}>
                             {animate && !showDowntime ? <Line data={lastDayChartData} height={chartHeight} width={chartWidth} options={chartOptions} /> : ''}
@@ -628,7 +628,7 @@ const SystemCard = (props: Props) => {
                         <h2
                             className="systemcard__status"
                             style={{ color: loading ? 'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
-                            {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray' }}>Checking status...</p> :
+                            {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray', paddingBottom: '1rem' }}>Checking status...</p> :
                                 <>
                                     <span
                                         style={{
@@ -647,9 +647,8 @@ const SystemCard = (props: Props) => {
                                             className="systemcard__status-live"
                                             draggable={false} />
                                     </span>
-                                    &nbsp;&nbsp;Status:&nbsp;
-                                    <strong>{reportedlyDown ? 'Problem' : status ? status === 'BUSY' ? status : 'UP' : 'DOWN'}
-                                    </strong>
+                                    &nbsp;
+                                    <strong>{reportedlyDown ? 'Problem' : status ? status === 'BUSY' ? status : 'UP' : 'DOWN'}</strong>
                                 </>
                             }
                         </h2>

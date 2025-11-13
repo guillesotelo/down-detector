@@ -14,6 +14,8 @@ export type AppContextType = {
     setHeaderLoading: (value: boolean) => void
     addSystemModal: boolean
     setAddSystemModal: (value: boolean) => void
+    sort: string
+    setSort: (value: string) => void
 }
 
 export type userType = {
