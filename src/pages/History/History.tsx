@@ -25,9 +25,13 @@ export default function History({ }: Props) {
     const history = useHistory()
 
     useEffect(() => {
-        getHistory()
+        getHistory(false)
         getSystems()
-    }, [getRaw, isSuper])
+    }, [isSuper])
+
+    useEffect(() => {
+        if (selectedSystem.name !== 'All' && getRaw) getHistory(true)
+    }, [getRaw])
 
     useEffect(() => {
         if (isLoggedIn !== null && !isLoggedIn) return history.push('/')
@@ -51,10 +55,10 @@ export default function History({ }: Props) {
         }
     }
 
-    const getHistory = async () => {
+    const getHistory = async (getRawData: boolean) => {
         try {
             setLoading(true)
-            const data = await getHistoryAndAlerts('', getRaw)
+            const data = await getHistoryAndAlerts('', getRawData)
             const { systems } = getUser()
             const ownedSystems = systems && Array.isArray(systems) ? systems.map(system => system._id) : []
             const completeHistory = isSuper ? data : data.filter(history => ownedSystems.includes(history.systemId))
@@ -118,13 +122,14 @@ export default function History({ }: Props) {
                             style={{ width: '12rem', marginRight: '1rem' }}
                             loading={loading}
                         />
-                        <Switch
-                            label='Get raw'
-                            value={getRaw}
-                            setValue={setGetRaw}
-                            on='Yes'
-                            off='No'
-                        />
+                        {selectedSystem.name !== 'All' ?
+                            <Switch
+                                label='Get raw'
+                                value={getRaw}
+                                setValue={setGetRaw}
+                                on='Yes'
+                                off='No'
+                            /> : ''}
                     </div>
                 </div>
                 <div className="history__col">
