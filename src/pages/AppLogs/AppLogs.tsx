@@ -96,6 +96,7 @@ export default function AppLogs({ }: Props) {
         <DataTable
           title='App Logs'
           tableData={filteredData}
+          setTableData={setFilteredData}
           tableHeaders={logHeaders}
           name='logs'
           loading={loading || pending}
