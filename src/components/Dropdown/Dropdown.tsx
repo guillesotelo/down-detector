@@ -17,6 +17,7 @@ type Props = {
     style?: React.CSSProperties
     multiselect?: boolean
     loading?: boolean
+    svg?: string
 }
 
 export default function Dropdown(props: Props) {
@@ -39,7 +40,8 @@ export default function Dropdown(props: Props) {
         maxHeight,
         style,
         multiselect,
-        loading
+        loading,
+        svg
     } = props
 
     useEffect(() => {
@@ -99,6 +101,7 @@ export default function Dropdown(props: Props) {
             }}
             ref={selectRef}
             onClick={() => setOpenDrop(!openDrop)}>
+            {svg ? <img src={svg} draggable={false} className={`dropdown__select-icon${darkMode ? '--dark' : ''}`} /> : ''}
             <h4 className={`dropdown__selected${darkMode ? '--dark' : ''}`}>
                 {getSelectValue()}
             </h4>

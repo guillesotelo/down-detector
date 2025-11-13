@@ -70,7 +70,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        gap: 1rem;
+        // gap: 1rem;
         cursor: pointer;
         position: relative;
         transition: .2s;
@@ -94,13 +94,26 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            // gap: 1rem;
             cursor: pointer;
             position: relative;
             transition: .2s;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
+        }
+
+        &-icon {
+            height: 1.2rem;
+            transition: .2s;
+            margin: 0 0 0 .5rem;
+
+            &--dark {
+                filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(263deg) brightness(85%) contrast(108%);
+                height: 1.2rem;
+                transition: .2s;
+                margin: 0 0 0 .5rem;
+            }
         }
     }
 
@@ -115,7 +128,7 @@
         height: 1.3rem;
         line-height: 1.3rem;
         font-weight: normal;
-        padding: 0.5rem;
+        padding: .4rem .5rem;
         transition: .2s;
 
         &-multi {
@@ -170,7 +183,7 @@
             height: 1.3rem;
             line-height: 1.3rem;
             font-weight: normal;
-            padding: 0.5rem;
+            padding: .4rem .5rem;
             transition: .2s;
             background-color: #353535;
         }

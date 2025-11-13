@@ -15,11 +15,13 @@ import Help from '../../assets/icons/help.svg'
 import Api from '../../assets/icons/api.svg'
 import Users from '../../assets/icons/users.svg'
 import Subscriptions from '../../assets/icons/subscribe.svg'
+import SortIcon from '../../assets/icons/sort.svg'
 import Tooltip from '../Tooltip/Tooltip'
 import Sidebar from '../Sidebar/Sidebar'
 import { getUser } from '../../helpers'
 import { APP_COLORS, APP_VERSION } from '../../constants/app'
 import Button from '../Button/Button'
+import Dropdown from '../Dropdown/Dropdown'
 
 export default function Header() {
   const [barWidth, setBarWidth] = useState('0%')
@@ -34,7 +36,9 @@ export default function Header() {
     setHeaderLoading,
     isMobile,
     addSystemModal,
-    setAddSystemModal
+    setAddSystemModal,
+    sort,
+    setSort
   } = useContext(AppContext)
   const history = useHistory()
   const location = useLocation()
@@ -256,6 +260,14 @@ export default function Header() {
         </div>
         <div className="header__col">
           <div className="header__user-group">
+            <Dropdown
+              label=''
+              options={['Relevance', 'Name', 'Status', 'Last created', 'Last updated']}
+              value={sort}
+              selected={sort}
+              setSelected={setSort}
+              svg={SortIcon}
+            />
             <Button
               label='Add system'
               handleClick={() => setAddSystemModal(true)}

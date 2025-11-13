@@ -42,6 +42,7 @@ export default function History({ }: Props) {
             setFilteredData(() =>
                 tableData.filter(h => h.systemId === selectedSystem._id))
         } else setFilteredData(tableData)
+        setGetRaw(false)
     }, [selectedSystem])
 
     const getSystems = async () => {
@@ -58,7 +59,7 @@ export default function History({ }: Props) {
     const getHistory = async (getRawData: boolean) => {
         try {
             setLoading(true)
-            const data = await getHistoryAndAlerts('', getRawData)
+            const data = await getHistoryAndAlerts(selectedSystem._id || '', getRawData)
             const { systems } = getUser()
             const ownedSystems = systems && Array.isArray(systems) ? systems.map(system => system._id) : []
             const completeHistory = isSuper ? data : data.filter(history => ownedSystems.includes(history.systemId))
@@ -80,7 +81,7 @@ export default function History({ }: Props) {
                 })
                 .reverse()
 
-            setTableData(statusAndAlerts)
+            if (!selectedSystem._id) setTableData(statusAndAlerts)
             setFilteredData(statusAndAlerts)
             setLoading(false)
         } catch (error) {
@@ -146,6 +147,7 @@ export default function History({ }: Props) {
                 <DataTable
                     title='History'
                     tableData={filteredData}
+                    setTableData={setFilteredData}
                     tableHeaders={hisrotyHeaders.concat(
                         getRaw ?
                             [{

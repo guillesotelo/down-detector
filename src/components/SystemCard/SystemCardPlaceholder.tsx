@@ -5,16 +5,17 @@ type Props = {
     delay?: string
 }
 
-export const SystemCardPlaceholderBlock = (darkMode: boolean) => {
+export const SystemCardPlaceholderBlock = (darkMode: boolean, height: string) => {
     return (
         <div className="systemcard__placeholder">
             <div
                 style={{
-                    height: '3rem',
+                    height,
                     width: '100%',
                     backgroundImage: darkMode ?
                         'linear-gradient(110deg, #262626 8%, #4f4f4f 18%, #262626 33%)' :
-                        'linear - gradient(110deg, #ececec 8 %, #f5f5f5 18 %, #ececec 33 %)'
+                        'linear - gradient(110deg, #ececec 8 %, #f5f5f5 18 %, #ececec 33 %)',
+                        margin: '.3rem 0'
                 }}
                 className='systemcard__loading-block' />
         </div>
@@ -30,29 +31,12 @@ export default function SystemCardPlaceholder({ delay }: Props) {
                 className={`systemcard__container${darkMode ? '--dark' : ''}`}
                 style={{
                     borderColor: darkMode ? 'gray' : '#d3d3d361',
-                    backgroundImage: ''
+                    backgroundImage: '',
+                    justifyContent: 'space-between'
                 }}>
-                <div className="systemcard__placeholder">
-                    <div
-                        style={{
-                            height: '.5rem',
-                            backgroundImage: darkMode ?
-                                'linear-gradient(110deg, #262626 8%, #4f4f4f 18%, #262626 33%)' :
-                                'linear - gradient(110deg, #ececec 8 %, #f5f5f5 18 %, #ececec 33 %)'
-                        }}
-                        className='systemcard__loading-block' />
-                </div>
-                {SystemCardPlaceholderBlock(darkMode)}
-                <div className="systemcard__footer">
-                    <div
-                        style={{
-                            height: '.5rem',
-                            backgroundImage: darkMode ?
-                                'linear-gradient(110deg, #262626 8%, #4f4f4f 18%, #262626 33%)' :
-                                'linear - gradient(110deg, #ececec 8 %, #f5f5f5 18 %, #ececec 33 %)'
-                        }}
-                        className='systemcard__loading-block' />
-                </div>
+                {SystemCardPlaceholderBlock(darkMode, '.5rem')}
+                {SystemCardPlaceholderBlock(darkMode, '2rem')}
+                {SystemCardPlaceholderBlock(darkMode, '.5rem')}
             </div>
         </div>
     )

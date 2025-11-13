@@ -41,7 +41,6 @@ export default function BuildCard(props: Props) {
 
     const getStatusIcon = () => {
         const status = getBuildStatus(build)
-        console.log(status)
         return status === 'success' ? BuildOk
             : status === 'unknown' ? BuildUnknown : BuildFail
     }

@@ -17,6 +17,8 @@ export const AppContext = createContext<AppContextType>({
     setHeaderLoading: () => { },
     addSystemModal: false,
     setAddSystemModal: () => { },
+    sort: '',
+    setSort: () => { },
 })
 
 type Props = {
@@ -31,6 +33,7 @@ export const AppProvider = ({ children }: Props) => {
     const [darkMode, setDarkMode] = useState(localStorage.getItem('preferredMode') !== 'false')
     const [headerLoading, setHeaderLoading] = useState(false)
     const [addSystemModal, setAddSystemModal] = useState(false)
+    const [sort, setSort] = useState('Relevance')
 
     useEffect(() => {
         verifyUser()
@@ -76,7 +79,9 @@ export const AppProvider = ({ children }: Props) => {
         headerLoading,
         setHeaderLoading,
         addSystemModal,
-        setAddSystemModal
+        setAddSystemModal,
+        sort,
+        setSort,
     }), [
         isSuper,
         setIsSuper,
@@ -90,7 +95,9 @@ export const AppProvider = ({ children }: Props) => {
         headerLoading,
         setHeaderLoading,
         addSystemModal,
-        setAddSystemModal
+        setAddSystemModal,
+        sort,
+        setSort,
     ])
 
 
