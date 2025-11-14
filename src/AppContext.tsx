@@ -33,7 +33,7 @@ export const AppProvider = ({ children }: Props) => {
     const [darkMode, setDarkMode] = useState(localStorage.getItem('preferredMode') !== 'false')
     const [headerLoading, setHeaderLoading] = useState(false)
     const [addSystemModal, setAddSystemModal] = useState(false)
-    const [sort, setSort] = useState('Relevance')
+    const [sort, setSort] = useState(localStorage.getItem('sortSystems') || 'Relevance')
 
     useEffect(() => {
         verifyUser()
