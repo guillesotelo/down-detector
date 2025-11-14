@@ -69,6 +69,14 @@ const Home = () => {
     { name: 'Other (explain)' },
   ]
 
+  const sortMap: dataObj = {
+    'Name': 'name',
+    'Status': 'lastCheckStatus',
+    'Last created': 'createdAt',
+    'Last updated': 'updatedAt',
+    'Relevance': 'order'
+  }
+
   const loadData = useMemo(() => {
     return () => {
       setLoading(true)
@@ -94,6 +102,7 @@ const Home = () => {
 
   useEffect(() => {
     if (allSystems.length) sortSystems()
+    localStorage.setItem('sortSystems', sort)
   }, [sort])
 
   useEffect(() => {
@@ -189,7 +198,7 @@ const Home = () => {
     try {
       let systems = await getActiveSystems()
       if (systems && Array.isArray(systems)) {
-        setAllSystems(sortArray(systems, 'order'))
+        setAllSystems(sortArray(systems, sortMap[sort]))
       }
     } catch (error) {
       console.error(error)
@@ -197,13 +206,6 @@ const Home = () => {
   }
 
   const sortSystems = () => {
-    const sortMap: dataObj = {
-      'Name': 'name',
-      'Status': 'lastCheckStatus',
-      'Last created': 'createdAt',
-      'Last updated': 'updatedAt',
-      'Relevance': 'order'
-    }
     setAllSystems(sys => sortArray(sys, sortMap[sort]))
   }
 
