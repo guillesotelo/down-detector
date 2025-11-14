@@ -12,7 +12,7 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        z-index: 2;
+        z-index: 1;
         position: relative;
         background-color: white;
         // transition: .1s;
@@ -20,7 +20,7 @@
         &:hover {
             // box-shadow: .5rem 1rem 2rem rgba(0, 0, 0, 0.197);
             border: 1px solid #0000007d !important;
-            z-index: 3;
+            z-index: 2;
         }
 
         &--dark {
@@ -35,14 +35,14 @@
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            z-index: 2;
+            z-index: 1;
             position: relative;
             background-color: #000000;
             // transition: .1s;
 
             &:hover {
                 border: 1px solid rgb(148, 148, 148) !important;
-                z-index: 3;
+                z-index: 2;
             }
         }
     }
@@ -208,20 +208,18 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 2rem .2rem 1rem .2rem;
         margin-top: -1rem;
         background-color: #ffe5b5;
         border-bottom-right-radius: 1rem;
         border-bottom-left-radius: 1rem;
         position: relative;
-        z-index: 1;
         overflow: hidden;
-        width: calc(14rem + 1.4rem);
-        padding: 1.1rem .8rem .3rem .8rem;
+        width: 14.9rem;
+        padding: 1rem .8rem 0 .8rem;
         transform: translateY(-100%);
         animation: fade-in-down-event 1s ease-in forwards;
         position: absolute;
-        z-index: 3;
+        z-index: 2;
 
         &:hover .systemcard__event-note {
             -webkit-line-clamp: unset;
@@ -232,24 +230,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem .2rem 1rem .2rem;
             margin-top: -1rem;
             background-color: #7d490d;
             border-bottom-right-radius: 1rem;
             border-bottom-left-radius: 1rem;
             position: relative;
-            z-index: 1;
             overflow: hidden;
-            width: calc(14rem + 1.4rem);
-            padding: 1.1rem .8rem .3rem .8rem;
+            width: 14.9rem;
+            padding: 1rem .8rem 0 .8rem;
             transform: translateY(-100%);
             animation: fade-in-down-event 1s ease-in forwards;
             position: absolute;
-            z-index: 3;
-
-            &:hover .systemcard__event-note {
-                -webkit-line-clamp: unset;
-            }
+            z-index: 2;
 
             &:hover .systemcard__event-note--dark {
                 -webkit-line-clamp: unset;
