@@ -76,8 +76,8 @@ export default function Help() {
           <br />The Stargate team is here to assist you and welcomes your input to improve the developer experience.
         </p>
         <h4 className="about__subtitle">Stargate Team</h4>
-        94530 HP System Architecture
-        <p className="about__text"><a href="mailto:test@mail.com.com">test@mail.com.com</a></p>
+        94510 Software Factory
+        <p className="about__text"><a href={`mailto:${process.env.REACT_APP_CONTACT_EMAIL}`}>{process.env.REACT_APP_CONTACT_EMAIL}</a></p>
         <p><i>Last app update: {versionDate}</i></p>
       </div>
     </div>
