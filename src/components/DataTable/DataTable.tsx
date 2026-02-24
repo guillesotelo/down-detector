@@ -20,6 +20,7 @@ type Props = {
     orderDataBy?: dataObj
     draggable?: boolean
     saveTableDataOrder?: (value: dataObj[]) => void
+    paginate?: number
 }
 
 export default function DataTable(props: Props) {
@@ -36,7 +37,8 @@ export default function DataTable(props: Props) {
         style,
         orderDataBy,
         draggable,
-        saveTableDataOrder
+        saveTableDataOrder,
+        paginate
     } = props
 
     const [maxItems, setMaxItems] = useState(max || 10)
@@ -45,6 +47,10 @@ export default function DataTable(props: Props) {
     const [loadingTime, setLoadingTime] = useState(0)
     const [dragging, setDragging] = useState(false)
     const { darkMode } = useContext(AppContext)
+
+    useEffect(() => {
+        if (paginate) setMaxItems(maxItems + 20)
+    }, [paginate])
 
     useEffect(() => {
         if (orderDataBy) orderBy(orderDataBy)

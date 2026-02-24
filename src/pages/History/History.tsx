@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useTransition } from 'react'
+import { useContext, useEffect, useRef, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import { hisrotyHeaders } from '../../constants/tableHeaders'
 import { getHistoryAndAlerts, getUser, sortArray } from '../../helpers'
@@ -20,9 +20,17 @@ export default function History({ }: Props) {
     const [filteredData, setFilteredData] = useState<historyType[]>([])
     const [allSystems, setAllSystems] = useState<systemType[]>([])
     const [selectedSystem, setSelectedSystem] = useState<systemType>({ name: 'All' })
+    const [paginate, setPaginate] = useState(0)
     const [pending, startTransition] = useTransition()
     const { isLoggedIn, isSuper } = useContext(AppContext)
     const history = useHistory()
+    const historyContainerRef = useRef<null | HTMLDivElement>(null)
+
+    useEffect(() => {
+        if (historyContainerRef.current) {
+            historyContainerRef.current.addEventListener('scroll', autoPaginate)
+        }
+    }, [historyContainerRef])
 
     useEffect(() => {
         getHistory(false)
@@ -44,6 +52,13 @@ export default function History({ }: Props) {
         } else setFilteredData(tableData)
         setGetRaw(false)
     }, [selectedSystem])
+
+    const autoPaginate = (e: Event) => {
+        const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLElement
+        if (scrollTop + clientHeight >= scrollHeight) {
+            setPaginate(p => p + 1)
+        }
+    }
 
     const getSystems = async () => {
         try {
@@ -108,7 +123,7 @@ export default function History({ }: Props) {
     }
 
     return (
-        <div className="history__container">
+        <div className="history__container" ref={historyContainerRef}>
             <div className="history__row">
                 <div className="history__col">
                     <div className="history__row" style={{ margin: 0, justifyContent: 'flex-start' }}>
@@ -158,6 +173,7 @@ export default function History({ }: Props) {
                     name='history'
                     loading={loading || pending}
                     max={18}
+                    paginate={paginate}
                 />
             </div>
         </div>
