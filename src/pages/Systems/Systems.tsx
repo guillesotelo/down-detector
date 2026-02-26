@@ -731,6 +731,7 @@ export default function Systems({ }: Props) {
             selected={selected}
             setSelected={setSelected}
             loading={loading}
+            max={30}
             draggable={isSuper && changeOrder}
             saveTableDataOrder={saveTableDataOrder}
           />
