@@ -1,16 +1,26 @@
 import { useContext, useEffect, useRef, useState, useTransition } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
-import { hisrotyHeaders } from '../../constants/tableHeaders'
-import { getHistoryAndAlerts, getUser, sortArray } from '../../helpers'
-import { alertType, eventType, historyType, logType, onChangeEventType, systemType } from '../../types'
+import { historyHeaders } from '../../constants/tableHeaders'
+import { getDate, getHistoryAndAlerts, getUser, sortArray } from '../../helpers'
+import { alertType, dataObj, eventType, historyType, logType, onChangeEventType, systemType } from '../../types'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useHistory } from 'react-router-dom'
 import { AppContext } from '../../AppContext'
 import Switch from '../../components/Switch/Swith'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import { getActiveSystems } from '../../services'
+import Button from '../../components/Button/Button'
+import { toast } from 'react-toastify'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { APP_COLORS } from '../../constants/app'
 
 type Props = {}
+
+const emptyFilter: dataObj = {
+    status: { label: 'All', value: null },
+    logsFrom: '2000-01-01'
+}
 
 export default function History({ }: Props) {
     const [loading, setLoading] = useState(false)
@@ -21,6 +31,8 @@ export default function History({ }: Props) {
     const [allSystems, setAllSystems] = useState<systemType[]>([])
     const [selectedSystem, setSelectedSystem] = useState<systemType>({ name: 'All' })
     const [paginate, setPaginate] = useState(0)
+    const [filter, setFilter] = useState(emptyFilter)
+    const [openCalendar, setOpenCalendar] = useState(false)
     const [pending, startTransition] = useTransition()
     const { isLoggedIn, isSuper } = useContext(AppContext)
     const history = useHistory()
@@ -46,12 +58,14 @@ export default function History({ }: Props) {
     }, [isLoggedIn])
 
     useEffect(() => {
-        if (selectedSystem._id) {
-            setFilteredData(() =>
-                tableData.filter(h => h.systemId === selectedSystem._id))
-        } else setFilteredData(tableData)
-        setGetRaw(false)
-    }, [selectedSystem])
+        setFilteredData(() =>
+            tableData.filter(h => (
+                (!selectedSystem._id || h.systemId === selectedSystem._id) &&
+                (filter.status.value === null || h.status === filter.status.value) &&
+                new Date(h.createdAt || '').getTime() >= new Date(filter.logsFrom).getTime()
+            )))
+        if (!selectedSystem._id) setGetRaw(false)
+    }, [selectedSystem, filter])
 
     const autoPaginate = (e: Event) => {
         const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLElement
@@ -97,7 +111,10 @@ export default function History({ }: Props) {
                 .reverse()
 
             if (!selectedSystem._id) setTableData(statusAndAlerts)
-            setFilteredData(statusAndAlerts)
+            setFilteredData(statusAndAlerts.filter(h => (
+                (filter.status.value === null || h.status === filter.status.value) &&
+                new Date(h.createdAt || '').getTime() >= new Date(filter.logsFrom).getTime()
+            )))
             setLoading(false)
         } catch (error) {
             setLoading(false)
@@ -122,10 +139,60 @@ export default function History({ }: Props) {
         } else setFilteredData(tableData)
     }
 
+    const downloadCsv = () => {
+        try {
+            const headers = historyHeaders.concat(
+                getRaw ? [{ name: 'RAW', value: 'raw' }] : []
+            )
+
+            const rows = [...filteredData] as any[]
+
+            // CSV header row
+            const headerRow = headers
+                .map(h => `"${h.name}"`)
+                .join(',')
+
+            // CSV data rows
+            const dataRows = rows.map(row =>
+                headers
+                    .map(h => {
+                        let value = row[h.value]
+
+                        // Special fallback
+                        if (h.value === 'createdBy' && (value === null || value === undefined || value === '')) {
+                            value = 'App'
+                        }
+
+                        return `"${String(value ?? '').replace(/"/g, '""')}"`
+                    })
+                    .join(',')
+            )
+
+            const csvContent = [headerRow, ...dataRows].join('\n')
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+            const url = URL.createObjectURL(blob)
+
+            const downloadLink = document.createElement('a')
+            downloadLink.href = url
+            downloadLink.download = 'logs.csv'
+            downloadLink.style.display = 'none'
+
+            document.body.appendChild(downloadLink)
+            downloadLink.click()
+
+            document.body.removeChild(downloadLink)
+            URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error(error)
+            toast.error('Error generating CSV. Please try again')
+        }
+    }
+
     return (
         <div className="history__container" ref={historyContainerRef}>
             <div className="history__row">
-                <div className="history__col">
+                <div className="history__col" style={{ width: 'fit-content' }}>
                     <div className="history__row" style={{ margin: 0, justifyContent: 'flex-start' }}>
                         <Dropdown
                             label='System'
@@ -133,11 +200,43 @@ export default function History({ }: Props) {
                             value={selectedSystem}
                             selected={selectedSystem}
                             setSelected={setSelectedSystem}
-                            maxHeight='20vh'
+                            maxHeight='40vh'
                             objKey='name'
-                            style={{ width: '12rem', marginRight: '1rem' }}
+                            style={{ width: '16rem', marginRight: '1rem' }}
                             loading={loading}
                         />
+                        <Dropdown
+                            label='Status'
+                            options={[{ label: 'All', value: null }, { label: 'DOWN', value: false }, { label: 'UP', value: true }]}
+                            value={filter.status}
+                            selected={filter.status}
+                            setSelected={v => setFilter(f => ({ ...f, status: v }))}
+                            maxHeight='20vh'
+                            objKey='label'
+                            style={{ width: '8rem', marginRight: '1rem' }}
+                            loading={loading}
+                        />
+                        {openCalendar ?
+                            <DatePicker
+                                selected={filter.logsFrom !== '2000-01-01' ? new Date(filter.logsFrom) : new Date()}
+                                onChange={v => {
+                                    setFilter(f => ({ ...f, logsFrom: v }))
+                                }}
+                                showTimeSelect
+                                timeCaption="time"
+                                timeFormat="HH:mm"
+                            // inline
+                            />
+                            :
+                            <Button
+                                label={filter.logsFrom !== '2000-01-01' ? getDate(filter.logsFrom) : 'Logs from date...'}
+                                handleClick={() => setOpenCalendar(!openCalendar)}
+                                bgColor={APP_COLORS.ORANGE_ONE}
+                                textColor='white'
+                                style={{ width: '45%' }}
+                                disabled={loading || openCalendar}
+                            />
+                        }
                         {selectedSystem.name !== 'All' ?
                             <Switch
                                 label='Get raw'
@@ -149,21 +248,30 @@ export default function History({ }: Props) {
                     </div>
                 </div>
                 <div className="history__col">
+                    <Button
+                        label='Download CSV'
+                        handleClick={downloadCsv}
+                        textColor='#fff'
+                        style={{ alignSelf: 'flex-start', marginLeft: '1rem' }}
+                        disabled={loading}
+                    />
+                </div>
+                <div className="history__col">
                     <SearchBar
                         handleChange={onChangeSearch}
                         triggerSearch={triggerSearch}
                         value={search}
                         placeholder='Search history...'
+                        style={{ alignSelf: 'flex-end' }}
                     />
                 </div>
-                <div className="history__col"></div>
             </div>
             <div className="history__col">
                 <DataTable
                     title='History'
                     tableData={filteredData}
                     setTableData={setFilteredData}
-                    tableHeaders={hisrotyHeaders.concat(
+                    tableHeaders={historyHeaders.concat(
                         getRaw ?
                             [{
                                 name: 'RAW',

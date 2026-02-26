@@ -29,3 +29,32 @@ body {
   appearance: textfield;
   /* Standard */
 }
+
+.react-datepicker__input-container input {
+  border: 1px solid lightgray;
+  font-family: 'Open Sans', sans-serif;
+  width: -webkit-fill-available;
+  margin: 0;
+  font-size: .9rem;
+  border-radius: 0.5rem;
+  min-height: 1.3rem;
+  width: -webkit-fill-available;
+  font-weight: normal;
+  padding: 0.5rem;
+
+  &:focus {
+    border: 1px solid #105ec6;
+    outline: none;
+  }
+
+  &:active {
+    border: 1px solid #105ec6;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #b5b5b5;
+    font-size: .9rem;
+  }
+
+}

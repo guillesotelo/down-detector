@@ -7,7 +7,7 @@ import { alertType, dataObj, downtimeModalType, eventType, historyType, onChange
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
 import DataTable from '../../components/DataTable/DataTable'
-import { hisrotyHeaders, systemHisrotyHeaders } from '../../constants/tableHeaders'
+import { historyHeaders, systemHistoryHeaders } from '../../constants/tableHeaders'
 import InputField from '../../components/InputField/InputField'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import Button from '../../components/Button/Button'
@@ -786,11 +786,11 @@ const Home = () => {
             title={`Latest system logs (${statusAndAlerts.length})`}
             tableData={statusAndAlerts}
             setTableData={setStatusAndAlerts}
-            tableHeaders={systemHisrotyHeaders}
+            tableHeaders={systemHistoryHeaders}
             name='logs'
             loading={loading}
             max={getDowntimeString() ? 3 : 6}
-            orderDataBy={hisrotyHeaders[0]}
+            orderDataBy={historyHeaders[0]}
             style={{ width: isMobile ? '80vw' : '100%' }}
             setSelected={isSuper ? setSelectedLog : undefined}
             selected={selectedLog}

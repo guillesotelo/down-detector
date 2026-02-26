@@ -71,7 +71,7 @@ export const downtimeHeaders = [
     },
 ]
 
-export const hisrotyHeaders = [
+export const historyHeaders = [
     {
         name: 'CREATED',
         value: 'createdAt'
@@ -98,7 +98,7 @@ export const hisrotyHeaders = [
     // },
 ]
 
-export const systemHisrotyHeaders = [
+export const systemHistoryHeaders = [
     {
         name: 'DATE & TIME',
         value: 'createdAt'
