@@ -682,8 +682,8 @@ const SystemCard = (props: Props) => {
                         className={`systemcard__event${darkMode ? '--dark' : ''}`}
                         style={{
                             backgroundColor: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ?
-                                'black' : '#ffc3c3' : darkMode ?
-                                'black' : 'transparent',
+                                '#000' : '#ffc3c3' : darkMode ?
+                                '#000' : '#fff',
                             border: isLiveDowntime(downtime[0]) || name === 'GitLab' ? darkMode ? '1px solid red'
                                 : '1px solid transparent' : darkMode ? '1px solid #ffc7006b' : '1px solid #dbdbdb',
                             animationDelay: `${delay || '0'}`
