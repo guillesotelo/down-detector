@@ -175,7 +175,7 @@ export default function History({ }: Props) {
 
             const downloadLink = document.createElement('a')
             downloadLink.href = url
-            downloadLink.download = 'logs.csv'
+            downloadLink.download = `Down@Volvo - ${selectedSystem.name}.csv`
             downloadLink.style.display = 'none'
 
             document.body.appendChild(downloadLink)
