@@ -68,7 +68,7 @@ export default function Systems({ }: Props) {
   const [isActive, setIsActive] = useState(true)
   const [firstStatus, setFirstStatus] = useState(true)
   const [changeOrder, setChangeOrder] = useState(false)
-  const { isLoggedIn, isSuper, isMobile } = useContext(AppContext)
+  const { isLoggedIn, isSuper, isMobile, dashboard, setDashboard } = useContext(AppContext)
   const history = useHistory()
   const user = getUser()
 
@@ -177,7 +177,8 @@ export default function Systems({ }: Props) {
         updatedBy: user.username || '',
         downtimeArray: Array.isArray(dtArray) ? dtArray : downtimeArray,
         active: isActive,
-        firstStatus
+        firstStatus,
+        dashboard
       }
       if (newSystem) {
         const saved = await createSystem(systemData)
@@ -491,6 +492,13 @@ export default function Systems({ }: Props) {
               </div> : ''}
             {isSuper ?
               <div className="systems__new-row">
+                <Dropdown
+                  label=''
+                  options={['SWEP SWF', 'ART INFO']}
+                  value={dashboard}
+                  selected={setDashboard}
+                  setSelected={setDashboard}
+                />
                 <Dropdown
                   label='User Alerts Threshold'
                   options={alertsThreshold}

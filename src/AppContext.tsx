@@ -19,6 +19,8 @@ export const AppContext = createContext<AppContextType>({
     setAddSystemModal: () => { },
     sort: '',
     setSort: () => { },
+    dashboard: '',
+    setDashboard: () => { },
 })
 
 type Props = {
@@ -33,6 +35,7 @@ export const AppProvider = ({ children }: Props) => {
     const [darkMode, setDarkMode] = useState(localStorage.getItem('preferredMode') !== 'false')
     const [headerLoading, setHeaderLoading] = useState(false)
     const [addSystemModal, setAddSystemModal] = useState(false)
+    const [dashboard, setDashboard] = useState(localStorage.getItem('dashboard') || 'SWEP SWF')
     const [sort, setSort] = useState(localStorage.getItem('sortSystems') || 'Relevance')
 
     useEffect(() => {
@@ -56,6 +59,11 @@ export const AppProvider = ({ children }: Props) => {
             )
         }
     }, [darkMode])
+
+
+    useEffect(() => {
+        if (dashboard) localStorage.setItem('dashboard', dashboard)
+    }, [dashboard])
 
     const verifyUser = async () => {
         const verified = await verifyToken()
@@ -82,6 +90,8 @@ export const AppProvider = ({ children }: Props) => {
         setAddSystemModal,
         sort,
         setSort,
+        dashboard,
+        setDashboard,
     }), [
         isSuper,
         setIsSuper,
@@ -98,6 +108,8 @@ export const AppProvider = ({ children }: Props) => {
         setAddSystemModal,
         sort,
         setSort,
+        dashboard,
+        setDashboard,
     ])
 
 

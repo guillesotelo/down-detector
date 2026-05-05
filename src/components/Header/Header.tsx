@@ -38,7 +38,9 @@ export default function Header() {
     addSystemModal,
     setAddSystemModal,
     sort,
-    setSort
+    setSort,
+    dashboard,
+    setDashboard
   } = useContext(AppContext)
   const history = useHistory()
   const location = useLocation()
@@ -260,6 +262,14 @@ export default function Header() {
         </div>
         <div className="header__col">
           <div className="header__user-group">
+             <Dropdown
+              label=''
+              options={['SWEP SWF', 'ART INFO']}
+              value={dashboard}
+              selected={setDashboard}
+              setSelected={setDashboard}
+              svg={Dashboard}
+            />
             <Dropdown
               label=''
               options={['Relevance', 'Name', 'Status', 'Last created', 'Last updated']}

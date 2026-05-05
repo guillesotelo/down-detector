@@ -12,14 +12,14 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
-const getActiveSystems = async () => {
+const getActiveSystems = async (dashboard?: string) => {
     try {
-        const systems = await axios.get(`${API_URL}/api/system/getActive`, { params: { _id: getUser()._id }, headers: getHeaders() })
+        const systems = await axios.get(`${API_URL}/api/system/getActive`, { params: { _id: getUser()._id, dashboard }, headers: getHeaders() })
         return systems.data
     } catch (err) { console.log(err) }
 }
 
-const getAllSystems = async () => {
+const getAllSystems = async (dashboard?: string) => {
     try {
         const systems = await axios.get(`${API_URL}/api/system/getAll`, { params: { _id: getUser()._id }, headers: getHeaders() })
         return systems.data

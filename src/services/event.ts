@@ -12,9 +12,9 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
-const getAllEvents = async () => {
+const getAllEvents = async (dashboard?: string) => {
     try {
-        const events = await axios.get(`${API_URL}/api/event/getAll`, { headers: getHeaders() })
+        const events = await axios.get(`${API_URL}/api/event/getAll`, { params: { dashboard }, headers: getHeaders() })
         return events.data
     } catch (err) { console.log(err) }
 }

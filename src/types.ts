@@ -16,6 +16,8 @@ export type AppContextType = {
     setAddSystemModal: (value: boolean) => void
     sort: string
     setSort: (value: string) => void
+    dashboard: string
+    setDashboard: (value: string) => void
 }
 
 export type userType = {
@@ -31,6 +33,7 @@ export type userType = {
 }
 
 export type systemType = {
+    dashboard?: string
     _id?: string
     name?: string
     url?: string
@@ -64,6 +67,7 @@ export type systemType = {
 }
 
 export type eventType = {
+    dashboard?: string
     _id?: string
     url?: string
     start?: Date
@@ -77,6 +81,7 @@ export type eventType = {
 }
 
 export type historyType = {
+    dashboard?: string
     _id?: string
     url?: string
     systemId?: string
@@ -91,6 +96,7 @@ export type historyType = {
 }
 
 export type alertType = {
+    dashboard?: string
     _id?: string
     systemId?: string
     type?: string

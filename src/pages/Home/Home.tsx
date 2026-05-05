@@ -54,7 +54,8 @@ const Home = () => {
     isSuper,
     addSystemModal,
     setAddSystemModal,
-    sort
+    sort,
+    dashboard
   } = useContext(AppContext)
 
   const chartHeight = '30vh'
@@ -87,7 +88,7 @@ const Home = () => {
       setLoading(false)
       getLogosAndRaw()
     }
-  }, [])
+  }, [dashboard])
 
   useEffect(() => {
     const targetSystem = new URLSearchParams(window.location.search).get('system')
@@ -103,7 +104,8 @@ const Home = () => {
   useEffect(() => {
     if (allSystems.length) sortSystems()
     localStorage.setItem('sortSystems', sort)
-  }, [sort])
+    localStorage.setItem('dashboard', dashboard)
+  }, [sort, dashboard])
 
   useEffect(() => {
     setHeaderLoading(true)
@@ -185,10 +187,8 @@ const Home = () => {
 
   const getAllDownTimes = async () => {
     try {
-      let events = await getAllEvents()
-      if (events && Array.isArray(events)) {
-        setAllEvents(events)
-      }
+      let events = await getAllEvents(dashboard)
+      setAllEvents(events && Array.isArray(events) ? events : [])
     } catch (error) {
       console.error(error)
     }
@@ -196,10 +196,8 @@ const Home = () => {
 
   const getSystems = async () => {
     try {
-      let systems = await getActiveSystems()
-      if (systems && Array.isArray(systems)) {
-        setAllSystems(sortArray(systems, sortMap[sort]))
-      }
+      let systems = await getActiveSystems(dashboard)
+      setAllSystems(systems && Array.isArray(systems) ? sortArray(systems, sortMap[sort]) : [])
     } catch (error) {
       console.error(error)
     }
@@ -211,14 +209,15 @@ const Home = () => {
 
   const getAllStatus = async () => {
     try {
-      let history = await getAllHistory()
+      let history = await getAllHistory(null, false, dashboard)
       if (history && Array.isArray(history)) {
         setAllStatus(history)
-        let alerts = await getAllAlerts()
-        if (alerts && Array.isArray(alerts)) {
-          setAllAlerts(alerts)
-        }
-      } else setTimeout(loadData, 1500)
+        let alerts = await getAllAlerts(null, dashboard)
+        setAllAlerts(alerts && Array.isArray(alerts) ? alerts : [])
+      } else {
+        setAllStatus([])
+        setAllAlerts([])
+      }
     } catch (error) {
       console.error(error)
     }

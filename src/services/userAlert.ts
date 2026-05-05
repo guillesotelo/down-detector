@@ -12,9 +12,9 @@ const getConfig = () => {
     return { headers: { authorization: `Bearer ${getUser().token}` } }
 }
 
-const getAllAlerts = async (systemId?: string) => {
+const getAllAlerts = async (systemId?: string | null, dashboard?: string) => {
     try {
-        const userAlert = await axios.get(`${API_URL}/api/userAlert/getAll`, { params: { systemId }, headers: getHeaders() })
+        const userAlert = await axios.get(`${API_URL}/api/userAlert/getAll`, { params: { systemId, dashboard }, headers: getHeaders() })
         return userAlert.data
     } catch (err) { console.log(err) }
 }
