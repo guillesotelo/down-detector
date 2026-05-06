@@ -82,6 +82,13 @@ const deleteSystem = async (data: systemType) => {
     } catch (err) { console.log(err) }
 }
 
+const getSystemChartData = async (dashboard?: string) => {
+    try {
+        const data = await axios.get(`${API_URL}/api/system/chartData`, { params: { dashboard }, headers: getHeaders() })
+        return data.data
+    } catch (err) { console.log(err) }
+}
+
 export {
     getActiveSystems,
     getAllSystems,
@@ -93,4 +100,5 @@ export {
     updateSystem,
     updateSystemOrder,
     deleteSystem,
+    getSystemChartData,
 }

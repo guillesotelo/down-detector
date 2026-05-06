@@ -1,10 +1,10 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import Button from '../Button/Button'
 import { Line } from 'react-chartjs-2'
-import { alertType, dataObj, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
+import { dataObj, downtimeModalType, eventType, historyType, statusType, systemType } from '../../types'
 import { AppContext } from '../../AppContext'
 import { registerables, Chart } from 'chart.js';
-import { getDate, getDateWithGivenHour, parseDateTime, sortArray } from '../../helpers'
+import { getDate, parseDateTime, sortArray } from '../../helpers'
 import { SystemCardPlaceholderBlock } from './SystemCardPlaceholder'
 import LiveIcon from '../../assets/icons/heart-pulse.svg'
 import Api from '../../assets/icons/api.svg'
@@ -18,7 +18,7 @@ type Props = {
     subscribe: (value: string) => void
     downtime?: { start?: Date, end?: Date }[]
     history?: historyType[]
-    alerts?: alertType[]
+    precomputedData?: { lastDayData: any[], completeData: any[] }
     setSelected: (value: string) => void
     setSelectedData: (value: any) => void
     setModalChartOptions: (value: systemType[]) => void
@@ -51,9 +51,9 @@ const SystemCard = (props: Props) => {
         reportIssue,
         downtime,
         history,
+        precomputedData,
         setSelected,
         setSelectedData,
-        alerts,
         setModalChartOptions,
         lastCheck,
         delay,
@@ -79,9 +79,13 @@ const SystemCard = (props: Props) => {
     }, [loading, status])
 
     useEffect(() => {
-        processChartData()
+        if (precomputedData) {
+            setLastDayData(precomputedData.lastDayData)
+            setCompleteData(precomputedData.completeData)
+        }
         setStatus(getCurrentStatus())
-    }, [history, alerts, system, animate])
+        setLoading(false)
+    }, [precomputedData, history, system, animate])
 
     useEffect(() => {
         const hasData = lastDayData.length && completeData.length
@@ -175,222 +179,6 @@ const SystemCard = (props: Props) => {
             getDate(time)
             : 'No data'
         return string ? string.split(' ').reverse().join(' - ') : ''
-    }
-
-    const processChartData = () => {
-        /* Process datasets for cards and modals (two weeks) 
-        and calculates user alerts to add them as a top layer 
-        on the graphs (dots) */
-        const reportedHours: string[] = []
-
-        alerts?.forEach((el: alertType) => {
-            if (el.createdAt) {
-                const date = new Date(el.createdAt)
-                date.setMinutes(0)
-                date.setSeconds(0)
-                reportedHours.push(date.toLocaleString())
-            }
-        })
-
-        let twoWeeksSet = processSet(336) // Two weeks = 336 h
-        const lastDaySet = twoWeeksSet.slice(Math.max(twoWeeksSet.length - 25, 0)) // take the last 24 hours for cards
-
-        setLastDayData(lastDaySet.map(item => {
-            if (reportedHours.includes(item.time.toLocaleString())) {
-                return { ...item, reported: true }
-            }
-            return item
-        }))
-
-        setCompleteData(twoWeeksSet.map(item => {
-            if (reportedHours.includes(item.time.toLocaleString())) {
-                return { ...item, reported: true }
-            }
-            return item
-        }))
-
-        setLoading(false)
-    }
-
-    const processSet = (hourSet: number = 336) => {
-        if (!history || !history.length) return []
-        const lastRegister = history[0]
-        const firstRegister = history[history.length - 1]
-        const firstStatus = firstRegister.status ? 1 : 0
-        const lastStatus = lastRegister.status ? 1 : 0
-        const firstTime = new Date(firstRegister.createdAt || new Date())
-        const lastTime = new Date(lastRegister.createdAt || new Date())
-        firstTime.setMinutes(0)
-        firstTime.setSeconds(0)
-        lastTime.setMinutes(0)
-        lastTime.setSeconds(0)
-
-        const allHours = new Map()
-        // We reverse so we check from old -> new registers
-        history.reverse()
-            .map((item, i, arr) => {
-                if (!item.status) {
-                    const currentStatus = item.status
-                    const currentTime = new Date(item.createdAt || new Date()).getTime()
-                    const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-                    const nextStatus = arr[i + 1] ? arr[i + 1].status : currentStatus
-                    const isBusy = new Date().getTime() - currentTime < 120000
-                    if (isBusy || (nextStatus && nextStatus !== currentStatus && nextTime && nextTime - currentTime < 120000)) {
-                        item.status = 'BUSY'
-                        item.busy = true
-                    }
-                }
-                return item
-            })
-            .forEach((register, i, arr) => {
-                const time = new Date(register.createdAt || new Date())
-                time.setMinutes(0)
-                time.setSeconds(0)
-                const currentTime = new Date(register.createdAt || new Date()).getTime()
-
-                if (allHours.get(time.toLocaleString())) {
-                    // If the hour is already registered, we decide which one stays 
-                    // based on how much time has passed (>3 mins)
-                    const prevTime = new Date(allHours.get(time.toLocaleString()).createdAt || new Date()).getTime()
-
-                    // If just one or two records registered, then we overwrite with latest (current iterated)
-                    if (arr.length < 3) {
-                        allHours.set(
-                            time.toLocaleString(),
-                            {
-                                ...register,
-                                status: register.status ? 1 : 0,
-                                busy: allHours.get(time.toLocaleString()).busy || false,
-                                isDown: !register.status || !allHours.get(time.toLocaleString()).status
-                            }
-                        )
-                    }
-
-                    // We check if the next hour, but not more that 3 minutes after, the status changed
-                    const nextTime = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-                    if (nextTime && (nextTime - currentTime < 180000) && arr[i + 1].status !== register.status) {
-                        // If less than 3 minutes passed, we overwrite the hour status.
-                        allHours.set(
-                            time.toLocaleString(),
-                            {
-                                ...register,
-                                status: arr[i + 1].status ? 1 : 0,
-                                busy: arr[i + 1].busy || false,
-                                isDown: !arr[i + 1].status || !register.status || !allHours.get(time.toLocaleString()).status
-                            }
-                        )
-                    }
-                    else if (
-                        // register.status || 
-                        currentTime - prevTime < 180000) {
-                        allHours.set(
-                            time.toLocaleString(),
-                            {
-                                ...register,
-                                status: register.status ? 1 : 0,
-                                busy: allHours.get(time.toLocaleString()).busy || false,
-                                isDown: !register.status || !allHours.get(time.toLocaleString()).status
-                            }
-                        )
-                    } else {
-                        // On the other hand, if time with next register is more than one hour, we add a new register 
-                        // as the next -unexistent- hour with the previous status to compensate the overwrite 
-                        // (otherwise it would show DOWN or UP until the next register)
-                        const nextRegisteredHour = arr[i + 1] ? new Date(arr[i + 1].createdAt || new Date()).getTime() : null
-                        const currentHour = new Date(register.createdAt || new Date()).getTime()
-                        if (nextRegisteredHour && nextRegisteredHour - currentHour > 3600000) {
-                            const nextHour = new Date(register.createdAt || new Date())
-                            nextHour.setHours(nextHour.getHours() + 1)
-                            nextHour.setMinutes(0)
-                            nextHour.setSeconds(0)
-                            allHours.set(
-                                nextHour.toLocaleString(),
-                                {
-                                    ...register,
-                                    createdAt: nextHour,
-                                    status: register.status ? 1 : 0,
-                                    isDown: !register.status || !allHours.get(time.toLocaleString()).status
-                                }
-                            )
-                        }
-                    }
-                } else {
-                    allHours.set(
-                        time.toLocaleString(),
-                        {
-                            ...register,
-                            status: register.status ? 1 : 0,
-                            isDown: !register.status
-                        }
-                    )
-                }
-            })
-
-        let prevStatus = 1
-        let prevBusy = false
-        let prevIsDown = false
-        // We add 2 hours to the set to render the full 24 hours in graph
-        const set = Array.from({ length: hourSet + 2 }).map((_, i) => {
-            const time = getDateWithGivenHour(hourSet - i)
-            let status = lastStatus ? 1 : 0
-            let unknown = false
-            let busy = false
-            let isDown = false
-
-            if (allHours.size > 1) {
-                // now < before === true
-                // Copy all status from the right to the last registered
-                if (new Date(time).getTime() > new Date(lastTime).getTime()) {
-                    if (allHours.get(lastTime)) {
-                        status = allHours.get(lastTime).status
-                        busy = allHours.get(lastTime).busy || false
-                        isDown = !allHours.get(lastTime).status
-                    }
-                }
-                // Copy all status from the left to the first registered
-                else if (new Date(time).getTime() < new Date(firstTime).getTime()) {
-                    // status = firstStatus
-                    // Other idea is putting unkown status (0.5) before the first register
-                    unknown = true
-                }
-                else if (allHours.get(time)) {
-                    const register = allHours.get(time)
-                    status = register.status
-                    prevStatus = register.status
-                    busy = register.busy || false
-                    prevBusy = register.busy || false
-                    isDown = register.isDown
-                    prevIsDown = register.isDown
-                }
-                // Copy status in between registered statuses
-                else {
-                    status = prevStatus
-                    busy = prevBusy
-                    isDown = prevIsDown
-
-                    prevStatus = 1
-                    prevBusy = false
-                    prevIsDown = false
-                }
-            } else {
-                status = allHours.values().next().value.status
-                if (new Date(time).getTime() < new Date(firstTime).getTime()) {
-                    unknown = true
-                }
-            }
-
-            const itemStatus = {
-                time,
-                status,
-                unknown,
-                busy,
-                isDown
-            }
-
-            return itemStatus
-        })
-
-        return set
     }
 
     const getDowntime = (event: eventType) => {

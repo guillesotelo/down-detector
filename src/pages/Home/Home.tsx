@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../AppContext'
 import SystemCard from '../../components/SystemCard/SystemCard'
 import Modal from '../../components/Modal/Modal'
-import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription, getSystemDataSelect, createSystemRequest } from '../../services'
+import { getActiveSystems, getAllHistory, createUserAlert, getAllAlerts, getAllEvents, deleteHistory, updateHistory, updateUserAlert, deleteUserAlert, createHistory, getVersionDate, createSubscription, getSystemDataSelect, createSystemRequest, getSystemChartData } from '../../services'
 import { alertType, dataObj, downtimeModalType, eventType, historyType, onChangeEventType, SubscriptionType, systemType } from '../../types'
 import { Line } from 'react-chartjs-2'
 import { registerables, Chart } from 'chart.js';
@@ -46,6 +46,7 @@ const Home = () => {
   const [countdownKey, setCountdownKey] = useState(0)
   const [systemLogos, setSystemLogos] = useState<dataObj>({})
   const [systemRaw, setSystemRaw] = useState<dataObj>({})
+  const [allChartData, setAllChartData] = useState<dataObj>({})
   const {
     darkMode,
     setHeaderLoading,
@@ -87,6 +88,7 @@ const Home = () => {
       getTooltipVersionDate()
       setLoading(false)
       getLogosAndRaw()
+      getChartData()
     }
   }, [dashboard])
 
@@ -135,6 +137,19 @@ const Home = () => {
       setEditedLogStatus('DOWN')
     }
   }, [selectedLog])
+
+  const getChartData = async () => {
+    try {
+      const chartData = await getSystemChartData(dashboard)
+      if (chartData && Array.isArray(chartData)) {
+        const chartMap: dataObj = {}
+        chartData.forEach((item: any) => { chartMap[item.systemId] = item })
+        setAllChartData(chartMap)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const getLogosAndRaw = async () => {
     try {
@@ -352,10 +367,6 @@ const Home = () => {
       toast.error('Subscription error. Please Try again.')
       setLoading(false)
     }
-  }
-
-  const getAlertsBySystem = (system: systemType) => {
-    return allAlerts.filter((alert: alertType) => alert.systemId === system._id)
   }
 
   const getHistoryBySystem = (system: systemType) => {
@@ -897,7 +908,7 @@ const Home = () => {
           reportIssue={setReport}
           subscribe={setSubscription}
           history={getHistoryBySystem(system)}
-          alerts={getAlertsBySystem(system)}
+          precomputedData={allChartData[system._id || '']}
           setSelected={setSelected}
           setSelectedData={setChartData}
           setModalChartOptions={setModalChartOptions}

@@ -18,6 +18,7 @@ import {
     updateSystem,
     updateSystemOrder,
     deleteSystem,
+    getSystemChartData,
 } from './system'
 
 import {
@@ -91,6 +92,7 @@ export {
     updateSystem,
     updateSystemOrder,
     deleteSystem,
+    getSystemChartData,
 
     getAllEvents,
     getEventById,
