@@ -278,13 +278,13 @@ export default function Header() {
               setSelected={setSort}
               svg={SortIcon}
             />
-            <Button
+            {/* <Button
               label='Add system'
               handleClick={() => setAddSystemModal(true)}
               bgColor={darkMode ? '#424242' : '#000'}
               textColor='white'
               style={{ width: '45%' }}
-            />
+            /> */}
             <img onClick={switchMode} src={darkMode ? Day : Night} draggable={false} alt="Switch Mode" className={`header__darkmode${darkMode ? '--dark' : ''}`} />
             <img src={UserIcon} alt="User Login" onClick={userOptions} draggable={false} className={`header__login-icon${darkMode ? '--dark' : ''}`} />
           </div>

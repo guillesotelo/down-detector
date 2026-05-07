@@ -83,7 +83,8 @@ const SystemCard = (props: Props) => {
             setLastDayData(precomputedData.lastDayData)
             setCompleteData(precomputedData.completeData)
         }
-        setStatus(getCurrentStatus())
+        if (history && history.length) setStatus(getCurrentStatus())
+        else if (status === null && system?.lastCheckStatus !== undefined) setStatus(system.lastCheckStatus)
         setLoading(false)
     }, [precomputedData, history, system, animate])
 
@@ -97,7 +98,7 @@ const SystemCard = (props: Props) => {
 
     useEffect(() => {
         generateLastDayData()
-    }, [lastDayData])
+    }, [lastDayData, status])
 
     const getStatusColor = (item: statusType) => {
         if (!status) return 'red'
@@ -222,7 +223,9 @@ const SystemCard = (props: Props) => {
             const isBusy = new Date().getTime() - currentTime < 120000
             current.status = isBusy ? 'BUSY' : currentStatus
         }
-        return current ? current.status : null
+        if (!current) return null
+        if (current.status === 'BUSY') return 'BUSY'
+        return Boolean(current.status)
     }
 
     const hasPageMessage = () => {
