@@ -73,11 +73,11 @@ export default function Help() {
         <h3 className="about__subtitle">Feedback and Contact Information</h3>
         <p className="about__text">
           We value your feedback, suggestions, and any concerns you may have regarding the system status monitoring application.
-          <br />The Stargate team is here to assist you and welcomes your input to improve the developer experience.
+          <br />The Prometheus team is here to assist you and welcomes your input to improve the developer experience.
         </p>
-        <h4 className="about__subtitle">Stargate Team</h4>
-        94510 Software Factory
-        <p className="about__text"><a href={`mailto:${process.env.REACT_APP_CONTACT_EMAIL}`}>{process.env.REACT_APP_CONTACT_EMAIL}</a></p>
+        <h4 className="about__subtitle">Prometheus Team</h4>
+        94510 SWEP Software Factory SWF10
+        <p className="about__text"><a href={`${process.env.REACT_APP_SUPPORT_CHANNEL}`} target="_blank">Support Channel</a></p>
         <p><i>Last app update: {versionDate}</i></p>
       </div>
     </div>
