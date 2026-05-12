@@ -41,6 +41,8 @@ const SystemCard = (props: Props) => {
     const [loading, setLoading] = useState(true)
     const [showMoreDowntime, setShowMoreDowntime] = useState(false)
     const [status, setStatus] = useState<boolean | null | string | undefined>(null)
+    const [downSpikeCount, setDownSpikeCount] = useState(0)
+    const downSpikeCountRef = useRef(0)
     const { darkMode, headerLoading, setHeaderLoading, isSuper } = useContext(AppContext)
     const targetUsed = useRef<boolean>(false)
     const chartHeight = '.5rem'
@@ -102,28 +104,49 @@ const SystemCard = (props: Props) => {
 
     const getStatusColor = (item: statusType) => {
         if (!status) return 'red'
-        if (reportedlyDown || status === 'BUSY') return 'orange'
+        if (reportedlyDown || status === 'BUSY' || downSpikeCountRef.current > 4) return 'orange'
 
         let color = darkMode ? '#00b000' : 'green'
         if (item && item.unknown) color = 'gray'
-        if (item.busy) color = darkMode ? '#007f00' : '#006000'
-        if (item.isDown) color = darkMode ? '#006600' : '#003a00'
+        if (item.busy) color = 'orange'
+        // if (item.isDown) color = 'red'
         return color
     }
 
     const generateLastDayData = useCallback(() => {
+        // Propagate isDown run: once isDown===true is seen, all subsequent
+        // points stay "down" until isDown===false is explicitly set.
+        let inDowntimeRun = false
+        const values = lastDayData.map((el: statusType) => {
+            if (el.isDown === true) inDowntimeRun = true
+            else if (el.isDown === false) inDowntimeRun = false
+            if (!el.status || el.isDown || inDowntimeRun) return 0
+            if (el.busy) return 0.7
+            return 1
+        })
+
+        // Count distinct down spikes (transitions from up to down)
+        let spikes = 0
+        let wasDown = false
+        for (const v of values) {
+            if (v === 0 && !wasDown) { spikes++; wasDown = true }
+            else if (v > 0) wasDown = false
+        }
+        downSpikeCountRef.current = spikes
+        setDownSpikeCount(spikes)
+
         setLastDayChartData({
             labels: lastDayData.length ? lastDayData.map(el => parseDateTime(el.time)) : [],
             datasets: [
                 {
-                    data: lastDayData.length ? lastDayData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
+                    data: values,
                     backgroundColor: (ctx: any) => lastDayData[ctx.index] && lastDayData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: lastDayData.length ? lastDayData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
+                    data: values,
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => getStatusColor(lastDayData[ctx.p1DataIndex])
@@ -148,14 +171,14 @@ const SystemCard = (props: Props) => {
             labels: completeData.length ? completeData.map(el => parseCompleteDataTime(el.time)) : [],
             datasets: [
                 {
-                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.7 : 1) : [],
                     backgroundColor: (ctx: any) => completeData[ctx.index] && completeData[ctx.index].reported ? darkMode ? 'white' : 'black' : 'transparent',
                     borderColor: 'transparent',
                     borderWidth: 4,
                     label: 'Reported DOWN by user'
                 },
                 {
-                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.8 : 1) : [],
+                    data: completeData.length ? completeData.map((el: statusType) => !el.status || el.isDown ? 0 : el.busy ? 0.7 : 1) : [],
                     backgroundColor: 'transparent',
                     segment: {
                         borderColor: (ctx: any) => getStatusColor(completeData[ctx.p1DataIndex])
@@ -387,7 +410,7 @@ const SystemCard = (props: Props) => {
                         borderColor: darkMode ? '#424244' : '#d3d3d3',
                         // borderColor: loading ? 'gray' : status ? 'green' : 'red',
                         backgroundImage: loading || (status !== false && status !== true && status !== 'BUSY') ? '' :
-                            status === 'BUSY' ? darkMode ? 'linear-gradient(to right bottom, rgb(0, 0, 0), rgb(255 152 0 / 26%)'
+                            (status === 'BUSY' || (downSpikeCount > 4 && status === true)) ? darkMode ? 'linear-gradient(to right bottom, rgb(0, 0, 0), rgb(255 152 0 / 26%)'
                                 : 'linear-gradient(to right bottom, white, rgb(202 120 0 / 17%))' : darkMode ?
                                 `linear-gradient(to bottom right, #000000, ${status ? '#00600085' : '#7000008c'})`
                                 :
@@ -418,7 +441,7 @@ const SystemCard = (props: Props) => {
                     <div className="systemcard__footer">
                         <h2
                             className="systemcard__status"
-                            style={{ color: loading ? 'gray' : reportedlyDown || status === 'BUSY' ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
+                            style={{ color: loading ? 'gray' : (reportedlyDown || status === 'BUSY' || (downSpikeCount > 4 && status === true)) ? 'orange' : status ? darkMode ? '#00b000' : 'green' : 'red' }}>
                             {loading || (status !== false && status !== true && status !== 'BUSY') ? <p style={{ color: 'gray', paddingBottom: '1rem' }}>Checking status...</p> :
                                 <>
                                     <span
@@ -429,7 +452,7 @@ const SystemCard = (props: Props) => {
                                         className='systemcard__status-dot'>
                                         <img
                                             style={{
-                                                filter: reportedlyDown || status === 'BUSY' ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
+                                                filter: (reportedlyDown || status === 'BUSY' || (downSpikeCount > 4 && status === true)) ? 'invert(64%) sepia(97%) saturate(1746%) hue-rotate(359deg) brightness(101%) contrast(106%)'
                                                     : status ? 'invert(24%) sepia(100%) saturate(1811%) hue-rotate(97deg) brightness(130%) contrast(105%)' :
                                                         'invert(19%) sepia(87%) saturate(7117%) hue-rotate(358deg) brightness(97%) contrast(117%)'
                                             }}
